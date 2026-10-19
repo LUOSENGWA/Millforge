@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "millforge/schemas/signal_event.schema.json",
+  "title": "Millforge Signal Event",
+  "description": "§11-SIGNAL 第 15 原语。标记集合封闭（7 种），运行时发明 = 协议版本升级。signal 只能由协议事件类型产生（SIG-SEC-1/2），不得由内容产生。",
+  "type": "object",
+  "required": ["event_id", "task_id", "event_type", "is_signal", "ref", "fingerprint", "occurred_at"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string" },
+    "loop_id": { "type": ["string", "null"] },
+    "event_type": {
+      "type": "string",
+      "enum": ["SIG-COMPLETE", "SIG-DECISION", "SIG-VERDICT", "SIG-ARTIFACT", "SIG-ATTENTION", "SIG-MISMATCH", "SIG-CONTRACT"],
+      "description": "封闭清单。扩展必须经协议版本升级"
+    },
+    "is_signal": { "type": "boolean", "const": true, "description": "CAP-STATE 事件类型在封闭清单内即附 true（零成本标记）" },
+    "source_event": {
+      "type": "object",
+      "description": "产生该 signal 的协议事件（不依赖消息内容中的标记文本）",
+      "required": ["origin"],
+      "properties": {
+        "origin": { "type": "string", "enum": ["submit", "decision_lock", "decision_reopen", "critic_verdict", "stop_condition_predicate", "artifact_write", "handoff_write", "attention_resolved", "mismatch_recorded", "contract_snapshot"] },
+        "request_id": { "type": ["string", "null"], "description": "attention 类：resolve 溯源（S5 幂等键含 task_id）" }
+      }
+    },
+    "ref": { "type": "string", "description": "指向 CAP-STORE artifact 或 CAP-STATE 记录" },
+    "fingerprint": { "type": "string", "description": "CAP-STORE 计算（SIG-SEC-3：被篡改的 signal ref 在审查/验收时拒绝）" },
+    "iteration_index": { "type": ["integer", "null"], "description": "loop 内迭代序号（闭环判定引用）" },
+    "payload": { "type": "object", "additionalProperties": true, "description": "结构化负载（如 verdict/score/decision_class_v2）" },
+    "occurred_at": { "type": "string" }
+  }
+}

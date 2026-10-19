@@ -1,0 +1,115 @@
+# Millforge 模板片段注册表（编译器 Assemble 段消费）
+# 出处三级纪律：source: production(实测) | reference(文档/审查) | llm(待整队实测→experimental)
+# 每个片段声明：id / file / applies_to(角色种类) / 行预算估算 / source / 触发装载(常驻|按需)
+version: "1.0"
+
+skeletons:
+  coordinator:
+    file: templates/skeleton/coordinator.md
+    budget: 500
+    source: production
+  leader:
+    file: templates/skeleton/leader.md
+    budget: 250
+    source: production
+  worker:
+    file: templates/skeleton/worker.md
+    budget: 150
+    source: production
+  critic:
+    file: templates/skeleton/critic.md
+    budget: 150
+    source: production
+
+# ── T1 行业模板（5+2，O5）：行业级差异片段 ─────────────────────────
+industry:
+  software:
+    file: templates/industry/software.md
+    source: production
+    applies_to: [worker, leader, critic]
+  embedded:
+    file: templates/industry/embedded.md
+    source: production
+    applies_to: [worker, leader]
+  data:
+    file: templates/industry/data.md
+    source: reference
+    applies_to: [worker, leader]
+  content:
+    file: templates/industry/content.md
+    source: reference
+    applies_to: [worker, leader]
+  business:
+    file: templates/industry/business.md
+    source: llm
+    experimental: true
+    applies_to: [worker, leader]
+  custom:
+    file: templates/industry/custom.md
+    source: llm
+    experimental: true
+    applies_to: [worker, leader]
+
+# ── T2 域片段（21 个，O5 矩阵）──────────────────────────────────
+domains:
+  # 软件 10 子域
+  web-frontend:  { file: templates/domain/web-frontend.md,  source: production, applies_to: [worker] }
+  web-backend:   { file: templates/domain/web-backend.md,   source: production, applies_to: [worker] }
+  mobile:        { file: templates/domain/mobile.md,        source: production, applies_to: [worker] }
+  desktop:       { file: templates/domain/desktop.md,       source: reference,  applies_to: [worker] }
+  ml-data:       { file: templates/domain/ml-data.md,       source: reference,  applies_to: [worker] }
+  infra-ops:     { file: templates/domain/infra-ops.md,     source: production, applies_to: [worker] }
+  security:      { file: templates/domain/security.md,      source: reference,  applies_to: [worker, critic] }
+  docs-content:  { file: templates/domain/docs-content.md,  source: production, applies_to: [worker] }
+  test-qa:       { file: templates/domain/test-qa.md,       source: reference,  applies_to: [worker, critic] }
+  data-engineering: { file: templates/domain/data-engineering.md, source: reference, applies_to: [worker] }
+  # 嵌入式 4
+  mcu:           { file: templates/domain/mcu.md,           source: production, applies_to: [worker] }
+  embedded-linux: { file: templates/domain/embedded-linux.md, source: reference, applies_to: [worker] }
+  hardware-bridge: { file: templates/domain/hardware-bridge.md, source: production, applies_to: [worker] }
+  rtos-firmware: { file: templates/domain/rtos-firmware.md, source: reference, applies_to: [worker] }
+  # 数据 2
+  data-analysis: { file: templates/domain/data-analysis.md, source: production, applies_to: [worker] }
+  data-visualization: { file: templates/domain/data-visualization.md, source: reference, applies_to: [worker] }
+  # 市场 2
+  market-research: { file: templates/domain/market-research.md, source: llm, experimental: true, applies_to: [worker] }
+  sales-outreach:  { file: templates/domain/sales-outreach.md,  source: llm, experimental: true, applies_to: [worker] }
+  # 通用 3
+  office-productivity: { file: templates/domain/office-productivity.md, source: reference, applies_to: [worker] }
+  research-reports: { file: templates/domain/research-reports.md, source: production, applies_to: [worker] }
+  general:       { file: templates/domain/general.md,       source: llm, experimental: true, applies_to: [worker] }
+
+# ── 协议片段（由 team.json protocol 开关选择，非域片段）──────────
+protocol:
+  nmh:             { file: templates/fragments/nmh.md,         resident: true,  source: production }
+  nma:             { file: templates/fragments/nma.md,         resident: false, source: production, trigger: "任务提交/验收请求到达" }
+  five-clauses:    { file: templates/fragments/five-clauses.md, resident: true,  source: production }
+  task-lifecycle:  { file: templates/fragments/task-lifecycle.md, resident: true, source: production }
+  dual-channel:    { file: templates/fragments/dual-channel.md, resident: true,  source: production }
+  fuse:            { file: templates/fragments/fuse.md,        resident: true,  source: production }
+  loop:            { file: templates/fragments/loop.md,        resident: false, source: reference,  trigger: "收到 loop_spec / iteration > 1" }
+  signal:          { file: templates/fragments/signal.md,      resident: true,  source: reference }
+  handoff:         { file: templates/fragments/handoff.md,     resident: false, source: production, trigger: "跨团队任务（仅 single_user 编译）", single_user_only: true }
+  contract:        { file: templates/fragments/contract.md,    resident: false, source: reference,  trigger: "task spec 含 contract_refs" }
+  governance:      { file: templates/fragments/governance.md,  resident: false, source: reference,  trigger: "R5 重开/投票/attention 升级" }
+  attention-ux:    { file: templates/fragments/attention-ux.md, resident: false, source: reference,  trigger: "CAP-ATTN request 到达（持久展示面应答面）" }
+
+# ── 队伍组合（O5 整队）──────────────────────────────────────────
+teams:
+  SW-01: { name: "web-app",        industry: software, members: { leader: 1, workers: 3, critic: 1 }, domains: [web-frontend, web-backend, test-qa], source: production }
+  SW-02: { name: "api-service",    industry: software, members: { leader: 1, workers: 2, critic: 1 }, domains: [web-backend, infra-ops, security], source: production }
+  SW-03: { name: "mobile-app",     industry: software, members: { leader: 1, workers: 2, critic: 1 }, domains: [mobile, test-qa], source: production }
+  SW-04: { name: "desktop-app",    industry: software, members: { leader: 1, workers: 2, critic: 1 }, domains: [desktop, test-qa], source: reference }
+  SW-05: { name: "data-ml",        industry: data,     members: { leader: 1, workers: 3, critic: 1 }, domains: [ml-data, data-engineering, data-analysis], source: reference }
+  SW-06: { name: "infra",          industry: software, members: { leader: 1, workers: 2, critic: 1 }, domains: [infra-ops, security], source: production }
+  SW-07: { name: "content-docs",   industry: content,  members: { leader: 1, workers: 2, critic: 1 }, domains: [docs-content, research-reports], source: production }
+  SW-08: { name: "fullstack",      industry: software, members: { leader: 1, workers: 5, critic: 1 }, domains: [web-frontend, web-backend, mobile, test-qa, infra-ops], source: reference }
+  EH-01: { name: "mcu-project",    industry: embedded, members: { leader: 1, workers: 3, critic: 1 }, domains: [mcu, rtos-firmware, hardware-bridge], source: production }
+  EH-02: { name: "embedded-linux", industry: embedded, members: { leader: 1, workers: 2, critic: 1 }, domains: [embedded-linux, hardware-bridge], source: reference }
+  EH-03: { name: "hw-integration", industry: embedded, members: { leader: 1, workers: 3, critic: 1 }, domains: [mcu, embedded-linux, hardware-bridge, infra-ops], source: production }
+  EH-04: { name: "firmware",       industry: embedded, members: { leader: 1, workers: 2, critic: 1 }, domains: [rtos-firmware, mcu], source: reference }
+  DA-01: { name: "analytics",      industry: data,     members: { leader: 1, workers: 2, critic: 1 }, domains: [data-analysis, data-visualization], source: production }
+  DA-02: { name: "bi-dashboard",   industry: data,    members: { leader: 1, workers: 3, critic: 1 }, domains: [data-analysis, data-visualization, data-engineering], source: reference }
+  MS-01: { name: "market-intel",   industry: business, members: { leader: 1, workers: 2, critic: 1 }, domains: [market-research, sales-outreach], source: llm, experimental: true }
+  MS-02: { name: "biz-ops",        industry: business, members: { leader: 1, workers: 3, critic: 1 }, domains: [office-productivity, research-reports, data-analysis], source: llm, experimental: true }
+  GEN-01: { name: "generalist",    industry: null,     members: { leader: 1, workers: 2, critic: 1 }, domains: [general, office-productivity, research-reports], source: llm, experimental: true }

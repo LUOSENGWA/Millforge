@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "millforge/schemas/contract.schema.json",
+  "title": "Millforge Contract Artifact",
+  "description": "§08-CONTRACT 契约物。指纹由 CAP-STORE 写入时计算返回（S2：不得自声明）。",
+  "type": "object",
+  "required": ["contract_id", "semver", "interface"],
+  "properties": {
+    "contract_id": { "type": "string", "minLength": 1 },
+    "semver": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "interface": {
+      "type": "object",
+      "description": "对下游有约束力的可观察部分（接口/格式/acceptance/锁定决策）",
+      "additionalProperties": true
+    },
+    "confirmations": {
+      "type": "array", "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["party", "confirmer", "verdict", "at"],
+        "properties": {
+          "party": { "type": "string", "enum": ["provider", "consumer"], "description": "S3 双确认：各一名独立确认者" },
+          "confirmer": { "type": "string" },
+          "verdict": { "type": "string", "enum": ["accept", "accept_with_conditions"] },
+          "conditions": { "type": "array", "items": { "type": "string" } },
+          "at": { "type": "string" }
+        }
+      }
+    },
+    "owner": { "type": "string" },
+    "contract_owner_is_implementer": {
+      "type": "boolean", "default": false,
+      "description": "B-9 独立性标记：true 时 critic 复核强制"
+    },
+    "fingerprint": { "type": ["string", "null"], "pattern": "^contract:\\d+\\.\\d+\\.\\d+:[0-9a-f]{8}$", "description": "CAP-STORE 计算返回；null = 未落盘" }
+  }
+}

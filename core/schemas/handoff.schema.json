@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "millforge/schemas/handoff.schema.json",
+  "title": "Millforge Cross-Team Handoff",
+  "description": "§07-HANDOFF（仅 single_user 编译）。三个硬限制：上下文 ≤3 句 / 关键决策 ≤5 条 / 总行数 ≤50。arbitrator 独占写作权。",
+  "type": "object",
+  "required": ["project_id", "from_team", "to_team", "sequence", "context", "key_decisions", "tasks_for_receiver"],
+  "properties": {
+    "project_id": { "type": "string" },
+    "from_team": { "type": "string" },
+    "to_team": { "type": "string" },
+    "sequence": { "type": "integer", "minimum": 1, "description": "序号递增（模式 B 可多次来回）" },
+    "date": { "type": "string" },
+    "brief_ref": { "type": "string", "description": "NMH 锁定版需求简报路径" },
+    "artifacts": { "type": "array", "items": { "type": "string" }, "description": "{proj}/artifacts/{team}/ 下的产出" },
+    "context": { "type": "string", "maxLength": 500, "description": "≤3 句：B 需要的前提（不写 A 的过程）" },
+    "key_decisions": {
+      "type": "array", "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["topic", "conclusion"],
+        "properties": {
+          "topic": { "type": "string" },
+          "conclusion": { "type": "string" },
+          "impact": { "type": "string", "description": "对 B 的具体影响" }
+        }
+      }
+    },
+    "tasks_for_receiver": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "可执行任务" },
+    "constraints": { "type": "array", "items": { "type": "string" }, "description": "无 → 写 ['无']（契约面决策的权威来源）" },
+    "questions_route": { "type": "string", "const": "arbitrator", "description": "不要直接找 A 团队（三省六部禁止跨团队直连）" }
+  }
+}

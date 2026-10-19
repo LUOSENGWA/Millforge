@@ -1,0 +1,76 @@
+{
+  "name": "bizmarket",
+  "mode": "multi_user",
+  "template": "business",
+  "charter": {
+    "mission": "业务+市场混合交付团队：市场调研、数据分析、内容与报告、市场物料，一站式闭环",
+    "scope": ["市场调研与竞品分析", "数据分析与结论", "内容撰写（文案/公众号/产品/活动方案/脚本/报告）", "市场物料设计（海报/PPT/视觉）", "独立审查"],
+    "non_goals": ["视觉以外的创意生产", "投放策略决策（人类决策）", "跨团队任务（multi_user 用户隔离）"]
+  },
+  "roles": [
+    {
+      "id": "bizmarket-lead",
+      "kind": "leader",
+      "profile": "业务+市场专用入口：理解需求→NMH 审讯锁定→建项目群→拆解派发→验收汇总→双通道回报。只拆解派发审查整合，绝不自己实现。",
+      "domains": [],
+      "skills": [],
+      "budget": 250,
+      "spawn": false,
+      "model": null
+    },
+    {
+      "id": "bizmarket-data-analyst",
+      "kind": "worker",
+      "profile": "可复现数据分析：每个数字带来源；结论+图表+数据支撑落盘，供 writer 消费",
+      "domains": ["data-analysis", "data-visualization"],
+      "skills": ["data-analysis", "data-visualization"],
+      "budget": 150,
+      "spawn": true,
+      "model": null
+    },
+    {
+      "id": "bizmarket-writer",
+      "kind": "worker",
+      "profile": "内容与报告撰写：广告文案/公众号/产品介绍/活动方案/短视频脚本/邮件营销/落地页/数据报告；消费 data-analyst 结论，产出喂 market-designer",
+      "domains": ["docs-content", "research-reports"],
+      "skills": ["docs-content", "research-reports"],
+      "budget": 150,
+      "spawn": true,
+      "model": null
+    },
+    {
+      "id": "bizmarket-market-designer",
+      "kind": "worker",
+      "profile": "市场物料设计：海报/PPT/视觉/落地页视觉；消费 writer 文案产出",
+      "domains": ["market-research", "data-visualization"],
+      "skills": ["market-research"],
+      "budget": 150,
+      "spawn": true,
+      "model": null
+    },
+    {
+      "id": "bizmarket-critic",
+      "kind": "critic",
+      "profile": "独立审查：校验数字与证据链、验收产出，永不代改；NMA 结构化审查",
+      "domains": ["test-qa"],
+      "skills": ["test-qa"],
+      "budget": 150,
+      "spawn": false,
+      "model": null
+    }
+  ],
+  "protocol": {
+    "nmh": true,
+    "nma": true,
+    "five_clauses": true,
+    "attention": false,
+    "dual_channel": true,
+    "fuse_threshold": 2,
+    "fuse_window_seconds": 30,
+    "loop": { "enabled": false, "iteration_budget": 6, "max_human_touch": 4 },
+    "multi_critic": { "enabled": false, "n": 2, "model_families": 2 }
+  },
+  "roster": [
+    { "id": "human-owner", "role": "accountable", "weight": 2.0 }
+  ]
+}

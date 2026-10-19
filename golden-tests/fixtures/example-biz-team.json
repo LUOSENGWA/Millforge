@@ -1,0 +1,79 @@
+{
+  "name": "example-biz-team",
+  "mode": "single_user",
+  "template": "business",
+  "subdomain": "MS-02",
+  "experimental": true,
+  "charter": {
+    "mission": "Example: a business-operations team that turns raw data into decision-ready reports",
+    "scope": ["data analysis", "report writing", "dashboard specs"],
+    "non_goals": ["external publishing without human approval", "production deployment"]
+  },
+  "roles": [
+    {
+      "id": "biz-coordinator",
+      "kind": "coordinator",
+      "profile": "Cluster-level coordinator for a single-user demo cluster",
+      "domains": [],
+      "skills": ["office-productivity"],
+      "budget": 500,
+      "spawn": false,
+      "model": null
+    },
+    {
+      "id": "biz-lead",
+      "kind": "leader",
+      "profile": "Decomposes business-analysis requests into data + writing tasks, owns acceptance",
+      "domains": [],
+      "skills": ["data-analysis", "research-reports"],
+      "budget": 250,
+      "spawn": false,
+      "model": null
+    },
+    {
+      "id": "biz-analyst",
+      "kind": "worker",
+      "profile": "Runs reproducible data analysis; every number carries its source",
+      "domains": ["data-analysis", "data-visualization"],
+      "skills": ["data-analysis", "data-visualization"],
+      "budget": 150,
+      "spawn": true,
+      "model": null
+    },
+    {
+      "id": "biz-writer",
+      "kind": "worker",
+      "profile": "Writes research reports with three-level evidence chains",
+      "domains": ["research-reports", "docs-content"],
+      "skills": ["research-reports", "docs-content"],
+      "budget": 150,
+      "spawn": true,
+      "model": null
+    },
+    {
+      "id": "biz-critic",
+      "kind": "critic",
+      "profile": "Independent reviewer; verifies numbers and evidence chains, never edits",
+      "domains": ["test-qa", "security"],
+      "skills": ["test-qa"],
+      "budget": 150,
+      "spawn": false,
+      "model": null
+    }
+  ],
+  "protocol": {
+    "nmh": true,
+    "nma": true,
+    "five_clauses": true,
+    "attention": true,
+    "dual_channel": true,
+    "fuse_threshold": 2,
+    "fuse_window_seconds": 30,
+    "loop": { "enabled": true, "iteration_budget": 6, "max_human_touch": 4 },
+    "multi_critic": { "enabled": false, "n": 2, "model_families": 2 }
+  },
+  "roster": [
+    { "id": "human-owner", "role": "accountable", "weight": 2.0 },
+    { "id": "human-reviewer", "role": "approver", "weight": 1.5 }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "millforge/schemas/task_meta.schema.json",
+  "title": "Millforge Task Meta (CAP-STATE)",
+  "description": "T3 状态映射的 CAP-STATE 读取面。核心脚本（attention-stall / verification-mismatch-window / aggregate-vote / timer-derive）只读本结构；decision_status 是叠加子状态，不改运行时既有任务状态机。",
+  "type": "object",
+  "required": ["task_id", "decision_status"],
+  "properties": {
+    "task_id": { "type": "string" },
+    "decision_status": {
+      "type": "string",
+      "enum": ["open", "blocked", "frozen", "paused", "spec_conflict"],
+      "description": "叠加子状态。运行时映射（§09-6）：blocked/frozen/paused/spec_conflict → BLOCKED；open → 不变"
+    },
+    "decision_status_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "at", "reason"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "at": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      },
+      "description": "append-only 审计链"
+    },
+    "dispatched_at": { "type": ["string", "null"] },
+    "completed_at": { "type": ["string", "null"] },
+    "timeout_at": { "type": ["string", "null"], "description": "超时判定唯一权威（F-2）：CAP-TIMER 与 watchdog 只可通知不可判定" },
+    "accountable": { "type": ["string", "null"], "description": "CAP-ROSTER Z2 单点；ABSENT 显式" },
+    "attention": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "status", "opened_at"],
+        "properties": {
+          "id": { "type": "string" },
+          "kind": { "type": "string", "enum": ["r6", "clarification", "escalation", "classification"] },
+          "status": { "type": "string", "enum": ["open", "resolved"] },
+          "opened_at": { "type": "string" },
+          "due_at": { "type": ["string", "null"] },
+          "resolved_at": { "type": ["string", "null"] },
+          "resolved_by": { "type": ["string", "null"] },
+          "resolved_via_surface": { "type": ["string", "null"], "description": "W5 持久展示面（群聊不得）" },
+          "reversible": { "type": "boolean", "default": true },
+          "rule": { "type": "string", "enum": ["R1", "R2", "R3", "R4", "R5", "R6"], "description": "计票规则（B-4 窗口：R5 不可逆 24h/可逆 4h；R2 4h）" },
+          "locker": { "type": ["string", "null"], "description": "B-4 R5 原锁定者（迟到降权 1.0）" },
+          "reopen_until": { "type": ["string", "null"] },
+          "contract_snapshot": {
+            "type": ["object", "null"],
+            "description": "C-2：R6 回答必带",
+            "required": ["task_id", "contract_ref", "pinned_fingerprint", "checked_at"],
+            "properties": {
+              "task_id": { "type": "string" },
+              "contract_ref": { "type": "string" },
+              "pinned_fingerprint": { "type": "string" },
+              "checked_at": { "type": "string" }
+            }
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["user", "weight", "choice", "received_at"],
+              "properties": {
+                "user": { "type": "string" },
+                "weight": { "type": "number", "minimum": 1.0 },
+                "choice": { "type": "string", "enum": ["approve", "reject", "defer"] },
+                "received_at": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "verification_mismatch": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion_id", "opened_at", "status"],
+        "properties": {
+          "criterion_id": { "type": "string" },
+          "opened_at": { "type": "string" },
+          "window_hours": { "type": "number", "default": 24, "description": "B-6 裁决窗口" },
+          "status": { "type": "string", "enum": ["open", "expired", "frozen"] },
+          "round_note": { "type": ["string", "null"], "description": "多 critic：按投票轮计（MC-10）" }
+        }
+      }
+    },
+    "loop_state": {
+      "type": ["object", "null"],
+      "description": "§10-3 loop 权威状态（driver 幂等派生源）",
+      "properties": {
+        "loop_id": { "type": "string" },
+        "current_iteration": { "type": "integer", "minimum": 0 },
+        "budget_remaining": { "type": "integer", "minimum": 0 },
+        "phase": { "type": "string", "enum": ["DISPATCH", "EXECUTE", "VERIFY", "JUDGE", "RECORD", "STOPPED"] },
+        "last_verdict": { "type": ["string", "null"], "enum": ["achieved", "not_achieved", "undecidable", null] },
+        "progress_trajectory": {
+          "type": "array",
+          "items": { "type": "object", "properties": {
+            "iteration_index": { "type": "integer" },
+            "signal": { "type": "string" },
+            "value": { "type": "number" },
+            "low_yield": { "type": "boolean", "default": false }
+          } }
+        },
+        "next_check_at": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
