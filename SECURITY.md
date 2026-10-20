@@ -6,11 +6,6 @@
 
 ## 报告漏洞
 
-**请不要开公开 issue。** 使用 GitHub 的私密渠道：
-
-1. 仓库页面 → **Security** → **Report a vulnerability**（GitHub Security Advisories）；或
-2. 若该入口不可用，开一个不含技术细节的 issue，标题注明 `security contact requested`，维护者会建立私密通道。
-
 报告请包含：影响版本、复现步骤、影响面（是否可远程触发、是否需要本地文件写权限）、建议修复方向（可选）。
 
 ## 响应
