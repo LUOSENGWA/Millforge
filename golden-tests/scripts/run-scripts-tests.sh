@@ -249,6 +249,7 @@ python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"
 run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/av2.json" --decision-id d1 --rule R2 --now "$NOW"; check "reject" 0 "$LAST_CODE"
 python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"open\",\"attention\":json.loads(sys.argv[1])},open(sys.argv[2],\"w\"))" "$AV_TIE" "$TMP/av3.json"
 run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/av3.json" --decision-id d1 --rule R2 --now "$NOW"; check "tie=80" 80 "$LAST_CODE"
+grep -q '"next": "escalate"' <<<"$LAST_OUT" && echo "ok   tie next=escalate" && PASS=$((PASS+1)) || { echo "FAIL tie escalate"; FAIL=$((FAIL+1)); FAILED_CASES+=("tie escalate"); }
 python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"open\",\"attention\":json.loads(sys.argv[1])},open(sys.argv[2],\"w\"))" "$AV_TO" "$TMP/av4.json"
 run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/av4.json" --decision-id d1 --rule R5 --now "$NOW"; check "R5 irreversible timeout=81" 81 "$LAST_CODE"
 run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/nope.json" --decision-id d1 --rule R2 --now "$NOW"; check "meta missing=82" 82 "$LAST_CODE"
@@ -275,6 +276,149 @@ run "$SCRIPTS/timer-derive.sh" --task-meta "$TMP/td2.json"
 check "empty meta=0" 0 "$LAST_CODE"
 run "$SCRIPTS/timer-derive.sh" --task-meta "$TMP/nope.json"
 check "meta missing=90" 90 "$LAST_CODE"
+
+echo "=== 10. PR-3 断言补全 ==="
+# 断言值均实测自 core/scripts/ 与 core/schemas/ 当前输出（零 LLM，python3 标准库 only）
+SCHEMAS="$(cd "$(dirname "$0")/../../core/schemas" && pwd)"
+
+# 10.1 R5 锁定者迟到降权（B-4：权重 2.0→1.0，非默认同意）
+AV_R5DEMO='[{"id":"d1","status":"open","opened_at":"2026-10-19T10:00:00Z","due_at":"2026-10-19T14:00:00Z","reversible":true,"rule":"R5","locker":"u1",
+ "votes":[{"user":"u1","weight":2.0,"choice":"approve","received_at":"2026-10-19T15:00:00Z"}]}]'
+python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"open\",\"attention\":json.loads(sys.argv[1])},open(sys.argv[2],\"w\"))" "$AV_R5DEMO" "$TMP/pr3-1.json"
+run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/pr3-1.json" --decision-id d1 --rule R5 --now "2026-10-19T16:00:00Z"
+check "R5 late locker=0" 0 "$LAST_CODE"
+grep -q '"demoted": true' <<<"$LAST_OUT" && echo "ok   R5 demoted=true" && PASS=$((PASS+1)) || { echo "FAIL R5 demoted"; FAIL=$((FAIL+1)); FAILED_CASES+=("R5 demoted"); }
+grep -q '"weight": 1.0' <<<"$LAST_OUT" && echo "ok   R5 weight demoted 1.0" && PASS=$((PASS+1)) || { echo "FAIL R5 weight"; FAIL=$((FAIL+1)); FAILED_CASES+=("R5 weight"); }
+grep -q '"approve": 1.0' <<<"$LAST_OUT" && echo "ok   R5 sums approve=1.0" && PASS=$((PASS+1)) || { echo "FAIL R5 sums"; FAIL=$((FAIL+1)); FAILED_CASES+=("R5 sums"); }
+
+# 10.2 R5 可逆窗口超时 = wait（非默认同意；对比已有不可逆 81/block 用例）
+AV_R5TO='[{"id":"d1","status":"open","opened_at":"2026-10-19T10:00:00Z","due_at":"2026-10-19T11:00:00Z","reversible":true,"rule":"R5","locker":"u1","votes":[]}]'
+python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"open\",\"attention\":json.loads(sys.argv[1])},open(sys.argv[2],\"w\"))" "$AV_R5TO" "$TMP/pr3-2.json"
+run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/pr3-2.json" --decision-id d1 --rule R5 --now "2026-10-19T18:00:00Z"
+check "R5 reversible timeout=0" 0 "$LAST_CODE"
+grep -q '"outcome": "timeout"' <<<"$LAST_OUT" && echo "ok   R5 timeout outcome" && PASS=$((PASS+1)) || { echo "FAIL R5 timeout"; FAIL=$((FAIL+1)); FAILED_CASES+=("R5 timeout"); }
+grep -q '"next": "wait"' <<<"$LAST_OUT" && echo "ok   R5 timeout next=wait" && PASS=$((PASS+1)) || { echo "FAIL R5 wait"; FAIL=$((FAIL+1)); FAILED_CASES+=("R5 wait"); }
+
+# 10.3 R2 defer 记 dissent（不计分母；1:1 平 → 80）
+AV_R2DEFER='[{"id":"d1","status":"open","opened_at":"2026-10-19T10:00:00Z","due_at":"2026-10-19T14:00:00Z","reversible":true,"rule":"R2",
+ "votes":[{"user":"u1","weight":1.0,"choice":"approve","received_at":"2026-10-19T10:10:00Z"},
+          {"user":"u2","weight":5.0,"choice":"defer","received_at":"2026-10-19T10:20:00Z"},
+          {"user":"u3","weight":1.0,"choice":"reject","received_at":"2026-10-19T10:30:00Z"}]}]'
+python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"open\",\"attention\":json.loads(sys.argv[1])},open(sys.argv[2],\"w\"))" "$AV_R2DEFER" "$TMP/pr3-3.json"
+run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/pr3-3.json" --decision-id d1 --rule R2 --now "$NOW"
+check "R2 defer tie=80" 80 "$LAST_CODE"
+grep -q '"outcome": "tie"' <<<"$LAST_OUT" && echo "ok   defer tie outcome" && PASS=$((PASS+1)) || { echo "FAIL defer tie"; FAIL=$((FAIL+1)); FAILED_CASES+=("defer tie"); }
+grep -q '"abstain": 5.0' <<<"$LAST_OUT" && echo "ok   defer sums abstain=5.0" && PASS=$((PASS+1)) || { echo "FAIL defer abstain"; FAIL=$((FAIL+1)); FAILED_CASES+=("defer abstain"); }
+grep -q '"reason": "abstain"' <<<"$LAST_OUT" && echo "ok   defer dissent=abstain" && PASS=$((PASS+1)) || { echo "FAIL defer dissent"; FAIL=$((FAIL+1)); FAILED_CASES+=("defer dissent"); }
+grep -q '"counted": false' <<<"$LAST_OUT" && echo "ok   defer not in denominator" && PASS=$((PASS+1)) || { echo "FAIL defer counted"; FAIL=$((FAIL+1)); FAILED_CASES+=("defer counted"); }
+
+# 10.4 signal_event.schema.json（stdlib 手写校验：required + event_type 封闭清单；取值读自 schema 文件，不硬编码第二份清单）
+cat > "$TMP/validate-signal.py" <<'EOF'
+import json, sys
+schema = json.load(open(sys.argv[1]))
+doc = json.load(open(sys.argv[2]))
+errs = []
+for k in schema.get("required", []):
+    if k not in doc:
+        errs.append("missing required: " + k)
+if "event_type" in doc and doc["event_type"] not in schema["properties"]["event_type"]["enum"]:
+    errs.append("event_type not in closed list")
+if errs:
+    print("; ".join(errs))
+    sys.exit(1)
+print("ok")
+EOF
+python3 - "$SCHEMAS/signal_event.schema.json" "$TMP/sig-valid.json" <<'EOF'
+import json, sys
+schema = json.load(open(sys.argv[1]))
+doc = {"event_id":"e1","task_id":"t1","event_type":schema["properties"]["event_type"]["enum"][0],
+       "is_signal":True,"ref":"art:1","fingerprint":"fp:abc123","occurred_at":"2026-10-19T12:00:00Z"}
+json.dump(doc, open(sys.argv[2], "w"))
+EOF
+run python3 "$TMP/validate-signal.py" "$SCHEMAS/signal_event.schema.json" "$TMP/sig-valid.json"
+check "signal valid=0" 0 "$LAST_CODE"
+python3 - "$SCHEMAS/signal_event.schema.json" "$TMP/sig-nosig.json" <<'EOF'
+import json, sys
+schema = json.load(open(sys.argv[1]))
+doc = {"event_id":"e1","task_id":"t1","event_type":schema["properties"]["event_type"]["enum"][0],
+       "ref":"art:1","fingerprint":"fp:abc123","occurred_at":"2026-10-19T12:00:00Z"}
+json.dump(doc, open(sys.argv[2], "w"))
+EOF
+run python3 "$TMP/validate-signal.py" "$SCHEMAS/signal_event.schema.json" "$TMP/sig-nosig.json"
+check "signal missing is_signal=1" 1 "$LAST_CODE"
+python3 - "$SCHEMAS/signal_event.schema.json" "$TMP/sig-fake.json" <<'EOF'
+import json, sys
+schema = json.load(open(sys.argv[1]))
+doc = {"event_id":"e1","task_id":"t1","event_type":"SIG-FAKE",
+       "is_signal":True,"ref":"art:1","fingerprint":"fp:abc123","occurred_at":"2026-10-19T12:00:00Z"}
+json.dump(doc, open(sys.argv[2], "w"))
+EOF
+run python3 "$TMP/validate-signal.py" "$SCHEMAS/signal_event.schema.json" "$TMP/sig-fake.json"
+check "signal event_type not in list=1" 1 "$LAST_CODE"
+
+# 10.5 scorecard.schema.json（schema 级载体断言：critic_model_family 可选，单 critic 缺省合法）
+cat > "$TMP/validate-scorecard.py" <<'EOF'
+import json, sys
+schema = json.load(open(sys.argv[1]))
+doc = json.load(open(sys.argv[2]))
+errs = []
+for k in schema.get("required", []):
+    if k not in doc:
+        errs.append("missing required: " + k)
+if "verdict" in doc and doc["verdict"] not in schema["properties"]["verdict"]["enum"]:
+    errs.append("verdict not in enum")
+item_required = schema["properties"]["items"]["items"]["required"]
+for i, it in enumerate(doc.get("items", [])):
+    for k in item_required:
+        if k not in it:
+            errs.append("items[%d] missing required: %s" % (i, k))
+if errs:
+    print("; ".join(errs))
+    sys.exit(1)
+print("ok")
+EOF
+cat > "$TMP/sc-valid.json" <<'EOF'
+{"task_id":"t1","reviewer":"r2","verdict":"pass","critic_model_family":"family-a",
+ "items":[{"id":"C1","what":"check a exists","command":"ls a","expected":"a exists","status":"pass"}]}
+EOF
+run python3 "$TMP/validate-scorecard.py" "$SCHEMAS/scorecard.schema.json" "$TMP/sc-valid.json"
+check "scorecard valid with family=0" 0 "$LAST_CODE"
+python3 -c "import json;d=json.load(open('$TMP/sc-valid.json'));d.pop('critic_model_family');json.dump(d,open('$TMP/sc-nofamily.json','w'))"
+run python3 "$TMP/validate-scorecard.py" "$SCHEMAS/scorecard.schema.json" "$TMP/sc-nofamily.json"
+check "scorecard no critic_model_family=0" 0 "$LAST_CODE"
+python3 -c "import json;d=json.load(open('$TMP/sc-valid.json'));d.pop('critic_model_family');d.pop('verdict');json.dump(d,open('$TMP/sc-noverdict.json','w'))"
+run python3 "$TMP/validate-scorecard.py" "$SCHEMAS/scorecard.schema.json" "$TMP/sc-noverdict.json"
+check "scorecard missing verdict=1" 1 "$LAST_CODE"
+
+# 10.7 reject 时少数 approve 记 dissent（minority）
+AV_R2MIN='[{"id":"d1","status":"open","opened_at":"2026-10-19T10:00:00Z","due_at":"2026-10-19T14:00:00Z","reversible":true,"rule":"R2",
+ "votes":[{"user":"u1","weight":1.0,"choice":"approve","received_at":"2026-10-19T10:10:00Z"},
+          {"user":"u2","weight":3.0,"choice":"reject","received_at":"2026-10-19T10:20:00Z"}]}]'
+python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"open\",\"attention\":json.loads(sys.argv[1])},open(sys.argv[2],\"w\"))" "$AV_R2MIN" "$TMP/pr3-7.json"
+run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/pr3-7.json" --decision-id d1 --rule R2 --now "$NOW"
+check "reject minority=0" 0 "$LAST_CODE"
+grep -q '"outcome": "reject"' <<<"$LAST_OUT" && echo "ok   reject outcome" && PASS=$((PASS+1)) || { echo "FAIL reject outcome"; FAIL=$((FAIL+1)); FAILED_CASES+=("reject outcome"); }
+grep -q '"user": "u1"' <<<"$LAST_OUT" && echo "ok   dissent user u1" && PASS=$((PASS+1)) || { echo "FAIL dissent u1"; FAIL=$((FAIL+1)); FAILED_CASES+=("dissent u1"); }
+grep -q '"reason": "minority"' <<<"$LAST_OUT" && echo "ok   dissent reason minority" && PASS=$((PASS+1)) || { echo "FAIL dissent minority"; FAIL=$((FAIL+1)); FAILED_CASES+=("dissent minority"); }
+
+# 10.8 blocked 态 defer 计入分母（B-5：defer 把 would-be pass 翻成 tie → 80）
+AV_B5='[{"id":"d1","status":"open","opened_at":"2026-10-19T10:00:00Z","due_at":"2026-10-19T14:00:00Z","reversible":true,"rule":"R2",
+ "votes":[{"user":"u1","weight":1.0,"choice":"approve","received_at":"2026-10-19T10:10:00Z"},
+          {"user":"u2","weight":5.0,"choice":"defer","received_at":"2026-10-19T10:20:00Z"}]}]'
+python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"blocked\",\"attention\":json.loads(sys.argv[1])},open(sys.argv[2],\"w\"))" "$AV_B5" "$TMP/pr3-8.json"
+run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/pr3-8.json" --decision-id d1 --rule R2 --now "$NOW"
+check "blocked defer counted=80" 80 "$LAST_CODE"
+grep -q '"blocked_no_abstain": true' <<<"$LAST_OUT" && echo "ok   blocked_no_abstain=true" && PASS=$((PASS+1)) || { echo "FAIL b5 flag"; FAIL=$((FAIL+1)); FAILED_CASES+=("b5 flag"); }
+grep -q '"counted": true' <<<"$LAST_OUT" && echo "ok   defer counted=true" && PASS=$((PASS+1)) || { echo "FAIL b5 counted"; FAIL=$((FAIL+1)); FAILED_CASES+=("b5 counted"); }
+grep -q '"abstain": 5.0' <<<"$LAST_OUT" && echo "ok   b5 abstain in denominator" && PASS=$((PASS+1)) || { echo "FAIL b5 abstain"; FAIL=$((FAIL+1)); FAILED_CASES+=("b5 abstain"); }
+grep -q '"reason": "abstain-counted(blocked)"' <<<"$LAST_OUT" && echo "ok   b5 dissent abstain-counted" && PASS=$((PASS+1)) || { echo "FAIL b5 dissent"; FAIL=$((FAIL+1)); FAILED_CASES+=("b5 dissent"); }
+
+# 10.9 非法 choice = 82
+AV_ILLEGAL='[{"id":"d1","status":"open","opened_at":"2026-10-19T10:00:00Z","due_at":"2026-10-19T14:00:00Z","reversible":true,"rule":"R2",
+ "votes":[{"user":"u1","weight":1.0,"choice":"maybe","received_at":"2026-10-19T10:10:00Z"}]}]'
+python3 -c "import json,sys;json.dump({\"task_id\":\"t1\",\"decision_status\":\"open\",\"attention\":json.loads(sys.argv[1])},open(sys.argv[2],\"w\"))" "$AV_ILLEGAL" "$TMP/pr3-9.json"
+run "$SCRIPTS/aggregate-vote.sh" --task-meta "$TMP/pr3-9.json" --decision-id d1 --rule R2 --now "$NOW"
+check "illegal choice=82" 82 "$LAST_CODE"
 
 echo
 echo "=================================================="
