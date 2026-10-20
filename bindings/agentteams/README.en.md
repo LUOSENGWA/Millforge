@@ -13,7 +13,7 @@
 | `skill-fragments.md` | CAP-SPAWN/CAP-EXEC skill surface (9 in-tree scripts + spawn fragments + three-layer review chain) |
 | `cron-spec.md` | CAP-TIMER binding spec (U1–U4 + registration/cleanup + fallback-wake redline) |
 | `deployment-guide.md` | topology + compile→deploy chain + filesync post-write protocol + failure sequences & recovery |
-| `rustfs-migration.md` | S3 semantics verification (T1–T3) + CAS positioning + 8-script audit + migration checklist |
+| `s3-storage.md` | S3 object-storage semantics verification (T1–T3) + CAS positioning + storage_adapter enum + 8-script audit |
 
 ## 1. CAP → Mechanism Mapping
 

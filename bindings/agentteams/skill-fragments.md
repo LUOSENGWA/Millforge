@@ -19,7 +19,7 @@
 | `consistency-check.py` | C-3 规则层一致性（字段级/枚举级二元比对） | R6 回答写回前调用；规则层无法判定时才升级受限分类 spawn |
 | `timer-derive.sh` | CAP-TIMER 幂等派生 | `qwenpaw cron` 回调 payload；见 `cron-spec.md` |
 
-**8 核心脚本 I/O 纪律**：只处理本地文件 / stdin / stdout，**不得调用任何对象存储 CLI**（`mc` 等）；对象存储 I/O 全由 CAP-STORE adapter 负责（`rustfs-migration.md` §4 审计表）。
+**8 核心脚本 I/O 纪律**：只处理本地文件 / stdin / stdout，**不得调用任何对象存储 CLI**（`mc` 等）；对象存储 I/O 全由 CAP-STORE adapter 负责（`s3-storage.md` §4 审计表）。
 
 ## 2. spawn 片段（CAP-SPAWN，v2.40 上下文隔离定案）
 

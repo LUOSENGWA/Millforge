@@ -19,7 +19,7 @@ Scripts ship with the core (the runtime is not asked to rewrite them); exit-code
 | `consistency-check.py` | C-3 rule-layer consistency (field-level/enum-level binary comparison) | invoked before R6 answer write-back; escalates to a bounded classification spawn only when the rule layer cannot decide |
 | `timer-derive.sh` | CAP-TIMER idempotent derivation | `qwenpaw cron` callback payload; see `cron-spec.md` |
 
-**8-core-script I/O discipline**: local files / stdin / stdout only; **no object-storage CLI calls** (`mc` etc.); all object-storage I/O is owned by the CAP-STORE adapter (audit table in `rustfs-migration.md` §4).
+**8-core-script I/O discipline**: local files / stdin / stdout only; **no object-storage CLI calls** (`mc` etc.); all object-storage I/O is owned by the CAP-STORE adapter (audit table in `s3-storage.md` §4).
 
 ## 2. Spawn Fragments (CAP-SPAWN, v2.40 context-isolation ruling)
 

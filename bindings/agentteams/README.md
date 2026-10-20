@@ -13,7 +13,7 @@
 | `skill-fragments.md` | CAP-SPAWN/CAP-EXEC skill 面（在树 9 脚本 + spawn 片段 + 三层审核链） |
 | `cron-spec.md` | CAP-TIMER 绑定规格（U1–U4 + 注册/清理 + 兜底唤醒红线） |
 | `deployment-guide.md` | 拓扑 + 编译→部署链 + filesync 写后协议 + 失败序列与恢复 |
-| `rustfs-migration.md` | S3 语义核验（T1–T3）+ CAS 定位 + 8 脚本审计 + 迁移检查清单 |
+| `s3-storage.md` | S3 对象存储语义核验（T1–T3）+ CAS 定位 + storage_adapter 枚举 + 8 脚本审计 |
 
 ## 1. CAP → 机制映射表
 

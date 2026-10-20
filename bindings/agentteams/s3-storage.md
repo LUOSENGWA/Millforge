@@ -1,6 +1,6 @@
-# RustFS 迁移（MinIO → RustFS，S3 语义核验）
+# S3 对象存储语义核验（CAP-STORE）
 
-> Provenance：生产化+开源就绪审查（第六轮，2026-10-18）定案；采纳状态 = 采纳。本文件是 `bindings/agentteams/` 的对象存储迁移规格。本层允许点名 MinIO/RustFS（通用词纪律见 `README.md` 头注）。
+> Provenance：生产化+开源就绪审查（第六轮，2026-10-18）定案；采纳状态 = 采纳。本文件是 `bindings/agentteams/` 的对象存储语义核验（任意 S3 兼容存储：MinIO / RustFS / 其他）。本层允许点名具体存储（通用词纪律见 `README.md` 头注）。
 
 ## 1. CAP-STORE T1–T3 在纯 S3 语义下的可实现性
 
@@ -39,7 +39,7 @@ write 返回前必须确认同步层已将该对象持久化到对象存储
 
 ## 4. storage_adapter 枚举 + 8 脚本审计
 
-**枚举**：`"local" | "s3"`（s3 覆盖 MinIO / RustFS / 任意 S3 兼容存储）。核心只要求 s3 和 local；其他（gcs/azure-blob）是绑定扩展。
+**枚举**：`"local" | "s3"`（s3 覆盖任意 S3 兼容存储）。核心只要求 s3 和 local；其他（gcs/azure-blob）是绑定扩展。
 
 **8 脚本硬编码检查（结论：核心脚本不得调用任何对象存储 CLI）**：
 
@@ -47,29 +47,11 @@ write 返回前必须确认同步层已将该对象持久化到对象存储
 |---|---|---|
 | `validate-decision-log.sh` | 无（纯 JSON 校验） | 不需要 |
 | `detect-conflict.py` | 无（纯 Python） | 不需要 |
-| `contract-revalidate.sh` | 可能调用 `mc cat` 读兼容性报告 | 改为从 stdin 或 `--report-path` 读本地文件；对象存储读取由调用方（CAP-STORE adapter）负责 |
+| `contract-revalidate.sh` | 可能调用对象存储 CLI 读兼容性报告 | 改为从 stdin 或 `--report-path` 读本地文件；对象存储读取由调用方（CAP-STORE adapter）负责 |
 | `attention-stall.sh` | 无（读 CAP-STATE） | 不需要 |
 | `verification-mismatch-window.sh` | 无 | 不需要 |
-| `saga-compensate.py` | 可能调用 `mc` 写补偿指令 | 改为写本地路径，由 CAP-STORE adapter 上传 |
+| `saga-compensate.py` | 可能调用对象存储 CLI 写补偿指令 | 改为写本地路径，由 CAP-STORE adapter 上传 |
 | `consistency-check.py` | 无 | 不需要 |
 | `aggregate-vote.sh` | 无 | 不需要 |
 
-脚本只处理本地文件 / stdin / stdout；所有对象存储 I/O 由 CAP-STORE adapter 负责。若现有脚本有 `mc` 调用，必须抽象掉。
-
-## 5. RustFS 迁移检查清单
-
-```
-1. 确认 RustFS 版本支持 S3 conditional writes（If-None-Match/If-Match）
-   和 read-after-write 强一致性；用 32 并发 If-None-Match: * PUT
-   验证 exactly-one-winner。
-2. 确认 filesync 同步层（容器↔RustFS）的 uploaded 回执机制与 MinIO
-   时期一致；如果不一致，更新 CAP-STORE T2 的绑定参数。
-3. 验证 mc mirror / rclone 迁移后对象指纹一致（客户端 SHA-256
-   对比）；bucket 策略、IAM、生命周期规则逐条检查。
-4. 检查 8 个核心脚本中是否有 `mc` 调用；有则替换为本地文件读写 +
-   CAP-STORE adapter。
-5. 用 golden test 跑一遍 Full 档跨团队任务，确认 decision_log /
-   contract / handoff 在 RustFS 上行为与 MinIO 一致。（不得删）
-```
-
-**实测注记**：RustFS 的 S3 兼容性矩阵覆盖 object put/get/delete/copy/head 与校验和，但 conditional writes 矩阵中未明确列出 If-None-Match——**必须实测**（清单第 1 条），不得以兼容矩阵代替。
+脚本只处理本地文件 / stdin / stdout；所有对象存储 I/O 由 CAP-STORE adapter 负责。若现有脚本有对象存储 CLI 调用，必须抽象掉。

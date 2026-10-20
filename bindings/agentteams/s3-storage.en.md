@@ -1,6 +1,6 @@
-# RustFS Migration (MinIO → RustFS, S3 Semantics Verification)
+# S3 Object-Storage Semantics Verification (CAP-STORE)
 
-> Provenance: production-readiness + open-source-readiness review (round 6, 2026-10-18), finalized; adoption status = adopted. This file is the object-storage migration spec for `bindings/agentteams/`. This layer may name MinIO/RustFS (generic-terminology discipline: see the `README.md` header).
+> Provenance: production-readiness + open-source-readiness review (round 6, 2026-10-18), finalized; adoption status = adopted. This file is the object-storage semantics verification for `bindings/agentteams/` (any S3-compatible store: MinIO / RustFS / others). This layer may name specific stores (generic-terminology discipline: see the `README.md` header).
 
 ## 1. CAP-STORE T1–T3 Implementability under Pure S3 Semantics
 
@@ -43,7 +43,7 @@ Ownership: T2 semantics go into CAP-STORE; the concrete confirmation mechanism (
 
 ## 4. storage_adapter Enum + 8-Script Audit
 
-**Enum**: `"local" | "s3"` (s3 covers MinIO / RustFS / any S3-compatible store). The core requires only s3 and local; anything else (gcs/azure-blob) is a binding extension.
+**Enum**: `"local" | "s3"` (s3 covers any S3-compatible store). The core requires only s3 and local; anything else (gcs/azure-blob) is a binding extension.
 
 **8-script hardcoding check (conclusion: core scripts must not call any object-storage CLI)**:
 
@@ -51,32 +51,11 @@ Ownership: T2 semantics go into CAP-STORE; the concrete confirmation mechanism (
 |---|---|---|
 | `validate-decision-log.sh` | none (pure JSON check) | not needed |
 | `detect-conflict.py` | none (pure Python) | not needed |
-| `contract-revalidate.sh` | may call `mc cat` to read the compatibility report | changed to read a local file from stdin or `--report-path`; object-store reads are the caller's (CAP-STORE adapter's) job |
+| `contract-revalidate.sh` | may call an object-storage CLI to read the compatibility report | changed to read a local file from stdin or `--report-path`; object-store reads are the caller's (CAP-STORE adapter's) job |
 | `attention-stall.sh` | none (reads CAP-STATE) | not needed |
 | `verification-mismatch-window.sh` | none | not needed |
-| `saga-compensate.py` | may call `mc` to write the compensation directive | changed to write a local path; the CAP-STORE adapter uploads |
+| `saga-compensate.py` | may call an object-storage CLI to write the compensation directive | changed to write a local path; the CAP-STORE adapter uploads |
 | `consistency-check.py` | none | not needed |
 | `aggregate-vote.sh` | none | not needed |
 
-Scripts handle local files / stdin / stdout only; all object-storage I/O is owned by the CAP-STORE adapter. Any existing `mc` call in a script must be abstracted away.
-
-## 5. RustFS Migration Checklist
-
-```
-1. Confirm the RustFS version supports S3 conditional writes
-   (If-None-Match/If-Match) and strong read-after-write consistency;
-   verify exactly-one-winner with 32 concurrent If-None-Match: * PUTs.
-2. Confirm the filesync layer's (container↔RustFS) uploaded-receipt
-   mechanism matches the MinIO era; if not, update CAP-STORE T2's
-   binding parameters.
-3. Verify object fingerprints match after mc mirror / rclone
-   migration (client-side SHA-256 comparison); check bucket policy,
-   IAM, and lifecycle rules item by item.
-4. Check the 8 core scripts for `mc` calls; replace any found with
-   local file I/O + the CAP-STORE adapter.
-5. Run a Full-tier cross-team task through the golden tests and
-   confirm decision_log / contract / handoff behave identically on
-   RustFS as on MinIO. (must not be deleted)
-```
-
-**Field-test note**: RustFS's S3 compatibility matrix covers object put/get/delete/copy/head and checksums, but the matrix does not explicitly list If-None-Match for conditional writes — **it must be field-tested** (checklist item 1); the compatibility matrix is not a substitute.
+Scripts handle local files / stdin / stdout only; all object-storage I/O is owned by the CAP-STORE adapter. Any existing object-storage CLI call in a script must be abstracted away.
