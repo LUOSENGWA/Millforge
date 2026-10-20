@@ -1,0 +1,26 @@
+{
+  "binding": "coding-cli",
+  "shape": "coding CLI (one-shot coding agent)",
+  "runtime_agnostic": true,
+  "products": [
+    "Claude Code (reference)",
+    "QwenCode",
+    "OpenCode",
+    "Codex CLI"
+  ],
+  "capabilities": {
+    "CAP-STATE": "caller-provided or unavailable; see bindings/coding-cli/mapping-table.md",
+    "CAP-STORE": "caller-provided or unavailable; see bindings/coding-cli/mapping-table.md",
+    "CAP-TIMER": "caller-provided or unavailable; see bindings/coding-cli/mapping-table.md",
+    "CAP-NOTIFY": "caller-provided or unavailable; see bindings/coding-cli/mapping-table.md",
+    "CAP-ATTN": "caller-provided or unavailable; see bindings/coding-cli/mapping-table.md",
+    "CAP-SPAWN": "caller-provided or unavailable; see bindings/coding-cli/mapping-table.md",
+    "CAP-EXEC": "caller-provided or unavailable; see bindings/coding-cli/mapping-table.md",
+    "CAP-ROSTER": "caller-provided or unavailable; see bindings/coding-cli/mapping-table.md"
+  },
+  "hard_gate_exceptions": {
+    "X1": "hard gate NOT satisfiable (no fork=False-equivalent session isolation per product)"
+  },
+  "docs": "bindings/coding-cli/",
+  "note": "DATA-ONLY: not consumed by the compiler (binding_profile downgraded 2026-10-20)."
+}

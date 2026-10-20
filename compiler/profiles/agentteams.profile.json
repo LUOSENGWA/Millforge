@@ -1,0 +1,31 @@
+{
+  "binding": "agentteams",
+  "shape": "orchestration-layer (controller + worker pool)",
+  "runtime_agnostic": true,
+  "products": {
+    "control_plane": [
+      "AgentTeams"
+    ],
+    "worker_runtime": [
+      "QwenPaw (reference)",
+      "copaw",
+      "OpenClaw",
+      "Hermes"
+    ]
+  },
+  "capabilities": {
+    "CAP-STATE": "provided-by-orchestrator-or-worker-runtime",
+    "CAP-STORE": "provided-by-orchestrator-or-worker-runtime",
+    "CAP-TIMER": "provided-by-orchestrator-or-worker-runtime",
+    "CAP-NOTIFY": "provided-by-orchestrator-or-worker-runtime",
+    "CAP-ATTN": "provided-by-orchestrator-or-worker-runtime",
+    "CAP-SPAWN": "provided-by-orchestrator-or-worker-runtime",
+    "CAP-EXEC": "provided-by-orchestrator-or-worker-runtime",
+    "CAP-ROSTER": "provided-by-orchestrator-or-worker-runtime"
+  },
+  "hard_gate_exceptions": {
+    "X4": "no enforced spawn bound upstream (best-effort)"
+  },
+  "docs": "bindings/agentteams/",
+  "note": "DATA-ONLY: not consumed by the compiler. The binding_profile compiler parameter was downgraded (2026-10-20 ruling); this file records the binding's declared shape for tooling and documentation."
+}

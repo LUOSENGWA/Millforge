@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  golden:
+    name: golden tests (compile + scripts)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: python deps
+        run: pip install -r requirements.txt
+      - name: toolchain
+        run: |
+          bash --version | head -1
+          python3 --version
+      - name: compile tests (T1-T10)
+        run: bash golden-tests/scripts/run-compile-tests.sh
+      - name: script tests (deterministic scripts)
+        run: bash golden-tests/scripts/run-scripts-tests.sh
+
+  bilingual:
+    name: bilingual completeness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: every doc has an en twin
+        run: |
+          set -e
+          fail=0
+          for f in $(git ls-files "*.md" | grep -v '\.en\.md$'); do
+            case "$f" in
+              docs/provenance/grill/*) continue ;;
+              golden-tests/baseline/*) continue ;;
+              golden-tests/fixtures/*) continue ;;
+            esac
+            [ -f "${f%.md}.en.md" ] || { echo "missing en twin: $f"; fail=1; }
+          done
+          for f in $(git ls-files "*.en.md"); do
+            [ -f "${f%.en.md}.md" ] || { echo "orphan en twin: $f"; fail=1; }
+          done
+          exit $fail
+
+  scrub:
+    name: sensitive-info scrub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: no credentials / private addresses / personal markers
+        run: |
+          set -e
+          hits=0
+          if git grep -nE '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' -- . ':!*.lock' ':!*.schema.json' ':!.github' >/tmp/ip.txt 2>/dev/null; then
+            echo '--- IPv4 hits ---'; cat /tmp/ip.txt; hits=1
+          fi
+          if git grep -niE '\b(api[_-]?key|secret|password|passwd|access[_-]?key|bearer)\s*[:=]' -- . ':!.github' >/tmp/cred.txt 2>/dev/null; then
+            echo '--- credential-assignment hits ---'; cat /tmp/cred.txt; hits=1
+          fi
+          if git grep -nE '罗总|LUOSENGWA|lsw@|internal decision' -- . ':!.github' >/tmp/pers.txt 2>/dev/null; then
+            echo '--- personal/internal-marker hits ---'; cat /tmp/pers.txt; hits=1
+          fi
+          exit $hits

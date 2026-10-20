@@ -1,0 +1,14 @@
+# 编译输出（每次编译生成，不入 git）
+out/
+/tmp/
+
+# Python
+__pycache__/
+*.pyc
+
+# 行业自定义模板的编译中间产物（实例参数文件，按实例管理）
+industry-custom.frag.md
+
+# 编辑器
+.DS_Store
+*.swp

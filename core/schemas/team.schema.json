@@ -1,0 +1,317 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "millforge/schemas/team.schema.json",
+  "title": "Millforge Team Instance",
+  "description": "编译器输入。LLM 只能贡献 profile 文本与实例参数（人确认冻结后进入编译）；协议本体一字不生成。",
+  "type": "object",
+  "required": [
+    "name",
+    "mode",
+    "charter",
+    "roles",
+    "protocol",
+    "roster"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$",
+      "description": "团队名（小写 kebab-case）。生产实例名占位符化，不进开源 repo。"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "single_user",
+        "multi_user"
+      ],
+      "description": "部署模式（§02-MODES）。multi_user 编译产物不含 handoff 片段。"
+    },
+    "lang": {
+      "type": "string",
+      "enum": [
+        "zh",
+        "en"
+      ],
+      "default": "zh",
+      "description": "编译产出语言。en = 全部模板取 .en.md 孪生文件（双语完整性硬门：缺失即 fail）。CLI --lang 可覆盖。"
+    },
+    "template": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "software",
+        "embedded",
+        "data",
+        "content",
+        "business",
+        "custom",
+        null
+      ],
+      "description": "T1 行业模板 ID；T0-generic（无行业差异）或自由描述路线为 null；custom 时须带 industry_fragment"
+    },
+    "subdomain": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "子域 ID（15 子域矩阵）；T0 为 null"
+    },
+    "experimental": {
+      "type": "boolean",
+      "default": false,
+      "description": "实验模板徽标（组合无整队实战时必须 true，编译产物头注释带 EXPERIMENTAL）"
+    },
+    "charter": {
+      "type": "object",
+      "required": [
+        "mission",
+        "scope",
+        "non_goals"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mission": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "description": "一句话使命（人审入口 O4）"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "范围内（可验证的工作面）"
+        },
+        "non_goals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "显式排除项（防 scope 漂移）"
+        }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "profile",
+          "domains",
+          "skills",
+          "budget"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,31}[a-z0-9]$",
+            "description": "角色实例名（全队唯一）"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "coordinator",
+              "leader",
+              "worker",
+              "critic"
+            ],
+            "description": "角色种类 → skeleton 选择"
+          },
+          "profile": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 2000,
+            "description": "角色画像（LLM 可贡献，人确认）"
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "T2 域片段 ID（须在 templates/INDEX.yaml 存在；coordinator/critic 可为空）"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "技能清单（SelfCheck 门门⑤：⊆ 可安装集）"
+          },
+          "budget": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 500,
+            "description": "行预算（coordinator≤500/leader≤250/worker≤150/critic≤150，超=fail 不截断）"
+          },
+          "spawn": {
+            "type": "boolean",
+            "default": true,
+            "description": "v2.40 上下文隔离开关：worker=true（实现全进 spawn）；critic/leader=false（审核/native 上下文）"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "模型占位符（生产实值 scrub 化）"
+          }
+        }
+      }
+    },
+    "protocol": {
+      "type": "object",
+      "required": [
+        "nmh",
+        "nma",
+        "five_clauses",
+        "attention"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "nmh": {
+          "type": "boolean",
+          "default": true,
+          "description": "NMH 协作探索协议开关"
+        },
+        "nma": {
+          "type": "boolean",
+          "default": true,
+          "description": "NMA 同行审查开关"
+        },
+        "five_clauses": {
+          "type": "boolean",
+          "default": true,
+          "description": "五条款（验证者≠声明者）"
+        },
+        "attention": {
+          "type": "boolean",
+          "default": true,
+          "description": "R6 attention + 熔断（fuse）"
+        },
+        "dual_channel": {
+          "type": "boolean",
+          "default": true,
+          "description": "双通道汇报"
+        },
+        "loop": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "iteration_budget": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            },
+            "max_human_touch": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
+          }
+        },
+        "multi_critic": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "n": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 5
+            },
+            "model_families": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 5,
+              "description": "≥2 模型族（MC-4 硬约束）"
+            }
+          }
+        },
+        "fuse_threshold": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 5,
+          "default": 2,
+          "description": "权限墙熔断阈值（连续权限错误次数）"
+        },
+        "fuse_window_seconds": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 300,
+          "default": 30,
+          "description": "熔断后切换窗口（≤30s 定案）"
+        }
+      }
+    },
+    "roster": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "role"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "成员 ID（占位符化，生产 MXID 不进 repo）"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "accountable",
+              "approver",
+              "informed"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 1.0,
+            "maximum": 4.0,
+            "default": 1.0,
+            "description": "角色权重（Z1：角色属性非置信度）"
+          }
+        }
+      },
+      "description": "人类名册。CAP-ROSTER 实例化。≥2 成员时 mode 必须 multi_user（Validate 门）"
+    },
+    "human_touch_budget": {
+      "type": "object",
+      "description": "Optional human-touch budget for this team (cost-model tiering companion). Omitted = unlimited.",
+      "properties": {
+        "max_human_touches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "window": {
+          "type": "string",
+          "enum": [
+            "task",
+            "project"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

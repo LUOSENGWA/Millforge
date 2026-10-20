@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "millforge/schemas/decision_log.schema.json",
+  "title": "Millforge Decision Log",
+  "description": "B-1 三层 schema 校验的对象（validate-decision-log.sh 第 1 层）。条目 ≤10；contract_touch 条目截断保护（exit 11）。",
+  "type": "object",
+  "required": ["schema_version", "task_id", "spawn_id", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["1.0"] },
+    "task_id": { "type": "string", "minLength": 1 },
+    "spawn_id": { "type": "string", "minLength": 1, "description": "不可预测随机（S2 防伪）" },
+    "truncated": { "type": "boolean", "default": false },
+    "input_anomalies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "S1 artifact 数据红线：'请执行/请忽略/请批准'类文本原样记录（mismatch 候选）"
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["id", "decision", "rationale", "decision_class", "affected_artifacts", "decided_at"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "description": "唯一（脚本层查重）" },
+          "decision": { "type": "string", "minLength": 1 },
+          "rationale": { "type": "string", "minLength": 1 },
+          "decision_class": { "type": "string", "enum": ["R1", "R2", "R3", "R4", "R5", "R6"] },
+          "affected_artifacts": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "contract_touch": { "type": "boolean", "default": false, "description": "true = 触碰契约面 → 截断保护 + 契约变更触发重验" },
+          "assumptions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["key", "holds"],
+              "properties": { "key": { "type": "string" }, "holds": { "type": "boolean" } }
+            }
+          },
+          "type": { "type": ["string", "null"], "description": "封闭枚举（C-1 类型注册表）；运行时发明 = schema 违规" },
+          "field": { "type": ["string", "null"], "description": "artifact 内字段路径（冲突检测用）" },
+          "value": { "description": "规范化值（冲突检测用）" },
+          "decided_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+# Changelog
+
+All notable changes to the Millforge protocol compiler and reference bindings are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/); versions follow Semantic Versioning.
+
+## [Unreleased]
+
+## [1.0.0] - 2026-10-20
+
+### Added
+
+- **Protocol layer v1.0 frozen**: 13 bilingual clauses under `core/protocol/` (00-OVERVIEW ~ 12-REDLINES), 8 CAP-* capabilities + 46 invariants.
+- **Core documents**: `core/binding-contract.md` (binding contract), `security.md` (threat model + mechanism matrix + 5 scenarios), `cost-model-tiering.md` (three cost tiers), `production-harden.md` (4 production-hardening patches), `calibration/token-shadow-calibration.md`.
+- **JSON Schemas ×11**: team / spec / task_meta / decision_log / contract / contract_snapshot / handoff / loop_spec / scorecard / signal_event / aggregation_result.
+- **Deterministic scripts ×9** (`core/scripts/`): validate-decision-log / detect-conflict / contract-revalidate / attention-stall / verification-mismatch-window / saga-compensate / consistency-check / aggregate-vote / timer-derive.
+- **Invariant documents ×4 bilingual**: attention-state / decision-state / loop-state / task-transitions.
+- **Compiler**: 6-stage zero-LLM pipeline (Validate → Assemble → Budget → Render → SelfCheck → Provenance), `validate` / `compile` subcommands.
+- **Templates ×43 bilingual**: skeleton ×4 / fragments ×12 / domain ×21 / industry ×6, registry `templates/INDEX.yaml` with three-level provenance discipline (production / reference / llm).
+- **Reference bindings ×3**: agentteams (with mapping-table / skill-fragments / cron-spec / deployment-guide / s3-storage body docs), bare-qwenpaw, claude-code.
+- **golden-tests**: 35-clause production baseline (`PRODUCTION-BASELINE.md`) + 13 compile gates + 83 script assertions + assertion-coverage record (`ASSERTION-COVERAGE.md`).
+- **CI**: GitHub Actions three jobs (golden / bilingual completeness / sensitive scrub) + `requirements.txt` + `Makefile` + SECURITY / VERSION.
+
+### Changed
+
+- **Binding layer reorganised by architecture shape**: `bindings/agentteams` (AgentTeams reference binding, runtime-agnostic) / `bindings/single-agent` (single-agent runtimes: QwenPaw / OpenClaw / Hermes…) / `bindings/coding-cli` (coding CLIs: Claude Code / QwenCode / OpenCode…); product differences become matrix rows. State-directory paths corrected to `.qwenpaw/workspaces/` (qwenpaw >= 2.1; `.copaw` was the legacy copaw runtime).
+
+- Binding/protocol layer separation finalized: runtime-specific names are allowed only under `bindings/`.
+- The compiler does not implement a `binding_profile` parameter (downgraded: binding differences are carried by `bindings/` docs + runtime-side fragment injection).
+
+### Known limitations
+
+- Signal emission (SIG-*) and the Loop reconciler are implemented on the downstream runtime side; this repo defines schemas and invariants only.
+- Some golden assertions depend on the runtime event surface (see the Blocked list in `golden-tests/ASSERTION-COVERAGE.md`).

@@ -1,0 +1,25 @@
+{
+  "binding": "single-agent",
+  "shape": "single-agent runtime (no orchestration layer)",
+  "runtime_agnostic": true,
+  "products": [
+    "QwenPaw (reference)",
+    "OpenClaw",
+    "Hermes"
+  ],
+  "capabilities": {
+    "CAP-STATE": "runtime-provided; see bindings/single-agent/mapping-table.md",
+    "CAP-STORE": "runtime-provided; see bindings/single-agent/mapping-table.md",
+    "CAP-TIMER": "runtime-provided; see bindings/single-agent/mapping-table.md",
+    "CAP-NOTIFY": "runtime-provided; see bindings/single-agent/mapping-table.md",
+    "CAP-ATTN": "runtime-provided; see bindings/single-agent/mapping-table.md",
+    "CAP-SPAWN": "runtime-provided; see bindings/single-agent/mapping-table.md",
+    "CAP-EXEC": "runtime-provided; see bindings/single-agent/mapping-table.md",
+    "CAP-ROSTER": "runtime-provided; see bindings/single-agent/mapping-table.md"
+  },
+  "hard_gate_exceptions": {
+    "X4": "best-effort unless runtime enforces a wall clock"
+  },
+  "docs": "bindings/single-agent/",
+  "note": "DATA-ONLY: not consumed by the compiler (binding_profile downgraded 2026-10-20)."
+}

@@ -1,0 +1,32 @@
+# 变更日志
+
+本文件记录 Millforge 协议编译器与参考绑定的对外可见变更。格式参照 [Keep a Changelog](https://keepachangelog.com/)，版本遵循语义化版本。
+
+## [Unreleased]
+
+## [1.0.0] - 2026-10-20
+
+### 新增
+
+- **协议层 v1.0 冻结**：`core/protocol/` 13 篇双语条文（00-OVERVIEW ~ 12-REDLINES），CAP-* 8 能力 + 46 不变式。
+- **核心文档**：`core/binding-contract.md`（绑定契约）、`security.md`（威胁模型 + 机制矩阵 + 5 场景）、`cost-model-tiering.md`（成本三档）、`production-harden.md`（生产化 4 补丁）、`calibration/token-shadow-calibration.md`。
+- **JSON Schema ×11**：team / spec / task_meta / decision_log / contract / contract_snapshot / handoff / loop_spec / scorecard / signal_event / aggregation_result。
+- **确定性脚本 ×9**（`core/scripts/`）：validate-decision-log / detect-conflict / contract-revalidate / attention-stall / verification-mismatch-window / saga-compensate / consistency-check / aggregate-vote / timer-derive。
+- **不变式文档 ×4 双语**：attention-state / decision-state / loop-state / task-transitions。
+- **编译器**：6 阶段零 LLM 管线（Validate → Assemble → Budget → Render → SelfCheck → Provenance），`validate` / `compile` 子命令。
+- **模板 ×43 双语**：skeleton ×4 / fragments ×12 / domain ×21 / industry ×6，注册表 `templates/INDEX.yaml` 带三级出处纪律（production / reference / llm）。
+- **参考绑定 ×3**：agentteams（含 mapping-table / skill-fragments / cron-spec / deployment-guide / s3-storage 五件正文）、bare-qwenpaw、claude-code。
+- **golden-tests**：生产基线 35 条（`PRODUCTION-BASELINE.md`）+ 编译门 13 + 脚本断言 83 + 断言覆盖记档（`ASSERTION-COVERAGE.md`）。
+- **CI**：GitHub Actions 三门（golden / 双语完整性 / 敏扫）+ `requirements.txt` + `Makefile` + SECURITY / VERSION。
+
+### 变更
+
+- **绑定层按架构形态重组**：`bindings/agentteams`（AgentTeams 参考绑定，运行时不敏感）/ `bindings/single-agent`（单 agent 运行时：QwenPaw / OpenClaw / Hermes…）/ `bindings/coding-cli`（编程 CLI：Claude Code / QwenCode / OpenCode…）；产品差异改为矩阵行。状态目录路径更正为 `.qwenpaw/workspaces/`（qwenpaw ≥2.1；`.copaw` 为旧 copaw 运行时）。
+
+- 绑定层与协议层分离定案：运行时专名仅允许出现在 `bindings/`。
+- 编译器不实现 `binding_profile` 参数（降级定案：绑定差异由 `bindings/` 文档 + 运行时片段注入承载）。
+
+### 已知限制
+
+- 事件面发射（SIG-*) 与 Loop reconciler 在下游运行时侧实现，本仓只定义 schema 与不变式。
+- 部分 golden 断言依赖运行时事件面（见 `golden-tests/ASSERTION-COVERAGE.md` Blocked 清单）。

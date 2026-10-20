@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "millforge/schemas/loop_spec.schema.json",
+  "title": "Millforge Loop Spec",
+  "description": "§10-LOOP loop_spec 完整 schema。stop_condition 不得是模型主观声明。",
+  "type": "object",
+  "required": ["loop_id", "goal_ref", "stop_condition", "iteration_budget", "convergence_rule", "re_plan_rule", "termination_action"],
+  "properties": {
+    "loop_id": { "type": "string", "minLength": 1 },
+    "goal_ref": { "type": "string", "minLength": 1, "description": "指向已人锁的 spec artifact（NMH 锁定）" },
+    "stop_condition": {
+      "type": "object",
+      "required": ["kind", "predicate_ref"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["deterministic", "rubric_threshold", "composite"] },
+        "predicate_ref": { "type": "string", "description": "确定性谓词/评分卡引用（CAP-STORE ref）" },
+        "threshold": { "type": "number", "description": "rubric_threshold 时必填" }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "rubric_threshold" } } },
+          "then": { "required": ["threshold"] } }
+      ]
+    },
+    "iteration_budget": {
+      "type": "object",
+      "required": ["max_iterations", "max_human_touch"],
+      "properties": {
+        "max_iterations": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "max_human_touch": { "type": "integer", "minimum": 1, "maximum": 50, "description": "整个 loop 的人类触达上限（goal_ref 聚合，非每迭代）" },
+        "max_total_spawns": { "type": ["integer", "null"], "minimum": 1 },
+        "token_budget": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "convergence_rule": {
+      "type": "object",
+      "required": ["no_progress_window", "progress_signal"],
+      "properties": {
+        "no_progress_window": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "progress_signal": { "type": "string", "enum": ["acceptance_delta", "fingerprint_change", "score_delta"], "description": "幅度感知（反灌水：不得是'有变化'二元信号）" },
+        "min_score_delta": { "type": "number" },
+        "stagnation_action": { "type": "string", "const": "freeze_escalate" }
+      }
+    },
+    "re_plan_rule": {
+      "type": "object",
+      "required": ["enabled", "max_replans"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_replans": { "type": "integer", "minimum": 0, "maximum": 25 },
+        "replan_trigger": { "type": "string", "enum": ["stop_condition_unreachable", "verification_feedback"] }
+      }
+    },
+    "termination_action": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["action"],
+        "properties": {
+          "action": { "type": "string", "enum": ["write_decision_record", "escalate", "emit_artifact"] },
+          "ref": { "type": "string" },
+          "to": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "cross_team_reflow": {
+      "type": "object",
+      "description": "§10-5 跨团队反馈环（仅 single_user）",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "max_reflow": { "type": "integer", "minimum": 1, "maximum": 4 }
+      }
+    },
+    "protocol_version": { "type": "string" }
+  }
+}

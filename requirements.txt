@@ -1,0 +1,3 @@
+﻿# Millforge compiler dependencies (zero-LLM, deterministic pipeline)
+jsonschema>=4.0,<5
+pyyaml>=6.0,<7
