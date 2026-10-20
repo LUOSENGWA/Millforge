@@ -22,7 +22,11 @@ core/
     10-LOOP          第 14 原语：loop_spec/五阶段/driver/反绕过
     11-SIGNAL        第 15 原语：7 封闭标记/三条效应/分层 reset
     12-REDLINES      安全红线 S1-S5/信任边界/可靠性分层/注意力装载
-  schemas/           JSON Schema（10 个，L5 编译器 Validate 段消费）
+  security.md        威胁模型 + 安全章节 v1.0（信任边界/完整性机制矩阵/5 对抗场景/通道身份最低要求/升级规则，双语）
+  cost-model-tiering.md  协议成本模型 + 三档分层 v1.0（simple/standard/full，档位=spec 创建期锁定，双语）
+  production-harden.md   生产化 4 补丁 v1.0（协议版本化/native 上下文预算/批量委托/时钟权威，双语）
+  calibration/       校准规程（token-shadow-calibration v1.0，token 影子计数，双语）
+  schemas/           JSON Schema（11 个，L5 编译器 Validate 段消费）
   invariants/        状态机不变式（task/decision/loop/attention，4 篇，双语）
   scripts/           8 确定性脚本 + timer-derive（协议语义的可执行部分）
   binding-contract.md 8 能力接口（CAP-STATE/STORE/TIMER/NOTIFY/ATTN/SPAWN/EXEC/ROSTER，双语）

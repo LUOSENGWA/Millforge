@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "millforge/schemas/aggregation_result.schema.json",
+  "title": "Millforge Aggregation Result",
+  "description": "R2/R5 加权计票结果（aggregate-vote.sh stdout/--out JSON）。outcome/next/rule_applied 封闭枚举；blocked_no_abstain = B-5 blocked 态禁弃权计票标记；idempotent_hit = 幂等键命中返回既有 outcome。",
+  "type": "object",
+  "required": ["task_id", "decision_id", "rule_applied", "votes", "sums", "outcome", "dissent", "next", "window_expired", "blocked_no_abstain", "idempotent_hit", "aggregated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "task_id": { "type": "string" },
+    "decision_id": { "type": "string" },
+    "rule_applied": { "type": "string", "enum": ["R2", "R5"], "description": "脚本硬约束：加权多数仅限 R2/R5（B-8/C-3：永不用于触及已锁 spec 的 R6）" },
+    "votes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["user", "weight", "choice", "received_at", "counted", "demoted"],
+        "additionalProperties": false,
+        "properties": {
+          "user": { "type": "string" },
+          "weight": { "type": "number", "minimum": 1.0 },
+          "choice": { "type": "string", "enum": ["approve", "reject", "defer"], "description": "defer = 弃权（非默认同意）" },
+          "received_at": { "type": ["string", "null"] },
+          "counted": { "type": "boolean", "description": "defer 仅 blocked 态计入分母（B-5）" },
+          "demoted": { "type": "boolean", "description": "B-4：R5 锁定者迟到（窗口后应答）→ 权重降 1.0" }
+        }
+      }
+    },
+    "sums": {
+      "type": "object",
+      "required": ["approve", "reject", "abstain"],
+      "additionalProperties": false,
+      "properties": {
+        "approve": { "type": "number" },
+        "reject": { "type": "number" },
+        "abstain": { "type": "number" }
+      }
+    },
+    "outcome": { "type": "string", "enum": ["pass", "reject", "tie", "timeout", "wait"] },
+    "dissent": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["user", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "user": { "type": "string" },
+          "reason": { "type": "string", "description": "已知值：abstain / abstain-counted(blocked) / minority" }
+        }
+      }
+    },
+    "next": { "type": "string", "enum": ["write_result", "escalate", "block", "wait"] },
+    "window_expired": { "type": "boolean" },
+    "blocked_no_abstain": { "type": "boolean", "description": "B-5：decision_status==blocked 时禁弃权计票（defer 完全不计）" },
+    "idempotent_hit": { "type": "boolean", "description": "decision_id + rule 幂等键命中 → 返回同一 outcome" },
+    "aggregated_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}" }
+  }
+}
