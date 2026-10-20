@@ -5,6 +5,16 @@
 > any runtime satisfying the 8 capabilities + invariants constitutes a legal binding (`bindings/bare-qwenpaw` and `bindings/claude-code` are two other reference implementations).
 > **Generic-terminology discipline**: this directory is the **only legal surface** for runtime-specific names (spawn_subagent / QwenPaw cron / channels send / mc / Matrix / MinIO-RustFS / dashboard).
 
+## Index (full documents)
+
+| Document | Content |
+|------|------|
+| `mapping-table.md` | CAP→mechanism mapping + 14 mechanisms × execution carriers + primitive mapping (**single source of truth**; README §1 is its consistent summary) |
+| `skill-fragments.md` | CAP-SPAWN/CAP-EXEC skill surface (9 in-tree scripts + spawn fragments + three-layer review chain) |
+| `cron-spec.md` | CAP-TIMER binding spec (U1–U4 + registration/cleanup + fallback-wake redline) |
+| `deployment-guide.md` | topology + compile→deploy chain + filesync post-write protocol + failure sequences & recovery |
+| `rustfs-migration.md` | S3 semantics verification (T1–T3) + CAS positioning + 8-script audit + migration checklist |
+
 ## 1. CAP → Mechanism Mapping
 
 | Capability | AgentTeams/QwenPaw mechanism | Invariant status | Risks/notes |

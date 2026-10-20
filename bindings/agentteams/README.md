@@ -5,6 +5,16 @@
 > 任何运行时满足 8 能力 + 不变式即可构成合法绑定（`bindings/bare-qwenpaw`、`bindings/claude-code` 是另两个参考实现）。
 > **通用词纪律**：本目录是运行时专名（spawn_subagent / QwenPaw cron / channels send / mc / Matrix / MinIO-RustFS / dashboard）的**唯一合法出现面**。
 
+## 索引（正文文档）
+
+| 文档 | 内容 |
+|------|------|
+| `mapping-table.md` | CAP→机制映射 + 14 机制×执行载体 + 原语映射（**单一事实源**；本 README §1 为其一致摘要） |
+| `skill-fragments.md` | CAP-SPAWN/CAP-EXEC skill 面（在树 9 脚本 + spawn 片段 + 三层审核链） |
+| `cron-spec.md` | CAP-TIMER 绑定规格（U1–U4 + 注册/清理 + 兜底唤醒红线） |
+| `deployment-guide.md` | 拓扑 + 编译→部署链 + filesync 写后协议 + 失败序列与恢复 |
+| `rustfs-migration.md` | S3 语义核验（T1–T3）+ CAS 定位 + 8 脚本审计 + 迁移检查清单 |
+
 ## 1. CAP → 机制映射表
 
 | 能力 | AgentTeams/QwenPaw 机制 | 不变式满足情况 | 风险/备注 |
