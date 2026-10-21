@@ -12,6 +12,19 @@
 | `skill-fragments.md` | CAP-SPAWN/CAP-EXEC skill surface (spawn surface with the X1 declaration + acceptance evidence chain + approval-tier discipline) |
 | `deployment-guide.md` | topology + invocation chain + failure sequences and recovery |
 
+## Capability Declaration (CAP-*)
+
+| CAP | Implemented | Coverage level | Mechanism (runtime) | Limitations |
+|-----|-------------|----------------|---------------------|-------------|
+| CAP-STATE | ❌ | declared-degraded | state held by the parent execution unit (one-shot, no cross-run state) | cannot host state-dependent protocol surfaces alone |
+| CAP-STORE | ✅ | full | coding-runs API + local workspace files + checksums | locally strongly consistent |
+| CAP-TIMER | ❌ | declared-degraded | per-run `--max-wall-time` (not scheduling) | scheduling belongs to the parent |
+| CAP-NOTIFY | ❌ | declared-degraded | none | notifications belong to the parent |
+| CAP-ATTN | ✅ | full | `--approval-mode` ladder + ACP `request_permission` | — |
+| CAP-SPAWN | ✅ | full | one-shot execution (10 flags) + `--max-wall-time` | X1 not satisfied (no session isolation) → reference, not compliant |
+| CAP-EXEC | ✅ | full | CLI process execution (exit-code semantics) | — |
+| CAP-ROSTER | ❌ | declared-degraded | none | single execution body |
+
 ## CAP Mapping (only 4/8 capabilities implemented = a legal partial binding)
 
 | Capability | Mechanism | Notes |
@@ -44,7 +57,7 @@
 ## Deployment / Invocation
 
 ```
-parent execution unit (AgentTeams worker / bare-qwenpaw agent)
+parent execution unit (AgentTeams worker / single-agent runtime)
   → construct the task spec (core/schemas/spec.schema.json)
   → invoke the coding-CLI (one-shot; flags include --max-wall-time + --approval-mode)
   → exit 0: read the coding-runs evidence chain → fingerprint verification (CAP-STORE T2) → accept

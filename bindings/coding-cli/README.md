@@ -12,6 +12,19 @@
 | `skill-fragments.md` | CAP-SPAWN/CAP-EXEC skill 面（spawn 面 X1 声明 + 验收证据链 + 审批档位纪律） |
 | `deployment-guide.md` | 拓扑 + 调用链 + 失败序列与恢复 |
 
+## 能力声明（CAP-*）
+
+| CAP | 已实现 | 覆盖等级 | 具体机制（运行时） | 限制 |
+|-----|--------|----------|--------------------|------|
+| CAP-STATE | ❌ | 声明降级 | 状态由父执行体持有（one-shot 无跨 run 状态） | 不可独立承载需要状态的面 |
+| CAP-STORE | ✅ | 完整 | coding-runs API + 本地工作区文件 + 校验和 | 本地强一致 |
+| CAP-TIMER | ❌ | 声明降级 | 单 run `--max-wall-time`（非调度） | 调度由父执行体 |
+| CAP-NOTIFY | ❌ | 声明降级 | 无 | 通知由父执行体 |
+| CAP-ATTN | ✅ | 完整 | `--approval-mode` 阶梯 + ACP `request_permission` | — |
+| CAP-SPAWN | ✅ | 完整 | one-shot 执行（10 flags）+ `--max-wall-time` | X1 不满足（无会话隔离）→ reference 而非 compliant |
+| CAP-EXEC | ✅ | 完整 | CLI 进程执行（退出码语义） | — |
+| CAP-ROSTER | ❌ | 声明降级 | 无 | 单执行体 |
+
 ## CAP 映射（只实现 4/8 能力 = 合法部分绑定）
 
 | 能力 | 机制 | 备注 |
@@ -44,7 +57,7 @@
 ## 部署/调用
 
 ```
-父执行体（AgentTeams worker / bare-qwenpaw agent）
+父执行体（AgentTeams worker / single-agent runtime）
   → 构造 task spec（core/schemas/spec.schema.json）
   → 调 coding-CLI（one-shot，flags 含 --max-wall-time + --approval-mode）
   → exit 0: 读 coding-runs 证据链 → 指纹验证（CAP-STORE T2）→ 验收

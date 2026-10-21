@@ -12,6 +12,19 @@
 | `skill-fragments.md` | CAP-SPAWN/CAP-EXEC skill 面（在树 9 脚本 + spawn 片段（生产已验证）+ 三层审核链） |
 | `deployment-guide.md` | 拓扑 + 编译→部署链 + 失败序列与恢复 |
 
+## 能力声明（CAP-*）
+
+| CAP | 已实现 | 覆盖等级 | 具体机制（运行时） | 限制 |
+|-----|--------|----------|--------------------|------|
+| CAP-STATE | ✅ | 完整 | 每 agent 本地 JSON + 文件锁 CAS | 无异地副本（宿主盘单点） |
+| CAP-STORE | ✅ | 完整 | 本地文件系统 / 共享卷 + 客户端 sha256 | 无跨节点强一致 |
+| CAP-TIMER | ✅ | 完整 | QwenPaw cron | 粒度 = cron 周期 |
+| CAP-NOTIFY | ⚠️ | 部分 | `channels send`（控制台/QQ/钉钉…） | V3 静默丢弃风险 / V5 无代码级事件面 |
+| CAP-ATTN | ✅ | 完整 | 控制台会话 + IM 私聊持久展示面 | 群聊 @mention 不得 resolve（S4） |
+| CAP-SPAWN | ✅ | 完整 | `spawn_subagent(fork=False)` | X4 时限尽力 |
+| CAP-EXEC | ✅ | 完整 | agent 容器/宿主 shell | venv pip 约束 |
+| CAP-ROSTER | ✅ | 完整 | roster JSON 文件 | 多 human 无协议层隔离 |
+
 ## CAP 映射
 
 | 能力 | 机制 | 备注 |
@@ -29,14 +42,14 @@
 
 ## 与 agentteams 绑定的能力差距
 
-| 面 | agentteams | bare-qwenpaw |
+| 面 | agentteams | single-agent |
 |----|-----------|--------------|
 | 跨团队 handoff | ✅（MinIO 项目空间 + Manager） | ❌（无对象存储项目空间；共享卷可模拟，权限靠目录约定） |
 | 多 user 隔离 | Controller + Matrix 权限 | 无（同宿主同权限 = 协议层不保证隔离，部署层自担） |
 | 团队/roster 管理 | Team CRD | 手工 roster 文件 |
 | 状态异地副本 | MinIO | 无（宿主盘单点） |
 
-**适用判定**：个人实验 / 单团队生产 / 快速验证协议行为 → bare-qwenpaw 足够（L1-L3 协议层完整可用）；多团队 + 跨团队 handoff + 多 human 隔离 → 上 agentteams。
+**适用判定**：个人实验 / 单团队生产 / 快速验证协议行为 → single-agent 绑定足够（L1-L3 协议层完整可用）；多团队 + 跨团队 handoff + 多 human 隔离 → 上 agentteams。
 
 ## 部署
 

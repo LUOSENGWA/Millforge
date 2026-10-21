@@ -8,7 +8,7 @@
 | Primitive | Deployment form |
 |------|---------|
 | this runtime | the coding-CLI process (one-shot), invoked by the parent execution unit |
-| parent execution unit | an AgentTeams worker / a bare-qwenpaw agent (provides CAP-STATE / CAP-TIMER / CAP-NOTIFY / CAP-ROSTER) |
+| parent execution unit | an AgentTeams worker / a single-agent runtime (provides CAP-STATE / CAP-TIMER / CAP-NOTIFY / CAP-ROSTER) |
 | state | the parent execution unit's CAP-STATE (this runtime is stateless) |
 | store | the coding-runs API + local workspace files |
 | timer / notify / roster | not applicable (provided by the parent execution unit) |

@@ -8,14 +8,14 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 
 ### Added
 
-- **Protocol layer v1.0 frozen**: 13 bilingual clauses under `core/protocol/` (00-OVERVIEW ~ 12-REDLINES), 8 CAP-* capabilities + 46 invariants.
+- **Protocol layer v1.0 frozen**: 13 bilingual clauses under `core/protocol/` (00-OVERVIEW ~ 12-REDLINES), 8 CAP-* capabilities + 55 invariants (34 capability invariants + 21 implementation sub-items/supplements).
 - **Core documents**: `core/binding-contract.md` (binding contract), `security.md` (threat model + mechanism matrix + 5 scenarios), `cost-model-tiering.md` (three cost tiers), `production-harden.md` (4 production-hardening patches), `calibration/token-shadow-calibration.md`.
 - **JSON Schemas ×11**: team / spec / task_meta / decision_log / contract / contract_snapshot / handoff / loop_spec / scorecard / signal_event / aggregation_result.
 - **Deterministic scripts ×9** (`core/scripts/`): validate-decision-log / detect-conflict / contract-revalidate / attention-stall / verification-mismatch-window / saga-compensate / consistency-check / aggregate-vote / timer-derive.
 - **Invariant documents ×4 bilingual**: attention-state / decision-state / loop-state / task-transitions.
 - **Compiler**: 6-stage zero-LLM pipeline (Validate → Assemble → Budget → Render → SelfCheck → Provenance), `validate` / `compile` subcommands.
 - **Templates ×43 bilingual**: skeleton ×4 / fragments ×12 / domain ×21 / industry ×6, registry `templates/INDEX.yaml` with three-level provenance discipline (production / reference / llm).
-- **Reference bindings ×3**: agentteams (with mapping-table / skill-fragments / cron-spec / deployment-guide / s3-storage body docs), bare-qwenpaw, claude-code.
+- **Reference bindings ×3**: `bindings/agentteams` (with mapping-table / skill-fragments / cron-spec / deployment-guide / s3-storage body docs), `bindings/single-agent` (bare single-agent runtimes such as QwenPaw), `bindings/coding-cli` (coding-CLI runtimes such as Claude Code / QwenCode / OpenCode).
 - **golden-tests**: 35-clause production baseline (`PRODUCTION-BASELINE.md`) + 13 compile gates + 83 script assertions + assertion-coverage record (`ASSERTION-COVERAGE.md`).
 - **CI**: GitHub Actions three jobs (golden / bilingual completeness / sensitive scrub) + `requirements.txt` + `Makefile` + SECURITY / VERSION.
 

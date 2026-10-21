@@ -77,6 +77,21 @@ loop_spec = {
  convergence_trajectory_ref] # 前 N 次进展信号序列（防重复无效路径）
 ```
 
+
+### 2.1 与 Loop CRD 的状态映射（资源生命周期视图）
+
+K8s Loop CRD 的 `status.state` 是**资源生命周期**视图（供控制器/运维读取），不是迭代阶段；迭代阶段只存在于 CAP-STATE（I-L1）。两者映射：
+
+| CRD status.state | 协议侧 | 说明 |
+|---|---|---|
+| `pending` | 未进入 DISPATCH | 控制器已观测，尚未开始迭代 |
+| `active` | DISPATCH / EXECUTE / VERIFY / JUDGE / RE-PLAN | 迭代进行中（阶段细节以 CAP-STATE 为准） |
+| `paused` | 任意阶段 + `spec.paused=true` | 暂停是资源生命周期操作，不是迭代阶段 |
+| `completed` | STOPPED(success) | 达成 stop_condition |
+| `failed` | STOPPED(stalled) / STOPPED(exhausted) / bounded_failure 终止 | 未达成而终止 |
+
+**禁止**：以 CRD status 反推迭代阶段；以协议阶段直接写 CRD status（CRD status 的写者是控制器/绑定层实现，协议阶段不直接写它）。
+
 ## 3. Driver 语义
 
 1. loop 权威状态**只存在于 CAP-STATE**（current_iteration, budget_remaining, convergence_trajectory, last_verdict, phase）——任何执行体上下文都不是权威来源

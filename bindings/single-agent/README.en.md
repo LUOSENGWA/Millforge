@@ -12,6 +12,19 @@
 | `skill-fragments.md` | CAP-SPAWN/CAP-EXEC skill surface (9 in-tree scripts + spawn fragment (production-verified) + three-layer review chain) |
 | `deployment-guide.md` | topology + compile→deploy chain + failure sequences and recovery |
 
+## Capability Declaration (CAP-*)
+
+| CAP | Implemented | Coverage level | Mechanism (runtime) | Limitations |
+|-----|-------------|----------------|---------------------|-------------|
+| CAP-STATE | ✅ | full | per-agent local JSON + file-lock CAS | no off-host replica (single disk) |
+| CAP-STORE | ✅ | full | local filesystem / shared volume + client-side sha256 | no cross-node strong consistency |
+| CAP-TIMER | ✅ | full | QwenPaw cron | granularity = cron period |
+| CAP-NOTIFY | ⚠️ | partial | `channels send` (console/QQ/DingTalk…) | V3 silent-drop risk / V5 no code-level event surface |
+| CAP-ATTN | ✅ | full | console session + IM DM persistent surface | group-chat @mention is not a resolve surface (S4) |
+| CAP-SPAWN | ✅ | full | `spawn_subagent(fork=False)` | X4 bound best-effort |
+| CAP-EXEC | ✅ | full | agent container/host shell | venv pip constraint |
+| CAP-ROSTER | ✅ | full | roster JSON file | no protocol-level isolation between humans |
+
 ## CAP Mapping
 
 | Capability | Mechanism | Notes |
@@ -29,14 +42,14 @@
 
 ## Capability Gap vs the agentteams Binding
 
-| Surface | agentteams | bare-qwenpaw |
+| Surface | agentteams | single-agent |
 |----|-----------|--------------|
 | cross-team handoff | ✅ (MinIO project space + Manager) | ❌ (no object-storage project space; a shared volume can simulate it, permissions via directory convention) |
 | multi-user isolation | Controller + Matrix permissions | none (same host, same permissions = isolation is not guaranteed at the protocol layer; the deployment layer owns it) |
 | team/roster management | Team CRD | manual roster file |
 | off-host state replica | MinIO | none (host disk is a single point) |
 
-**Applicability verdict**: personal experiments / single-team production / quick protocol-behavior validation → bare-qwenpaw is enough (the L1–L3 protocol layer is fully usable); multi-team + cross-team handoff + multi-human isolation → use agentteams.
+**Applicability verdict**: personal experiments / single-team production / quick protocol-behavior validation → the single-agent binding is enough (the L1–L3 protocol layer is fully usable); multi-team + cross-team handoff + multi-human isolation → use agentteams.
 
 ## Deployment
 

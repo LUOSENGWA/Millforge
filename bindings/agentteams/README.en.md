@@ -16,6 +16,19 @@
 | `s3-storage.md` | S3 object-storage semantics verification (T1–T3) + CAS positioning + storage_adapter enum + 8-script audit |
 | `reference-mappings.md` | runtime-specific-name mapping (non-normative appendix; migrated from core/binding-contract, preserved line by line; English twin `.en.md`) |
 
+## Capability Declaration (CAP-*)
+
+| CAP | Implemented | Coverage level | Mechanism (runtime) | Limitations |
+|-----|-------------|----------------|---------------------|-------------|
+| CAP-STATE | ✅ | full | worker-local JSON + file-lock CAS; task-level state may live in TeamHarness task meta | container rebuild needs object-storage backup (S4) |
+| CAP-STORE | ✅ | full | S3-compatible object storage (MinIO / RustFS) + client-side sha256 | no same-object append on hot keys |
+| CAP-TIMER | ✅ | full | runtime cron + `timer-derive.sh` idempotent derivation | granularity = cron period (default 5 min) |
+| CAP-NOTIFY | ⚠️ | partial | channel messages + Room @mention | V3/V5/V6 gaps (see §4) |
+| CAP-ATTN | ✅ | full | DM Room persistent display surface + state file | single surface (no multi-surface sync) |
+| CAP-SPAWN | ✅ | full | fresh-session sub-execution (`fork=False`) | X4 bound best-effort (not enforced) |
+| CAP-EXEC | ✅ | full | worker container shell (venv pip) | scripts ship with the core |
+| CAP-ROSTER | ✅ | full | Team CRD / agent-config roster | Z2 needs explicit configuration |
+
 ## 1. CAP → Mechanism Mapping
 
 | Capability | AgentTeams/QwenPaw mechanism | Invariant status | Risks/notes |

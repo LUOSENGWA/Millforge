@@ -1,7 +1,7 @@
 # Invariants: Task State Machine (T3 Overlay Layer)
 
 > The core constrains only the mapping between **protocol substates** (decision_status) and runtime state; it does not rewrite the runtime task state machine.
-> The 9-state runtime states (upstream contract: PENDING/QUEUED/RUNNING/SUSPENDED/BLOCKED/CANCELLED/SUCCEEDED/FAILED/EXPIRED) stay untouched.
+> The 9-state runtime states (upstream task contract: planned / prepared / assigned / in_progress / submitted / completed / revision / blocked / cancelled) stay untouched.
 
 ## 1. decision_status Substate Transitions
 
@@ -29,7 +29,7 @@
 
 | decision_status | Runtime state | Note |
 |-----------------|-----------|------|
-| open | unchanged (QUEUED/RUNNING…) | normal progress |
+| open | unchanged (planned/assigned/in_progress…) | normal progress |
 | blocked | **BLOCKED** | recoverable |
 | frozen | **BLOCKED** | marked with the frozen substate (metadata) |
 | paused | BLOCKED | re-classification window |

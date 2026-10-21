@@ -119,7 +119,7 @@ The protocol does not assume a model window size. **The window size is declared 
 | Concurrent on-demand protocol full texts | **1** | **2** | **3** | Only trigger descriptions stay resident; release after use |
 | Concurrent skill full texts | **1** | **2** | **3** | Skills are reference layer, not resident |
 | Loop iteration summaries retained | last **3** | last **5** | last **8** | Older ones keep `key_refs` only; never replay full text |
-| Spawn `context_refs` cap | **3** | **5** | **8** | Each ref = a CAP-STORE artifact (no inline body) |
+| Spawn `context_refs` cap (**including the mandatory set**) | **4** | **6** | **8** | the mandatory set takes priority (loop re-plan's four are non-negotiable, see §10-LOOP); each ref = a CAP-STORE artifact (no inline body) |
 | Single inline-read cap | **5%** of window | **8%** | **10%** | Beyond it → dispatch a review spawn, return ref + summary |
 | Soft reset (reload signal refs + task state) | **60%** of working budget | 60% | 60% | Soft reset loses dialogue detail, not the task |
 | Hard reset (rebuild context) | **80%** of working budget | 80% | 80% | State is re-read from CAP-STATE; outputs are persisted before the reset |

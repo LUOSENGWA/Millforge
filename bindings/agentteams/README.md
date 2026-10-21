@@ -16,6 +16,19 @@
 | `s3-storage.md` | S3 对象存储语义核验（T1–T3）+ CAS 定位 + storage_adapter 枚举 + 8 脚本审计 |
 | `reference-mappings.md` | 运行时专名对照（非规范附录；自 core/binding-contract 迁出，逐行保留；英文孪生 `.en.md`） |
 
+## 能力声明（CAP-*）
+
+| CAP | 已实现 | 覆盖等级 | 具体机制（运行时） | 限制 |
+|-----|--------|----------|--------------------|------|
+| CAP-STATE | ✅ | 完整 | Worker 本地 JSON + 文件锁 CAS；任务级可落 TeamHarness task meta | 容器重建需对象存储备份（S4） |
+| CAP-STORE | ✅ | 完整 | S3 兼容对象存储（MinIO / RustFS）+ 客户端 sha256 | 热 key 不做同对象 append |
+| CAP-TIMER | ✅ | 完整 | 运行时 cron + `timer-derive.sh` 幂等派生 | 粒度 = cron 周期（默认 5min） |
+| CAP-NOTIFY | ⚠️ | 部分 | 频道消息 + Room @mention | V3/V5/V6 缺口（见 §4） |
+| CAP-ATTN | ✅ | 完整 | DM Room 持久展示面 + 状态文件 | 单面（无多面同步） |
+| CAP-SPAWN | ✅ | 完整 | fresh-session 子执行体（`fork=False`） | X4 时限尽力（未强制） |
+| CAP-EXEC | ✅ | 完整 | Worker 容器 shell（venv pip） | 脚本随核心分发 |
+| CAP-ROSTER | ✅ | 完整 | Team CRD / agent 配置 roster | Z2 需显式配置 |
+
 ## 1. CAP → 机制映射表
 
 | 能力 | AgentTeams/QwenPaw 机制 | 不变式满足情况 | 风险/备注 |

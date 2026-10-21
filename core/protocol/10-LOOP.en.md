@@ -77,6 +77,21 @@ loop_spec = {
  convergence_trajectory_ref] # the sequence of progress signals so far (prevents repeating ineffective paths)
 ```
 
+
+### 2.1 Mapping to the Loop CRD States (resource-lifecycle view)
+
+The K8s Loop CRD's `status.state` is a **resource-lifecycle** view (read by the controller/operators), not an iteration phase; iteration phases exist only in CAP-STATE (I-L1). The mapping:
+
+| CRD status.state | Protocol side | Note |
+|---|---|---|
+| `pending` | not yet in DISPATCH | observed by the controller, iterations not started |
+| `active` | DISPATCH / EXECUTE / VERIFY / JUDGE / RE-PLAN | iterations in progress (phase detail lives in CAP-STATE) |
+| `paused` | any phase + `spec.paused=true` | pause is a resource-lifecycle operation, not an iteration phase |
+| `completed` | STOPPED(success) | stop_condition achieved |
+| `failed` | STOPPED(stalled) / STOPPED(exhausted) / bounded_failure termination | terminated without achievement |
+
+**Forbidden**: inferring iteration phases from the CRD status; writing the CRD status from protocol phases (the CRD status is written by the controller/binding implementation, never by a protocol phase).
+
 ## 3. Driver Semantics
 
 1. loop authoritative state exists **only in CAP-STATE** (current_iteration, budget_remaining, convergence_trajectory, last_verdict, phase) — no execution unit's context is authoritative

@@ -237,16 +237,16 @@ The binding's README **must** contain:
 
 ```
 ## Capability Declaration (CAP-*)
-| CAP | Implemented | Tier (L1/L2/L3) | Mechanism (runtime API) | Limitations |
+| CAP | Implemented | Coverage level (full/partial/declared-degraded) | Mechanism (runtime API) | Limitations |
 |-----|-------------|------------------|--------------------------|-------------|
-| CAP-STATE | ✅ | L2 | … | … |
-| CAP-STORE | ✅ | L1 | … | … |
-| CAP-TIMER | ✅ | L2 | … | … |
-| CAP-NOTIFY | ✅ | L1 | … | … |
-| CAP-ATTN | ⚠️ partial | L2/L3 | … | the persistent display surface is DM only |
-| CAP-SPAWN | ✅ | L1 | … | X4 deadline = 3600s (version vX) |
-| CAP-EXEC | ✅ | L1 | … | isolation boundary = … |
-| CAP-ROSTER | ✅ | L2 | … | … |
+| CAP-STATE | ✅ | full | … | … |
+| CAP-STORE | ✅ | full | … | … |
+| CAP-TIMER | ✅ | full | … | … |
+| CAP-NOTIFY | ✅ | full | … | … |
+| CAP-ATTN | ⚠️ | partial | … | the persistent display surface is DM only |
+| CAP-SPAWN | ✅ | full | … | X4 deadline = 3600s (version vX) |
+| CAP-EXEC | ✅ | full | … | isolation boundary = … |
+| CAP-ROSTER | ✅ | full | … | … |
 
 ## Illegal-Capability Degradation
 (declare, per capability, which protocol clauses this binding "does not support / must degrade")
@@ -254,6 +254,8 @@ The binding's README **must** contain:
 ## Known Issues
 (the runtime's known defects and their impact on protocol execution)
 ```
+
+> The coverage level describes **implementation completeness** (full / partial / declared-degraded) and is a different axis from the **reliability layering L1/L2/L3** in §12-REDLINES §4 (platform built-in / deterministic scripts / behaviour layer) — never use L1/L2/L3 for capability levels.
 
 **Failing to declare = an illegal binding** (it cannot host any Millforge protocol flow).
 

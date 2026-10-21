@@ -5,6 +5,6 @@
 - `grill-me.md` — 社区 skill 原稿：逐题追问（决策树逐分支审讯）
 - `grill-with-docs.md` — 社区 skill 原稿：文档对齐版（术语冲突即时指出 + 模糊语言锐化 + 场景压力测试 + 决策即时落盘 + ADR 克制提出）
 
-这两个 skill 的**核心模式**被逐字继承进千锻 NMH（继承点逐条列于 [../../ACKNOWLEDGMENTS.md](../../ACKNOWLEDGMENTS.md) §1）。NMH 在此基础上的扩展（双模式/七问自检/结构化 spec 输出/信号集成）为千锻自研，不属于继承范围。
+这两个 skill 的**核心模式**被逐字继承进千锻 NMH（继承点逐条列于 [../../ACKNOWLEDGMENTS.md](../../../ACKNOWLEDGMENTS.md) §1）。NMH 在此基础上的扩展（双模式/七问自检/结构化 spec 输出/信号集成）为千锻自研，不属于继承范围。
 
 原文按原样保留（frontmatter 未改动），不做任何改写——照搬必注出处，原文可核。

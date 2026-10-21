@@ -1,7 +1,7 @@
 # 不变式：Task 状态机（T3 叠加层）
 
 > 核心只约束**协议子状态**（decision_status）与运行时状态的映射；不重写运行时任务状态机。
-> 9 态运行时状态（上游契约：PENDING/QUEUED/RUNNING/SUSPENDED/BLOCKED/CANCELLED/SUCCEEDED/FAILED/EXPIRED）保持不动。
+> 9 态运行时状态（上游任务契约：planned / prepared / assigned / in_progress / submitted / completed / revision / blocked / cancelled）保持不动。
 
 ## 1. decision_status 子状态迁移
 
@@ -29,7 +29,7 @@
 
 | decision_status | 运行时状态 | 说明 |
 |-----------------|-----------|------|
-| open | 不变（QUEUED/RUNNING…） | 正常推进 |
+| open | 不变（planned/assigned/in_progress…） | 正常推进 |
 | blocked | **BLOCKED** | 可恢复 |
 | frozen | **BLOCKED** | 标记 frozen 子状态（元数据） |
 | paused | BLOCKED | 重分类窗口 |

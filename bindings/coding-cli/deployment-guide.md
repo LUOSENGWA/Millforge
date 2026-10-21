@@ -8,7 +8,7 @@
 | 原语 | 部署形态 |
 |------|---------|
 | 本运行时 | coding-CLI 进程（one-shot），由父执行体调用 |
-| 父执行体 | AgentTeams worker / bare-qwenpaw agent（提供 CAP-STATE / CAP-TIMER / CAP-NOTIFY / CAP-ROSTER） |
+| 父执行体 | AgentTeams worker / single-agent runtime（提供 CAP-STATE / CAP-TIMER / CAP-NOTIFY / CAP-ROSTER） |
 | state | 父执行体 CAP-STATE（本运行时 stateless） |
 | store | coding-runs API + 本地工作区文件 |
 | timer / notify / roster | 不适用（父执行体提供） |

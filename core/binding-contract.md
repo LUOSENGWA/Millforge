@@ -237,16 +237,16 @@ delegation_chain(task_id) -> [{delegator, delegatee, scope, granted_at}] | []
 
 ```
 ## 能力声明（CAP-*）
-| CAP | 已实现 | 层级（L1/L2/L3） | 具体机制（运行时 API） | 限制 |
+| CAP | 已实现 | 覆盖等级（完整/部分/声明降级） | 具体机制（运行时 API） | 限制 |
 |-----|--------|------------------|------------------------|------|
-| CAP-STATE | ✅ | L2 | … | … |
-| CAP-STORE | ✅ | L1 | … | … |
-| CAP-TIMER | ✅ | L2 | … | … |
-| CAP-NOTIFY | ✅ | L1 | … | … |
-| CAP-ATTN | ⚠️ 部分 | L2/L3 | … | 持久展示面仅 DM |
-| CAP-SPAWN | ✅ | L1 | … | X4 时限 = 3600s（版本 vX） |
-| CAP-EXEC | ✅ | L1 | … | 隔离边界 = … |
-| CAP-ROSTER | ✅ | L2 | … | … |
+| CAP-STATE | ✅ | 完整 | … | … |
+| CAP-STORE | ✅ | 完整 | … | … |
+| CAP-TIMER | ✅ | 完整 | … | … |
+| CAP-NOTIFY | ✅ | 完整 | … | … |
+| CAP-ATTN | ⚠️ | 部分 | … | 持久展示面仅 DM |
+| CAP-SPAWN | ✅ | 完整 | … | X4 时限 = 3600s（版本 vX） |
+| CAP-EXEC | ✅ | 完整 | … | 隔离边界 = … |
+| CAP-ROSTER | ✅ | 完整 | … | … |
 
 ## 非法能力降级
 （逐能力声明本绑定"不支持 / 必须降级"的协议条文）
@@ -254,6 +254,8 @@ delegation_chain(task_id) -> [{delegator, delegatee, scope, granted_at}] | []
 ## 已知问题
 （运行时已知缺陷及其对协议执行的影响）
 ```
+
+> 覆盖等级描述**能力实现程度**（完整 / 部分 / 声明降级），与 §12-REDLINES §4 的**可靠性分层 L1/L2/L3**（平台内置 / 确定性脚本 / 行为层）是两套不同语义——不得用 L1/L2/L3 表示能力等级。
 
 **未声明 = 非法绑定**（不能承载任何千锻协议流程）。
 

@@ -13,7 +13,7 @@
 1. `README.md`（仓库根）→ 仓库定位与快速开始
 2. `PHILOSOPHY.md` → 为什么这样设计（可整段喂给任意 LLM）
 3. `core/protocol/00-OVERVIEW.md` → 13 篇协议的导航
-4. `core/binding-contract.md` → 运行时需声明的最小能力集（8 能力 + 46 不变式）
+4. `core/binding-contract.md` → 运行时需声明的最小能力集（8 能力 + 55 条不变式：34 条能力不变式 + 21 条实现子项）
 5. `bindings/<形态>/` → 你的运行时应参考哪一个形态
 6. `migration/` → 存量团队怎么迁进来
 
