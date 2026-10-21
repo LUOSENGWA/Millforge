@@ -4,8 +4,7 @@
 > Provenance: finalized in the second-round DeepSeek review (implementation round, 2026-10-18)
 > Used together with the line hard gate; it does not replace the line hard gate
 
-1. For each target model family, take its official tokenizer (Qwen: qwen-tokenizer;
-   Claude: anthropic tokenizer; GPT: tiktoken cl100k/o200k).
+1. For each target model family, take its official tokenizer (Qwen: qwen-tokenizer; Claude: anthropic tokenizer; GPT: tiktoken cl100k/o200k).
 2. For each existing SOUL compilation artifact, count separately with the line
    counter and the tokenizer, recording (lines, tokens, rules_estimated).
    rules_estimated = the number of explicit imperative/constraint sentences

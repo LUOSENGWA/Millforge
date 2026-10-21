@@ -1,9 +1,11 @@
 # Millforge Runtime Binding Contract v1.0
 
+> 版本: v1.0（协议层冻结基线） | 许可: Apache-2.0
 > 千锻核心与任何运行时之间的**最小能力接口**（唯一合法引用面）。
 > 核心条文只能引用 CAP-* 编号和不变式，不得引用任何具体组件。
 > 范式：contract 不包含任何 provider 类型，adapter 把具体运行时语义翻译成统一 contract。
 > durable collaboration 与 native execution 分离：harness 拥有持久状态，provider 只负责执行。
+> 运行时专名对照见 `bindings/agentteams/reference-mappings.md`（英文孪生 `.en.md`）——非规范附录；本契约本体不含任何运行时专名。
 
 ## 设计原则
 
@@ -30,6 +32,9 @@ list_keys(task_id) -> key[]
 - **S2 原子性**：compare_and_set 并发下线性；CAS 失败不得产生部分写入
 - **S3 可重放**：append 顺序在重读时一致（append-only 语义）
 - **S4 不可静默丢失**：状态不得因缓存淘汰、通知丢失、临时存储清理而丢失
+- **S5 记录结构（实现子项）**：状态记录为带版本的 JSON（版本字段或 append 序号），支撑 S3 重放
+- **S6 写入确认（实现子项）**：写入必须有可确认点；未确认的写入视为未执行，确认前不得触发任何 merge/consume/accept（对齐 CAP-STORE T2 执行细则）
+- **S7 确定性实现（实现子项）**：超时判定/计票/冲突检测等协议层判定必须由确定性脚本（L2）读 CAP-STATE 派生，不得依赖 agent“记住计算”；绑定必须声明脚本的触发机制（如外部调度器）
 
 **千锻依赖**：R1-R6 决策记录、NMH 锁定链、B-4/B-5/B-6 计数与窗口、B-10 分类状态、spec 与 decision_class、loop 权威状态（§10）。
 
@@ -53,6 +58,9 @@ exists(ref) -> bool
 - **T2 写入可确认**：write 返回的 {ref, fingerprint} 必须在持久化完成后才返回；返回即代表可被下游安全消费
   - **T2 执行细则**：若写入路径经过同步层（工作区 ↔ 对象存储的异步同步），write 返回前必须确认同步层已持久化该对象（uploaded/committed 回执）；未确认的写入不得返回 {ref, fingerprint}，调用方不得消费未确认的 ref。同步层实现（push_loop/mirror/rsync 等）是绑定参数，"确认后才返回"是 T2 强制语义
 - **T3 append-only（可链式模拟）**：`append(path, entry) -> new_ref`。实现可以是：① 同对象 JSONL 追加（运行时支持安全并发时）② 新对象链式追加（entry_ref = path+seq，append 返回链尾）③ 其他等价语义。核心只要求 read(ref) 能按 append 顺序返回所有条目，**不要求物理同对象**
+- **T4 不可变性（建议级）**：已 accept 的 artifact 冻结；内容变化必须产生新版本（新 ref）
+- **T5 路径契约**：artifact 路径形如 `<root>/<kind>/<id>…`（kind ∈ artifacts/decisions/nmh-docs/contracts/…），稳定可预测
+- **T6 指纹算法声明**：指纹算法必须由绑定声明（如 sha256-8）；跨绑定实现可不同，同一绑定内必须一致
 
 **千锻依赖**：decision_log 落盘、contract artifact、handoff、decision record、saga 补偿指令。
 **decision_log 落盘规则**：写入 CAP-STORE 返回 {ref, fingerprint} 且满足 T2；spawn 返回只携带 ref + fingerprint；ref 必须写入 CAP-STATE。
@@ -73,6 +81,9 @@ on_due(callback)   # due_at 之后调用；callback 幂等
 - **U2 至多一次**：同一 timer_id 不得触发两次；迟到触发允许，callback 必须幂等
 - **U3 状态权威**：定时器不得维护独立"已处理"标记作为判定依据；判定必须从 CAP-STATE 重新派生（幂等重派生）
 - **U4 粒度声明**：运行时必须声明最小检查粒度（如 2 分钟）；调用方不得假设更细精度
+- **U5 触发模式**：支持 one-shot 与周期（periodic）触发；周期触发用于兜底唤醒（watchdog/心跳）场景，周期为绑定声明参数
+- **U6 payload 自包含**：触发 payload 必须自包含，不得假设接收会话仍记得上下文
+- **U7 去重键公式**：去重键 = `hash(task_id + trigger_kind + due_at)`（U2 至多一次的具体化）
 
 **千锻依赖**：R6 30min/2h 超时、R5 24h/4h 窗口、B-5 停摆、B-6 mismatch 窗口、loop 兜底唤醒、watchdog 三模式。
 
@@ -95,6 +106,8 @@ unsubscribe(subscription_id) -> OK | ABSENT
 - **V4 通知可重复**：同一消息重复投递不产生状态副作用；接收方按 message_id 去重
 - **V5 代码级订阅**：每个协议事件（attention 创建/解决/超时、决策锁定/重开、熔断状态变更、契约快照变更）必须可被程序订阅，事件携带 event_ref（指向 CAP-STATE 权威记录）；IM 文本通知是代码级事件的**派生视图**，不是唯一观测面
 - **V6 回执可查**：delivery_report 必须区分 delivered（运行时确认送达通道）与 accepted（通道确认接收）；仅 accepted 不构成"人类已看到"——人类已看到的证据只能是 CAP-ATTN resolve 或通道侧显式 read receipt
+- **V7 通道声明**：绑定必须声明存在哪些通道（project room / DM / originating channel）及其相对位置
+- **V8 originating-channel 通知分层**：originating-channel 通知的投递是 L2 机制（delivery_report 可观测）；报告的内容生成是 L3 行为层；丢失部分可按 V2 从 CAP-STATE 重建；不得依赖“记住发送”
 
 **千锻依赖**：attention 旁路 CC、升级通知、冻结/解冻通知、dashboard/IM 卡片（派生视图）。
 
@@ -120,6 +133,9 @@ list_open(task_id) -> request_id[]
 - **W5 应答面质量**：每个 request 必须至少有一个**持久展示面**支持应答——请求超时前持续存在、可被人类主动回访、应答可在该面完成身份验证。IM 私聊、dashboard 待办列表、专用审批页 = 持久展示面；**群聊 @mention 不是**（消息被淹没、无法回访）
 - **W6 多面关闭**：任一持久展示面 resolve 成功 → CAP-STATE 状态 resolved；其他展示面通过轮询/事件推送感知并关闭待办；关闭是视图行为，不改变权威状态
 - **W7 选项结构**：kind=decision 且提供 options 时，options 必须是 `[{option_id, label, consequence_summary?}]` 结构化列表；应答必须回传 option_id，**不得回传自由文本作为选择**
+- **W8 应答者限人类**：request 只能由人类 resolve（roster role = human）；Agent 不得自行 resolve
+- **W9 幂等键公式**：request 幂等键 = `hash(task_id + decision_node_id + decision_hash)`；resolve 幂等键含 responder_id + action，即 `hash(task_id + request_id + responder_id + action)`
+- **W10 应答写入确认**：人类应答在写入确认后才进入 CAP-STATE；后续动作（重分类/重新投票）不得先于确认启动
 
 **千锻依赖**：R6 attention、NMH 锁定确认、B-6 升级、B-10 重分类裁决、C-3 undecidable 升级。
 
@@ -138,6 +154,9 @@ spawn(task_spec, context_refs[], return_schema, timeout?)
 - **X2 结构化返回**：result 必须符合 return_schema；decision_log_ref 必须指向 CAP-STORE 中可指纹 artifact
 - **X3 独立性**：spawn 不得修改父执行体状态；所有状态变更通过返回值传递
 - **X4 有界性（硬）**：spawn 必须有界——要么在声明时限内返回结构化结果 `{artifact_refs[], decision_log_ref, self_reported_status}`，要么时限内报告有界失败 `{bounded_failure: true, reason, partial_refs?}`；不得无限挂起；时限由调用方声明，运行时必须强制执行。**不满足 X4 的运行时不得作为合法绑定**（Loop 可执行前提：否则 iteration_budget 与 CAP-TIMER 失去意义）
+- **X5 输入 = spec 引用**：spawn 输入是任务 spec 引用（task_spec / context_refs），不是消息内联长文
+- **X6 context_refs 内容限制**：context_refs 只可包含标记信号 + CAP-STORE artifact refs（§11-SIGNAL）
+- **X7 worker 上下文隔离（协议规则）**：worker 的 native session 只做调度 + 验收，所有实现工作必须经 CAP-SPAWN 子执行体（读文件取上下文、写文件出结果、用完销毁）；这是协议规则而非绑定特性，但绑定必须提供实现手段
 
 **千锻依赖**：worker 上下文隔离（v2.40 定案）、critic 独立执行、C-3 受限分类、merge 语义确认、loop 迭代/re-plan spawn。
 
@@ -154,6 +173,10 @@ exec(program_ref, args[], stdin?, timeout?) -> {exit_code, stdout, stderr}
 - **Y1 确定性**：同一 program_ref + 同一输入 → 同一输出（不依赖 LLM 采样）
 - **Y2 退出码语义**：退出码按调用方定义的语义解释；0 不自动等于"成功"
 - **Y3 无隐式状态**：不得读写调用方隐式状态；所有输入显式传入，所有输出显式返回
+- **Y4 执行环境声明**：绑定必须声明执行环境（哪台机器 / 容器 / 沙箱）
+- **Y5 输出持久化**：执行输出必须持久化（写入 CAP-STORE 或内联返回），证据可审计
+- **Y6 超时界**：命令执行必须有界，不得无限挂起
+- **Y7 NMA 隔离边界**：执行者不得运行在被审方 workspace 内（跨容器/跨 workspace 不可达）；🔵 项限于外部可验证面（API / 对象存储 / 公开文档）
 
 **8 脚本归属裁决**：`core/scripts/` 的 8+1 脚本**随核心协议分发**，不要求运行时重写——
 1. CAP-EXEC 语义是"运行确定性程序"，不是"运行时提供这些特定程序"；运行时重写 = 语义漂移风险

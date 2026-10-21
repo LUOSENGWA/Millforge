@@ -1,245 +1,208 @@
-# Millforge Runtime Binding Contract (8 Capabilities)
+# Millforge Runtime Binding Contract v1.0
 
-> v1.0 (frozen protocol-layer baseline)
-> **Positioning**: this file is the sole "capability interface" the Millforge protocol layer requires of any runtime.
-> **Binding layer = runtime-specific implementation**, which must explicitly declare which of the following 8 capabilities it implements.
-> A binding not satisfying a capability = **illegal binding** (that capability's protocol clauses automatically degrade to "unsupported", and the binding must declare this in its README).
->
-> **Generic-terminology discipline**: the core layer admits only "capability numbers (CAP-*) + generic terms". Concrete runtime API names (spawn_subagent / QwenPaw cron / mc / channels send / specific dashboard components / Matrix / MinIO) **may only appear in this file's "reference mappings" tables and in each bindings/ implementation document**.
->
-> **Layering discipline (P5)**: every capability has a "reliability tier" — the binding must state which tier its implementation lands in (L1 platform built-in / L2 deterministic script / L3 behavioral). **System correctness may depend only on L1/L2**; L3 is a quality enhancement only.
-
----
+> Version: v1.0 (frozen protocol-layer baseline) | License: Apache-2.0
+> The **minimal capability interface** between the Millforge core and any runtime (the sole legal reference surface).
+> Core clauses may reference only CAP-* ids and invariants — never any concrete component.
+> Paradigm: the contract contains no provider type; the adapter translates concrete runtime semantics into the unified contract.
+> durable collaboration is separated from native execution: the harness owns persistent state, the provider is only responsible for execution.
+> Runtime-specific-name mapping: see `bindings/agentteams/reference-mappings.md` (English twin `.en.md`) — a non-normative appendix; the contract body contains no runtime-specific names.
 
 ## Design Principles
 
-1. The core never references concrete components — only CAP-* ids and invariants.
-2. Capabilities are a **minimal set**, not a maximal one — a runtime may offer more; the core depends only on the following 8.
-3. Every capability must declare its invariants — **an invariant violation = an illegal binding**, not an "implementation difference".
+1. The core never references concrete components — only CAP-* ids and invariants
+2. Capabilities are a **minimal set**, not a maximal one — a runtime may offer more; the core depends only on the following 8
+3. Every capability must declare its invariants — **an invariant violation = an illegal binding**, not an "implementation difference"
 
 ---
 
-## Capability List
+## CAP-STATE — Task-Level Durable State Store
 
-| CAP | Capability | Mandatory for | One-line semantics |
-|-----|------|-----------|---------|
-| CAP-STATE | durable state read/write | ✅ | structured state persistence + CAS + append-only history |
-| CAP-STORE | artifact store | ✅ | file write/read + ref + fingerprint |
-| CAP-TIMER | timer | ⚠️ soft-mandatory | one-shot / period + dedup + idempotent derivation |
-| CAP-NOTIFY | notification channel | ⚠️ soft-mandatory | message send (room/DM) + delivery evidence |
-| CAP-ATTN | human attention request | ⚠️ soft-mandatory | idempotent + reply persistence + timeout + trusted identity |
-| CAP-SPAWN | sub-execution unit | ✅ (worker present) | X1 fresh context + X2 structured return + X4 boundedness (mandatory for loop) |
-| CAP-EXEC | command execution | ⚠️ soft-mandatory | verifiable command execution (NMA 🔵/🟢) |
-| CAP-ROSTER | stakeholder registry | ⚠️ soft-mandatory | roles/weights/delegation query |
+**Semantics**: provides atomically updatable key-value state for each task; survives process restart/crash.
 
-**Mandatory for** = a binding lacking it cannot be a legal binding (except for the pure "human-only mode" degeneration, which must be explicitly declared).
+**Interface contract** (language-agnostic):
+```
+read(task_id, key) -> value | ABSENT
+compare_and_set(task_id, key, expected, next) -> OK | CONFLICT | ABSENT
+append(task_id, key, entry) -> new_length      # append semantics, for event streams
+list_keys(task_id) -> key[]
+```
 
----
+**Invariants**:
+- **S1 write durability**: a write that returns OK must be readable back after a crash (durable custody)
+- **S2 atomicity**: compare_and_set is linearizable under concurrency; a CAS failure must not produce a partial write
+- **S3 replayability**: append order is consistent on re-read (append-only semantics)
+- **S4 no silent loss**: state must not be lost due to cache eviction, notification loss, or temporary-storage cleanup
+- **S5 record structure (implementation sub-item)**: state records are versioned JSON (a version field or an append sequence), supporting S3 replay
+- **S6 write confirmation (implementation sub-item)**: a write must have a confirmable point; an unconfirmed write is treated as unexecuted, and no merge/consume/accept may be triggered before the confirmation (aligned with the CAP-STORE T2 execution detail)
+- **S7 deterministic implementation (implementation sub-item)**: protocol-layer judgments such as timeout judgment / vote counting / conflict detection must be derived by deterministic scripts (L2) reading CAP-STATE — never "the agent remembering to compute"; the binding must declare the scripts' trigger mechanism (e.g. an external scheduler)
 
-## CAP-STATE — Durable State Read/Write
+**Millforge dependencies**: R1-R6 decision records, NMH lock chain, B-4/B-5/B-6 counts and windows, B-10 classification state, spec and decision_class, loop authoritative state (§10).
 
-**Semantics**:
-- read/write a **structured state record** (task meta / decision record / loop state / attention entry)
-- **CAS** (compare-and-set, optimistic concurrency control)
-- **append-only history** (never overwrite; every change leaves a trail)
-- **idempotent write** (the same logical write repeated does not duplicate)
-- the write has a **synchronous confirmation** (a write-confirmation point: "written and readable by others")
+> Note: the positioning of object storage (S3 semantics) is **CAP-STORE, not CAP-STATE**. If you implement CAP-STATE with S3 JSON files, use conditional PUT + a version field for optimistic concurrency (retry on failure); do not simulate key-value CAS with object-level conditional writes (hot-key serialization).
 
-**Sub-requirements**:
-- S1 record = versioned JSON (a version field or an append sequence)
-- S2 write returns a confirmation result (not fire-and-forget)
-- S3 CAS failure returns the current value (not silent failure)
-- S4 append-only: the read interface is immutable (historical versions are queryable)
-- **T1 single clock source** (all timestamps from the same clock, for causal order)
-- **T2 write confirmation** (the write must have a confirmable point; a write without confirmation is treated as unexecuted — **no merge/consume/accept may be triggered before the confirmation**)
-- **U1 clock-source unification**: state timestamps (T1) and timer scheduling (CAP-TIMER) derive from the **same clock source**; the protocol requires only "same clock source", not a specific implementation
+## CAP-STORE — Addressable, Fingerprintable Artifact Store
 
-**Deterministic implementation requirement (P4)**: the protocol layer's **timeout judgment / vote counting / conflict detection** must be **scripts (L2)** reading state and deriving — not "the agent remembering to compute." The binding declares the script's trigger mechanism (external scheduler).
+**Semantics**: stores path-addressable immutable content; a cryptographic fingerprint can be computed over the content.
 
-**Reference mappings** (non-normative):
+**Interface contract**:
+```
+write(path, bytes) -> {ref, fingerprint}
+append(path, entry) -> new_ref        # see T3
+read(ref) -> bytes | ABSENT
+fingerprint(ref) -> fingerprint | ABSENT
+exists(ref) -> bool
+```
 
-| Runtime | Implementation | Tier |
-|---|---|---|
-| AgentTeams (TeamHarness) | project/task meta + decision_log ref in object storage; external one-shot timer (runtime cron) | L2 |
-| Bare QwenPaw | workspace JSON state file + git-like append log; runtime cron + HEARTBEAT | L2/L3 |
-| claude-code | task file + CLAUDE.md pointer; Task tool + ScheduleWakeup | L2 |
+**Invariants**:
+- **T1 content addressing**: the fingerprint of the same ref is constant while its content is unchanged; a content change must produce a new ref or a new fingerprint
+- **T2 write confirmability**: the {ref, fingerprint} returned by write must be returned only after persistence completes; returning means it can be safely consumed downstream
+  - **T2 execution detail**: if the write path goes through a sync layer (workspace ↔ object-storage asynchronous sync), before write returns it must confirm the sync layer has persisted the object (uploaded/committed receipt); an unconfirmed write must not return {ref, fingerprint}, and the caller must not consume an unconfirmed ref. The sync-layer implementation (push_loop/mirror/rsync etc.) is a binding parameter; "return only after confirmation" is the mandatory semantics of T2
+- **T3 append-only (chain-simulable)**: `append(path, entry) -> new_ref`. The implementation may be: ① JSONL append to the same object (when the runtime supports safe concurrency) ② chained append of new objects (entry_ref = path+seq, append returns the chain tail) ③ any other equivalent semantics. The core only requires that read(ref) returns all entries in append order, and **does not require the same physical object**
+- **T4 immutability (recommended)**: an accepted artifact is frozen; a content change must produce a new version (new ref)
+- **T5 path contract**: artifact paths follow `<root>/<kind>/<id>…` (kind ∈ artifacts/decisions/nmh-docs/contracts/…), stable and predictable
+- **T6 fingerprint algorithm declaration**: the fingerprint algorithm must be declared by the binding (e.g. sha256-8); different bindings may differ, but within the same binding it must be consistent
 
----
+**Millforge dependencies**: decision_log landing, contract artifact, handoff, decision record, saga compensation instructions.
+**decision_log landing rule**: the write to CAP-STORE returns {ref, fingerprint} and satisfies T2; a spawn's return carries only ref + fingerprint; the ref must be written into CAP-STATE.
 
-## CAP-STORE — Artifact Store
+## CAP-TIMER — Due-Time Trigger
 
-**Semantics**:
-- **write / read / list** of files (artifacts / decision_log / NMH documents / contract objects)
-- a **path contract** (a stable, predictable path for every kind of artifact)
-- **ref** (a reference that can be carried in a message and re-read later)
-- **fingerprint** (content hash; tamper evidence)
-- **immutability** (an accepted / accepted-for-acceptance artifact is never overwritten; new version = new path)
+**Semantics**: registers a timer that "triggers a derived action after a persisted point in time comes due"; the triggered action is deterministic (read state, derive due, execute a predefined action).
 
-**Sub-requirements**:
-- T3 immutability (optional but recommended): the accepted artifact is frozen; changes produce a new version
-- T4 path contract: `<root>/<kind>/<id>...` (kind ∈ artifacts/decisions/nmh-docs/contracts/…)
-- **U2 object-storage fingerprinting**: the fingerprint algorithm must be declared (e.g. sha256-8); different binding implementations may differ, but **must be consistent within the same binding**
-- **F1 write confirmation** (aligns with CAP-STATE T2): an object write must have a synchronous confirmation (read-back or a write-ack from the storage layer); **a merge/consume/acceptance must not occur before the confirmation**
-- **F2 idempotent derivation**: timeout / budget decisions are derived from the state's timestamp fields (the source of truth); timer caches only notify, they do not decide — repeated derivations are idempotent
+**Interface contract**:
+```
+schedule(task_id, timer_id, due_at, action_spec) -> OK | ALREADY_EXISTS
+cancel(task_id, timer_id) -> OK | ABSENT
+on_due(callback)   # called after due_at; callback idempotent
+```
 
-**Reference mappings** (non-normative):
+**Invariants**:
+- **U1 monotonicity + clock authority**: due_at is based on the timestamp in the persisted state; the trigger must not fire earlier than due_at. **timeout_at must be written by CAP-STATE, using the time of the clock source where CAP-STATE resides; the "now" compared when the timer fires must come from the same clock source** (or an equivalently calibrated source)
+- **U2 at most once**: the same timer_id must not fire twice; a late trigger is allowed, and the callback must be idempotent
+- **U3 state authority**: a timer must not maintain an independent "processed" marker as the basis for judgment; the judgment must be re-derived from CAP-STATE (idempotent re-derivation)
+- **U4 granularity declaration**: the runtime must declare the minimum check granularity (e.g. 2 minutes); the caller must not assume finer precision
+- **U5 trigger mode**: supports one-shot and periodic triggering; periodic triggering is for fallback-wake (watchdog/heartbeat) scenarios; the period is a binding-declared parameter
+- **U6 self-contained payload**: the trigger payload must be self-contained; it must not assume the receiving session still remembers the context
+- **U7 dedup key formula**: dedup key = `hash(task_id + trigger_kind + due_at)` (the concretization of U2 at-most-once)
 
-| Runtime | Implementation | Tier |
-|---|---|---|
-| AgentTeams | MinIO (object storage, `mc` CLI) + per-team bucket | L1 |
-| Bare QwenPaw | workspace directory + a file-sync mechanism (declared) | L2 |
-| claude-code | the repo's files/ directory + git (the fingerprint = git hash) | L1 |
+**Millforge dependencies**: R6 30min/2h timeouts, R5 24h/4h windows, B-5 stall, B-6 mismatch windows, loop fallback wake, watchdog three modes.
 
----
+## CAP-NOTIFY — Best-Effort Notification
 
-## CAP-TIMER — Timer
+**Semantics**: delivers a notification to a human or Agent; loss is allowed (on loss, the state must be rebuildable from CAP-STATE); **protocol events must have a code-level subscription surface; IM text is not the sole observation point**.
 
-**Semantics**:
-- **one-shot / periodic** trigger
-- **dedup** (the same trigger key repeated does not fire twice)
-- **idempotent derivation** (a timer fires = "go read the state and re-derive next_action", never "directly perform X")
+**Interface contract**:
+```
+send(recipients[], message, event_ref?)
+  -> delivery_report {delivered[], failed[], gaps[]: {recipient, reason}}
+subscribe(event_types[], callback) -> subscription_id   # code-level event surface
+unsubscribe(subscription_id) -> OK | ABSENT
+```
 
-**Sub-requirements**:
-- T5 the trigger payload must be **self-contained** (it cannot assume the receiving session still remembers the context)
-- T6 dedup key = `hash(task_id + trigger_kind + due_at)`
-- **U1** shares a clock source with CAP-STATE
-- **F2 idempotent derivation**: the timer is a **notification**; the **judgment** comes from reading CAP-STATE (timeout_at / budget) and re-deriving. **The timer itself does not carry a judgment conclusion** (it may carry a "please derive" hint, but the derivation must be done by the script/driver)
+**Invariants**:
+- **V1 a notification is not state**: no decision/due/count may exist only in a notification
+- **V2 loss is rebuildable**: after a notification is lost, CAP-STATE + CAP-TIMER must suffice to rebuild "who needs to know what"
+- **V3 no silent drop**: when the runtime knows a recipient is unreachable (not in the allowlist / channel does not exist / identity unverified) → it must return the reason in delivery_report.gaps[]; gaps do not block send, but the caller must be able to observe them
+- **V4 notifications are repeatable**: repeated delivery of the same message produces no state side effects; the receiver dedups by message_id
+- **V5 code-level subscription**: every protocol event (attention create/resolve/timeout, decision lock/reopen, circuit-breaker state change, contract snapshot change) must be subscribable by code, and the event carries an event_ref (pointing to the authoritative record in CAP-STATE); an IM text notification is a **derived view** of the code-level event, not the sole observation surface
+- **V6 receipts queryable**: delivery_report must distinguish delivered (the runtime confirms delivery to the channel) from accepted (the channel confirms receipt); accepted alone does not constitute "the human saw it" — evidence that a human saw it can only be a CAP-ATTN resolve or an explicit read receipt on the channel side
+- **V7 channel declaration**: the binding must declare which channels exist (project room / DM / originating channel) and their relative positions
+- **V8 originating-channel notification layering**: the delivery of the originating-channel notice is an L2 mechanism (the delivery_report is observable); the generation of the report's content is the L3 behavioral layer; what is lost can be rebuilt from CAP-STATE per V2; never rely on "remembering to send"
 
-**Reference mappings** (non-normative):
+**Millforge dependencies**: attention bypass CC, escalation notifications, freeze/unfreeze notifications, dashboard/IM cards (derived views).
 
-| Runtime | Implementation | Tier |
-|---|---|---|
-| AgentTeams | runtime cron (a one-shot job per timeout; text self-contained) | L2 |
-| Bare QwenPaw | runtime cron + HEARTBEAT (fallback period 10–30min) | L2/L3 |
-| claude-code | ScheduleWakeup / loop scheduling | L2 |
+## CAP-ATTN — Human Attention Request and Response
 
-**Degradation rule**: a binding without a CAP-TIMER must implement "external polling fallback" (a watchdog reads CAP-STATE on a fixed period) and declare it; a pure L3 "the agent remembers to remind itself" is **not** a legal implementation.
+**Semantics**: initiates a request requiring a response to a designated human; the response must be persisted; the same request is idempotent; **the human response must be initiated from at least one persistent display surface, and the initiator's identity must be verifiable**.
 
----
+**Interface contract**:
+```
+request(task_id, kind, prompt, options?, route_to, timeout_at, idempotency_key)
+  -> {request_id, state, surfaces[]}
+resolve(request_id, response, responder_id, surface_id, idempotency_key)
+  -> OK | ALREADY_RESOLVED | NOT_FOUND | IDENTITY_UNVERIFIED
+status(request_id) -> {state, response?, resolved_at?, resolved_via_surface?}
+list_open(task_id) -> request_id[]
+```
 
-## CAP-NOTIFY — Notification Channel
+**Invariants**:
+- **W1 idempotency**: requests with the same idempotency_key must not produce multiple independent requests; a duplicate returns the same request_id; resolve is likewise idempotent — a repeated resolve with the same (request_id, responder_id, idempotency_key) returns the first result and produces no second response
+- **W2 response persistence**: after a successful resolve, the response (including responder_id, surface_id, timestamp) must be written to CAP-STATE; merely "read/clicked" on the channel does not count as a response
+- **W3 timeout judged by CAP-TIMER**: the request does not maintain a wall-clock timeout; timeout_at is written to CAP-STATE, and the due action is triggered by CAP-TIMER
+- **W4 trusted identity**: resolve must verify the responder's identity; the role self-declared by the payload must not be trusted; the strength of identity verification is declared by the channel (W5); a channel below the minimum requirement must not serve as a response surface
+- **W5 response-surface quality**: each request must have at least one **persistent display surface** supporting the response — it persists until the request times out, can be actively revisited by a human, and the response can complete identity verification on that surface. IM private chat, dashboard todo list, dedicated approval page = persistent display surfaces; **group-chat @mention is not** (messages get buried, cannot be revisited)
+- **W6 multi-surface close**: a successful resolve on any persistent display surface → the CAP-STATE state becomes resolved; other display surfaces perceive it via polling/event push and close the todo; closing is a view behavior and does not change the authoritative state
+- **W7 option structure**: when kind=decision and options are provided, options must be a structured list `[{option_id, label, consequence_summary?}]`; the response must return the option_id, and **free text must not be returned as a choice**
+- **W8 responder restricted to humans**: a request can only be resolved by a human (roster role = human); an Agent must not resolve it on its own
+- **W9 idempotency-key formula**: the request idempotency key = `hash(task_id + decision_node_id + decision_hash)`; the resolve idempotency key includes responder_id + action, i.e. `hash(task_id + request_id + responder_id + action)`
+- **W10 response write confirmation**: a human response enters CAP-STATE only after the write confirmation; subsequent actions (reclassification / re-voting) must not begin before the confirmation
 
-**Semantics**:
-- send a message to a **room / DM / originating channel**
-- **delivery evidence** (send success ≠ the other side read it; a delivery report is required)
+**Millforge dependencies**: R6 attention, NMH lock confirmation, B-6 escalation, B-10 reclassification ruling, C-3 undecidable escalation.
 
-**Sub-requirements**:
-- T7 the message carries a routing hint (to whom / to which room)
-- T8 a delivery report (delivered / read / failed) — at least "send-confirmed"
-- **U3 channel declaration**: which channels exist (project room / DM / originating channel) and their relative positions are declared by the binding
-- **F1 write confirmation** (aligns with the dual channel): **the delivery of the originating-channel notice is an L2 mechanism** (CAP-NOTIFY delivery_report); the report's **content generation** is L3 — what is lost can be rebuilt from CAP-STATE; never rely on "remembering to send"
+## CAP-SPAWN — Fresh-Context Execution Unit
 
-**Reference mappings** (non-normative):
+**Semantics**: creates an execution unit with a brand-new context, receives a structured task, and returns a structured result.
 
-| Runtime | Implementation | Tier |
-|---|---|---|
-| AgentTeams | Matrix room / DM (channel send) | L1 |
-| Bare QwenPaw | channels send (DM) + room @mention | L1/L3 |
-| claude-code | the Task result message + the parent session | L1 |
+**Interface contract**:
+```
+spawn(task_spec, context_refs[], return_schema, timeout?)
+  -> {spawn_id, result, decision_log_ref}
+```
 
----
+**Invariants**:
+- **X1 context isolation (hard)**: a spawn must not inherit the parent execution unit's conversation history; it can obtain explicit input only through context_refs. **A runtime that does not satisfy X1 must not serve as a legal binding**
+- **X2 structured return**: result must conform to return_schema; decision_log_ref must point to a fingerprintable artifact in CAP-STORE
+- **X3 independence**: a spawn must not modify the parent execution unit's state; all state changes are passed through the return value
+- **X4 boundedness (hard)**: a spawn must be bounded — either return a structured result `{artifact_refs[], decision_log_ref, self_reported_status}` within the declared deadline, or report a bounded failure `{bounded_failure: true, reason, partial_refs?}` within the deadline; it must not hang indefinitely; the deadline is declared by the caller, and the runtime must enforce it. **A runtime that does not satisfy X4 must not serve as a legal binding** (the loop-executability prerequisite: otherwise iteration_budget and CAP-TIMER lose their meaning)
+- **X5 input = spec reference**: the spawn input is a task-spec reference (task_spec / context_refs), not a long text inlined in the message
+- **X6 context_refs content restriction**: context_refs may contain only marked signals + CAP-STORE artifact refs (§11-SIGNAL)
+- **X7 worker context isolation (protocol rule)**: the worker's native session does only scheduling + acceptance; all implementation work must go through a CAP-SPAWN sub-execution unit (reads context from files, writes outputs to files, destroyed on completion). This is a protocol rule, not a binding feature — but the binding must provide the means to implement it
 
-## CAP-ATTN — Human Attention Request
+**Millforge dependencies**: worker context isolation (the v2.40 ruling), critic independent execution, C-3 constrained classification, merge-semantics confirmation, loop iteration/re-plan spawn.
 
-**Semantics** (the 13th primitive's runtime support):
-- create a **human-attention request** (R6 decision / escalation / clarification)
-- **idempotent** (a repeated request for the same decision does not duplicate)
-- **reply persistence** (the human's reply enters CAP-STATE and is auditable)
-- **timeout** (two-tier: reversible / irreversible; aligned with CAP-TIMER)
-- **trusted identity** (only a human's confirmed reply counts; an agent cannot self-resolve)
+## CAP-EXEC — Deterministic Program Execution
 
-**Sub-requirements**:
-- W1 idempotency key = `hash(task_id + decision_node_id + decision_hash)` (W7 extension: include `responder_id + action` for a resolve)
-- W2 the reply must be written to CAP-STATE (the reply itself carries an audit record: who / when / which option)
-- W3 timeout = the timeout_at field in CAP-STATE + a CAP-TIMER derivation (the request does not hold its own timer)
-- W4 trusted identity: the request may only be resolved by a **human** (roster role = human)
-- **W5 persistent display surface**: every attention request must have at least one persistent display surface (a display that persists until timeout, is actively revisitable, and has identity-verified replies); **a group chat is not a persistent display surface**; a channel with trust below the persistent-surface requirement may only notify, not resolve (S4)
-- **W6 multi-surface close**: a request may be presented on multiple surfaces; any one surface's resolve → the others close (polling/event sync); the close is a **view behavior**, not a state write (the authoritative state is still in CAP-STATE)
-- **W7 structured resolve**: when kind=decision + options, the resolve response must carry back the **option_id** (structured); a free-text choice is rejected (idempotency key = `hash(task_id + request_id + responder_id + action)`)
-- **F1 write confirmation**: the human's reply enters CAP-STATE only **after the write confirmation**; subsequent actions (reclassification / re-voting) must not begin before the confirmation
-- **F2 idempotent derivation**: the timeout verdict (reversible 30min / irreversible 2h / R5 24h/4h) is derived from the timeout_at/due_at fields (the source of truth); the timer only notifies, the script decides
+**Semantics**: runs a deterministic program (script/binary), passes arguments, and captures structured output and an exit code. The program may ship with the core, or be a runtime-provided equivalent.
 
-**Reference mappings** (non-normative):
+**Interface contract**:
+```
+exec(program_ref, args[], stdin?, timeout?) -> {exit_code, stdout, stderr}
+```
 
-| Runtime | Implementation | Tier |
-|---|---|---|
-| AgentTeams | Matrix DM @human + runtime one-shot timer | L2 |
-| Bare QwenPaw | DM channel + HEARTBEAT fallback + runtime cron | L2/L3 |
-| claude-code | the parent session's AskUserQuestion (a persistent display surface; group chat does not apply) | L1 |
+**Invariants**:
+- **Y1 determinism**: the same program_ref + the same input → the same output (does not rely on LLM sampling)
+- **Y2 exit-code semantics**: the exit code is interpreted with the semantics defined by the caller; 0 does not automatically mean "success"
+- **Y3 no implicit state**: must not read/write the caller's implicit state; all input is passed explicitly, all output is returned explicitly
+- **Y4 execution environment declaration**: the binding must declare the execution environment (which machine / container / sandbox)
+- **Y5 output persistence**: execution output must be persisted (written to CAP-STORE or returned inline); the evidence is auditable
+- **Y6 timeout bound**: command execution must be bounded; it must not hang forever
+- **Y7 NMA isolation boundary**: the executor must not run inside the reviewed party's workspace (unreachable across containers / across workspaces); 🔵 items are limited to externally verifiable surfaces (API / object storage / public docs)
 
-**Persistent-surface examples** (W5, non-normative): IM private chat with a bot, a dashboard todo list, a dedicated approval page, a console interactive prompt. **Group-chat @mention is not one** (buried in messages, not revisitable, identity unreliable).
+**Ruling on the ownership of the 8 scripts**: the 8+1 scripts in `core/scripts/` **ship with the core protocol**; runtimes are not required to rewrite them —
+1. The CAP-EXEC semantics is "run a deterministic program", not "the runtime provides these particular programs"; a runtime rewrite = semantic-drift risk
+2. The scripts are **deterministic implementations of the protocol semantics** (B-1 schema validation / B-2 conflict detection / B-3 semver classification …) and should be versioned together with the protocol clauses
+3. Runtimes without object storage / group chat (the claude-code adaptation) run the scripts as-is — the input/output paths are resolved by the caller per the CAP-STORE ref (the local file system is a legal CAP-STORE implementation)
+4. Exception: the **scheduling part** of the watchdog (scheduler configuration, state-file path) = binding implementation; the logic part (due judgment / action derivation) = the core's CAP-TIMER reference implementation
 
----
+**Millforge dependencies**: all deterministic scripts for B-1/B-2/B-3/B-5/B-6/B-10/C-3 + timer-derive.
 
-## CAP-SPAWN — Sub-Execution Unit (worker's implementation unit)
+## CAP-ROSTER — Role Roster
 
-**Semantics**:
-- X1 **fresh-context** sub-execution unit (isolated from the parent's session history)
-- X2 **structured return** (the result is a parseable structured object, not free text)
-- **X4 boundedness (mandatory)**: a spawn must declare a **bounded return within a deadline** — a structured result or a bounded failure `{bounded_failure: true, reason, partial_refs?}`; a spawn that hangs / overruns / returns unparseable text is treated as bounded_failure
+**Semantics**: queries the identity, role, and weight of human members.
 
-**Sub-requirements**:
-- X3 the spawn's input = a **spec reference** (context_refs), not a long text inlined in the message
-- X5 the spawn's context_refs may contain **only marked signals + CAP-STORE artifact refs** (§11-SIGNAL effect 1)
-- X6 a spawn's decision_log (if any) is written to CAP-STORE + fingerprinted (S2); the message carries only the ref
-- **X4a** the deadline is declared at spawn creation (aligned with CAP-TIMER / task timeout); the deadline is the spawn's own bound, not an external watchdog
-- **X4b** the return must conform to a declared return schema (validated by the structured-return validation; schema violation = bounded_failure)
-- **X4c** a runtime that does not satisfy X4 is **not a legal binding** for loop / acceptance flows (otherwise iteration_budget and CAP-TIMER become meaningless)
+**Interface contract**:
+```
+members(team_id) -> [{member_id, role, weight, accountable_for[]}]
+accountable(task_id) -> member_id | ABSENT
+delegation_chain(task_id) -> [{delegator, delegatee, scope, granted_at}] | []
+```
 
-**Reference mappings** (non-normative):
+**Invariants**:
+- **Z1 weight comes from role**: weight is a role attribute, not model confidence; the core must not infer weight via LLM
+- **Z2 single accountable**: each task has at most one accountable stakeholder; ABSENT must be returned explicitly and must not be silently filled with a "default owner"
+- **Z3 delegation chain queryable**: when the accountable delegates a response, the delegation chain must be queryable; the core uses the delegation chain when judging "who has the power to lock"
 
-| Runtime | Implementation | Tier | X4 |
-|---|---|---|---|
-| QwenPaw (bare) | `spawn_subagent` (fork=False; background=false) | L1 | ✅ (a versioned 3600s hard deadline — the runtime enforces it; the binding must state the version) |
-| AgentTeams (Worker) | Worker = a CAP-SPAWN instance (the runtime schedules the worker container) | L1 | ✅ (the runtime's task timeout; the binding must state it) |
-| claude-code | the `Task` tool (subagent) | L1 | ⚠️ (the Task tool has no built-in deadline; the binding must supplement a deadline via ScheduleWakeup + state derivation; **the supplement must be deterministic (L2), not behavioral (L3)**) |
-
-**Worker context isolation (a protocol-level requirement on the CAP-SPAWN user)**: the worker's native session does scheduling + acceptance only; **all implementation work must go through a CAP-SPAWN sub-execution unit** (reads context from files, writes outputs to files, destroyed). This is a **protocol rule**, not a binding feature — but the binding must provide the means for it.
-
----
-
-## CAP-EXEC — Command Execution (NMA verification)
-
-**Semantics**:
-- execute a **verifiable command** (shell / grep / curl / API call / test)
-- return **command + output + exit code** (evidence)
-
-**Sub-requirements**:
-- E1 the execution environment is declared (which machine / container / sandbox)
-- E2 the output is persisted (written to CAP-STORE or inline; evidence is auditable)
-- E3 timeout bound (a command cannot hang forever)
-
-**Isolation boundary (NMA)**: the executor cannot run inside the **reviewed party's workspace** (cross-container / cross-workspace is unreachable) — 🔵 items are limited to externally verifiable surfaces (API / object storage / public docs).
-
-**Reference mappings** (non-normative):
-
-| Runtime | Implementation | Tier |
-|---|---|---|
-| QwenPaw (bare) | execute_shell_command (container-local) | L1 |
-| AgentTeams | worker container shell + docker exec (host) | L1 |
-| claude-code | the Bash tool (sandboxed) | L1 |
-
----
-
-## CAP-ROSTER — Stakeholder Registry
-
-**Semantics**:
-- register **stakeholders** (humans + agents) with **role / weight**
-- **accountable query** (who is accountable for this task/project/loop)
-- **delegation chain** (who delegated to whom; queryable)
-
-**Sub-requirements**:
-- Z1 weight = role-based (owner/approver/informed × value), never model confidence
-- Z2 a single accountable per task/loop/decision (exactly one; no collective)
-- Z3 the delegation chain is queryable (a delegation record with timestamps)
-
-**Reference mappings** (non-normative):
-
-| Runtime | Implementation | Tier |
-|---|---|---|
-| AgentTeams | the team roster in object storage (team.json / agent config) | L2 |
-| Bare QwenPaw | workspace roster file (roster.json) | L2 |
-| claude-code | a project-level roster file | L2 |
+**Millforge dependencies**: R1 owner ruling, R2 weighted majority, NMH locking, attention routing (§03-4), loop driver identity determination (§10-3).
 
 ---
 
@@ -249,44 +212,57 @@ See `protocol/12-REDLINES.md` §1 (artifact data redlines / decision_log anti-fo
 
 ## Binding Legality Determination
 
-A runtime is a **legal binding** if and only if:
-1. all 8 capabilities are implemented and all invariants hold (X1/X4 are hard gates);
-2. it provides CAP-EXEC able to run `core/scripts/` (or declares an equivalent implementation that passes the golden tests);
-3. it declares: runtime version matrix / primitive mapping table (every §01 primitive → concrete mechanism) / mode matrix / timer granularity / persistent display surfaces;
-4. it passes the `golden-tests/` regression (L5).
+A runtime constitutes a **legal binding** if and only if:
+1. all 8 capabilities are implemented and all invariants are satisfied (X1/X4 are hard gates)
+2. it provides CAP-EXEC able to run `core/scripts/` (or declares an equivalent implementation and passes the golden tests)
+3. it declares: runtime version matrix / primitive mapping table (every §01 primitive → concrete mechanism) / mode matrix / timer granularity / persistent-display-surface list
+4. it passes the `golden-tests/` regression (L5)
+
+## Capability List (overview)
+
+| Capability | One-line semantics |
+|---|---|
+| CAP-STATE | task-level durable state read/write (replayable, atomically updatable) |
+| CAP-STORE | addressable, fingerprintable artifact store (append optional) |
+| CAP-TIMER | due-time trigger (granularity declaration, idempotent callback) |
+| CAP-NOTIFY | best-effort notification channel (loss allowed, state rebuildable) |
+| CAP-ATTN | human attention request and response (persistent display surface, idempotent) |
+| CAP-SPAWN | fresh-context execution unit (structured return) |
+| CAP-EXEC | deterministic program execution (exit-code semantics) |
+| CAP-ROSTER | role roster (human members + roles + weights) |
 
 ## Binding Declaration Format
 
-A binding's README **must** contain:
+The binding's README **must** contain:
 
 ```
 ## Capability Declaration (CAP-*)
-| CAP | Implemented | Tier (L1/L2/L3) | Mechanism (concrete runtime API) | Limitations |
-|-----|-------------|------------|-------------------------|------|
+| CAP | Implemented | Tier (L1/L2/L3) | Mechanism (runtime API) | Limitations |
+|-----|-------------|------------------|--------------------------|-------------|
 | CAP-STATE | ✅ | L2 | … | … |
 | CAP-STORE | ✅ | L1 | … | … |
 | CAP-TIMER | ✅ | L2 | … | … |
 | CAP-NOTIFY | ✅ | L1 | … | … |
-| CAP-ATTN | ⚠️ partial | L2/L3 | … | the persistent display surface is only the DM |
-| CAP-SPAWN | ✅ | L1 | … | the X4 deadline is 3600s (version vX) |
-| CAP-EXEC | ✅ | L1 | … | the isolation boundary is … |
+| CAP-ATTN | ⚠️ partial | L2/L3 | … | the persistent display surface is DM only |
+| CAP-SPAWN | ✅ | L1 | … | X4 deadline = 3600s (version vX) |
+| CAP-EXEC | ✅ | L1 | … | isolation boundary = … |
 | CAP-ROSTER | ✅ | L2 | … | … |
 
 ## Illegal-Capability Degradation
-(declares, per capability, which protocol clauses this binding "does not support / must degrade")
+(declare, per capability, which protocol clauses this binding "does not support / must degrade")
 
 ## Known Issues
-(the runtime's known bugs and their impact on protocol execution)
+(the runtime's known defects and their impact on protocol execution)
 ```
 
-**A binding that fails to declare = an illegal binding** (it cannot host any Millforge protocol flow).
+**Failing to declare = an illegal binding** (it cannot host any Millforge protocol flow).
 
 ## Protocol ↔ Binding Dependency Summary
 
-| Protocol piece | Dependent capabilities | Missing = |
-|----------|---------|--------|
+| Protocol piece | Dependent capabilities | Consequence of missing |
+|---|---|---|
 | §03 decision aggregation | CAP-STATE + CAP-TIMER (scripts) | the aggregation mechanism is unavailable (degrades to "human single-point only") |
-| §04 NMH | CAP-STORE (NMH documents) | the decision tree is not persisted (the file is not the contract — illegal) |
+| §04 NMH | CAP-STORE (NMH documents) | the decision tree is not persisted (file-as-contract unavailable → illegal) |
 | §05 NMA | CAP-EXEC + CAP-STORE | the checklist is not executable (degrades to "peer review only") |
 | §06 lifecycle | CAP-NOTIFY + CAP-STATE | dual-channel reporting / completion signals are unavailable |
 | §07 handoff | CAP-STORE (cross-team space) | cross-team is unavailable (single_user only; a multi_user binding may omit) |

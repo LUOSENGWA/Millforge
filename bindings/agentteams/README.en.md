@@ -14,6 +14,7 @@
 | `cron-spec.md` | CAP-TIMER binding spec (U1–U4 + registration/cleanup + fallback-wake redline) |
 | `deployment-guide.md` | topology + compile→deploy chain + filesync post-write protocol + failure sequences & recovery |
 | `s3-storage.md` | S3 object-storage semantics verification (T1–T3) + CAS positioning + storage_adapter enum + 8-script audit |
+| `reference-mappings.md` | runtime-specific-name mapping (non-normative appendix; migrated from core/binding-contract, preserved line by line; English twin `.en.md`) |
 
 ## 1. CAP → Mechanism Mapping
 
