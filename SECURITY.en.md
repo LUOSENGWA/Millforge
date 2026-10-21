@@ -6,11 +6,6 @@ Only the latest release (see `VERSION`) receives security fixes. Historical vers
 
 ## Reporting a vulnerability
 
-**Do not open a public issue.** Use GitHub's private channel:
-
-1. Repository page → **Security** → **Report a vulnerability** (GitHub Security Advisories); or
-2. If that entry is unavailable, open an issue with no technical detail titled `security contact requested`; maintainers will open a private channel.
-
 Please include: affected version, reproduction steps, impact (remotely triggerable? requires local file-write access?), and a suggested fix direction (optional).
 
 ## Response
