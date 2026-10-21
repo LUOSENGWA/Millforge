@@ -1,0 +1,7 @@
+{"ts": "2026-10-21T18:32:36Z", "task": "P2c", "status": "blocked-by-gate", "detail": "files_to_touch overlap with active task"}
+{"ts": "2026-10-21T18:32:38Z", "task": "P2d", "status": "blocked-by-gate", "detail": "files_to_touch overlap with active task"}
+{"ts": "2026-10-21T18:42:56Z", "task": "P3k", "status": "done", "detail": "rc=0 wall=59s"}
+{"ts": "2026-10-21T18:42:59Z", "task": "P3b", "status": "done", "detail": "rc=0 wall=63s"}
+{"ts": "2026-10-21T18:46:35Z", "task": "P4b", "status": "failed-budget", "detail": "rc=55 wall=46s"}
+{"ts": "2026-10-21T18:49:59Z", "task": "P4k", "status": "done", "detail": "rc=0 wall=251s"}
+{"ts": "2026-10-21T18:51:20Z", "task": "P4x", "status": "killed", "detail": "rc=137 wall=30s"}

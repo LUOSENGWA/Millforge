@@ -1,0 +1,11 @@
+{
+ "task": "P4b",
+ "session_id": "4152164c-71fb-4956-b0b9-7ec58bffb2ae",
+ "status": "failed-budget",
+ "started_at": "2026-10-21T18:45:49Z",
+ "updated_at": "2026-10-21T18:46:35Z",
+ "pid": "438778",
+ "exit_code": "55",
+ "wall_s": "46",
+ "finished_at": "2026-10-21T18:46:35Z"
+}

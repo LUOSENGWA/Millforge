@@ -1,0 +1,11 @@
+{
+ "task": "P4x",
+ "session_id": "4c570ef4-94cf-4410-bb5a-687b6dc1464e",
+ "status": "killed",
+ "started_at": "2026-10-21T18:50:50Z",
+ "updated_at": "2026-10-21T18:51:20Z",
+ "pid": "438994",
+ "exit_code": "137",
+ "wall_s": "30",
+ "finished_at": "2026-10-21T18:51:20Z"
+}

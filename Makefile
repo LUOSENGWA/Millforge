@@ -3,7 +3,7 @@
 
 FILE ?= golden-tests/fixtures/bizmarket-team.json
 
-.PHONY: test compile validate deps compliance evidence
+.PHONY: test compile validate deps compliance evidence contract
 
 deps:
 	pip install -r requirements.txt
@@ -11,6 +11,7 @@ deps:
 test:
 	bash golden-tests/scripts/run-compile-tests.sh
 	bash golden-tests/scripts/run-scripts-tests.sh
+	bash golden-tests/scripts/run-contract-tests.sh
 	python3 core/scripts/check-evidence-refs.py
 	python3 core/scripts/check-binding-compliance.py
 	python3 golden-tests/tests/test_tier_gate.py
@@ -26,3 +27,6 @@ compliance:
 
 evidence:
 	python3 core/scripts/check-evidence-refs.py
+
+contract:
+	bash golden-tests/scripts/run-contract-tests.sh
