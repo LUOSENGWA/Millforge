@@ -36,6 +36,15 @@
       "default": "zh",
       "description": "编译产出语言。en = 全部模板取 .en.md 孪生文件（双语完整性硬门：缺失即 fail）。CLI --lang 可覆盖。"
     },
+    "context_tier": {
+      "type": "string",
+      "enum": [
+        "S",
+        "M",
+        "L"
+      ],
+      "description": "上下文窗口档位（S ≤256K / M 256K–512K / L 512K–1M）。声明后编译器按 12-REDLINES §5.2 强制常驻 token 上限（超 = fail）；未声明则仅行门 + 报告。"
+    },
     "template": {
       "type": [
         "string",

@@ -41,17 +41,17 @@ millforge/
 │   └── INDEX.yaml       #   fragment registry
 ├── bindings/            # runtime bindings (agentteams reference / standalone-agent / coding-cli)
 ├── migration/           # migrating existing teams (scaffold-team.py + MIGRATION-CHECKLIST)
-├── golden-tests/        # deterministic regression (T1–T10 gates / 13 cases / 83 script assertions)
+├── golden-tests/        # deterministic regression (T1–T10 gates / 13 cases / 83 script assertions + evidence/compliance/tier unit gates)
 └── docs/                # binding guide (adding-a-binding) + provenance/ (verbatim-inheritance source archives)
 ```
 
 **Three binding shapes**:
 
-| Shape | Directory | Applies to | Capability coverage |
-|-------|-----------|-----------|---------------------|
-| team platform | `bindings/agentteams/` | multi-team / cross-team handoff / multi-human isolation | 8/8 (CAP-NOTIFY partial) |
-| standalone agent runtime | `bindings/standalone-agent/` | single host, multiple agent instances, no orchestration layer | 8/8 (CAP-NOTIFY partial) |
-| coding-CLI execution backend | `bindings/coding-cli/` | execution backend; the parent provides state-class capabilities | 4/8 (declared-degraded) |
+| Shape | Directory | Applies to | Capability coverage | Status |
+|-------|-----------|-----------|---------------------|--------|
+| team platform | `bindings/agentteams/` | multi-team / cross-team handoff / multi-human isolation | 8/8 (CAP-NOTIFY partial) | reference (not compliant) |
+| standalone agent runtime | `bindings/standalone-agent/` | single host, multiple agent instances, no orchestration layer | 8/8 (CAP-NOTIFY partial) | reference (not compliant) |
+| coding-CLI execution backend | `bindings/coding-cli/` | execution backend; the parent provides state-class capabilities | 4/8 (declared-degraded) | reference (not compliant) |
 
 ## Quick Start
 

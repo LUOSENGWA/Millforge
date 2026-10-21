@@ -18,6 +18,13 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 - Capability declarations now use coverage levels (full/partial/declared-degraded); L1/L2/L3 reserved for reliability layering.
 - Repository cleanup: internal round/date/version notes and PR progress tables removed; README tree corrected.
 
+### Engineering
+
+- Compiler: optional `context_tier` (S/M/L) in `team.json`; the Budget stage gains a resident-token gate (`token_estimate` = CJK chars + non-CJK / 4; fail when a tier is declared and the cap is exceeded, report-only otherwise); new `golden-tests/tests/test_tier_gate.py`.
+- Binding compliance state machine: `bindings/*/compliance.json` (machine-readable coverage levels + gaps) + `make compliance`; two-tier status `compliant` / `reference` (all three bindings are currently reference).
+- Evidence register: `docs/EVIDENCE.md` (`[E#]` external citations / internal observations) + `make evidence`.
+- Appendix moved: `bindings/reference-mappings.md` (cross-binding non-normative appendix).
+
 ### Fixed
 
 - Invariant count 46→55; broken link; `spawn context_refs` cap 4/6/8 (including the mandatory set).

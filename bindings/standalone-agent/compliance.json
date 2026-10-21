@@ -1,0 +1,39 @@
+{
+  "binding": "standalone-agent",
+  "status": "reference",
+  "compliant": false,
+  "capabilities": {
+    "CAP-STATE": "full",
+    "CAP-STORE": "full",
+    "CAP-TIMER": "full",
+    "CAP-NOTIFY": "partial",
+    "CAP-ATTN": "full",
+    "CAP-SPAWN": "full",
+    "CAP-EXEC": "full",
+    "CAP-ROSTER": "full"
+  },
+  "hard_gates": {
+    "X1": "pass",
+    "X4": "not-enforced"
+  },
+  "gaps": [
+    {
+      "id": "X4",
+      "scope": "hard-gate",
+      "ref": "upstream spawn deadline",
+      "note": "spawn bound is best-effort, not enforced"
+    },
+    {
+      "id": "V3",
+      "scope": "CAP-NOTIFY",
+      "ref": "#1388",
+      "note": "same allowlist mechanism as agentteams"
+    },
+    {
+      "id": "V5",
+      "scope": "CAP-NOTIFY",
+      "ref": "#1394 (event surface)",
+      "note": "code-level event surface; flips green when the upstream event surface lands"
+    }
+  ]
+}

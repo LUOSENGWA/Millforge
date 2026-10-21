@@ -4,6 +4,8 @@
 > This binding is a **reference binding, not the only binding** — protocol legality is judged by the 8 capabilities in `core/binding-contract.md`;
 > any runtime satisfying the 8 capabilities + invariants constitutes a legal binding (`bindings/standalone-agent` and `bindings/coding-cli` are two other reference implementations).
 > **Generic-terminology discipline**: this directory is the **only legal surface** for runtime-specific names (spawn_subagent / QwenPaw cron / channels send / mc / Matrix / MinIO-RustFS / dashboard).
+> **Status: reference — not compliant** (`compliance.json`: X4 not enforced; CAP-NOTIFY V3/V5/V6 gaps). Legality: `core/binding-contract.md` §5.
+
 
 ## Index (full documents)
 
@@ -14,7 +16,8 @@
 | `cron-spec.md` | CAP-TIMER binding spec (U1–U4 + registration/cleanup + fallback-wake redline) |
 | `deployment-guide.md` | topology + compile→deploy chain + filesync post-write protocol + failure sequences & recovery |
 | `s3-storage.md` | S3 object-storage semantics verification (T1–T3) + CAS positioning + storage_adapter enum + 8-script audit |
-| `reference-mappings.md` | runtime-specific-name mapping (non-normative appendix; migrated from core/binding-contract, preserved line by line; English twin `.en.md`) |
+
+> The runtime-specific-name mapping (**cross-binding** non-normative appendix) is at [`../reference-mappings.md`](../reference-mappings.md) (English twin `.en.md`).
 
 ## Capability Declaration (CAP-*)
 

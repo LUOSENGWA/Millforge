@@ -101,7 +101,7 @@ Participants: {human} ↔ {agent}
 | park ("let's leave this for now") | 🏳️ | explicit parking; annotate the escalation path for when it must be handled during execution |
 | **no verifiable source** | 🏳️ | a factual assertion must carry a source (file+line / CAP-STORE ref+fingerprint / external doc / the human's own words). **Retrieve first (files/code/docs/API); if no source can be produced → 🏳️**; "I remember / I know" is not a source |
 
-**"Whether the agent knows" is not the thing being judged.** We do not ask an execution body to self-assess its knowledge boundary (LLMs cannot reliably introspect: hallucinated answers carry persistently high confidence). We require one mechanically checkable discipline: **every factual assertion carries a resolvable source; no source = 🏳️ (fail-closed)**. The reviewer spot-checks sources (see §05-NMA Checklist) instead of asking the model "are you sure".
+**"Whether the agent knows" is not the thing being judged.** We do not ask an execution body to self-assess its knowledge boundary (LLMs cannot reliably introspect: hallucinated answers carry persistently high confidence [E2]). We require one mechanically checkable discipline: **every factual assertion carries a resolvable source; no source = 🏳️ (fail-closed)**. The reviewer spot-checks sources (see §05-NMA Checklist) instead of asking the model "are you sure".
 
 **All nodes ✅ or 🏳️ (no 🔓) = NMH complete.**
 

@@ -3,6 +3,7 @@
 > Version: v1.0 | License: Apache-2.0
 > Provenance: migrated from the reference-mappings tables of `core/binding-contract.md` (moved out of the core contract body per the generic-terminology discipline); the table content is preserved line by line, no rewrite.
 > Scope: non-normative appendix — runtime-specific names appear only in this file and in each `bindings/<runtime>/` implementation document (see the `core/binding-contract.en.md` header).
+> Ownership: a **cross-binding appendix**; each binding README's "Capability Declaration" is the authoritative source for that binding's status and coverage level.
 
 ## CAP-STATE
 

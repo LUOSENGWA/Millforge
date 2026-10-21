@@ -3,6 +3,8 @@
 > The mapping between the Millforge core and a **standalone-agent runtime** (no orchestration layer). **This binding is generic across standalone-agent runtimes**: product matrix = QwenPaw / OpenClaw / Hermes / … (QwenPaw is the reference product).
 > Applicable scenario: a single Docker host, multiple QwenPaw agent instances (no K8s/Controller/Team CRD), no MinIO (local disk / shared volume as object storage).
 > The difference from `bindings/agentteams` = removing the platform orchestration layer; **all capabilities are carried by QwenPaw native mechanisms + local files**.
+> **Status: reference — not compliant** (`compliance.json`: X4 not enforced; CAP-NOTIFY V3/V5 gaps). Legality: `core/binding-contract.md` §5.
+
 
 ## Index (full documents)
 

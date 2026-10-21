@@ -71,7 +71,7 @@ Layer 3 (unreliable — agent behavior; a quality enhancement only)
 
 **Hard ceilings** (enforced by the compiler's Budget stage; over = fail, never truncate): coordinator role ≤500 lines / leader ≤250 / worker ≤150.
 
-**Principle**: U-shaped attention (high at context start/end, low in the middle) + multi-turn dialogue pushes the identity file toward the far end. **Capacity ≠ attention.**
+**Principle**: U-shaped attention (high at context start/end, low in the middle [E1]) + multi-turn dialogue pushes the identity file toward the far end. **Capacity ≠ attention.**
 
 The **frequency × criticality matrix** determines content placement: high-frequency & fatal → identity-file head/tail; low-frequency & important → an independent on-demand file (capability-trigger mechanism: trigger description resident + full text loaded on demand); auxiliary → reference layer (grep/read).
 
@@ -100,13 +100,15 @@ Layer 2 · reference layer (on-demand grep/read)
 
 ### 5.1 Context-Window Tiers (S / M / L)
 
-The protocol does not assume a model window size. **The window size is declared by the binding** (a deployment parameter); the protocol only defines three tiers and their budgets:
+The protocol does not assume a model window size. **The window size is declared by the deployment** (the binding provides the window → tier mapping; an instance tags its deployment tier with `context_tier` in `team.json`); the protocol only defines three tiers and their budgets:
 
 | Tier | Window | Applies to |
 |------|--------|-----------|
 | **S** | ≤256K tokens | small/medium-window deployments, the tightest context |
 | **M** | 256K–512K | medium-window deployments |
 | **L** | 512K–1M | large-window deployments (>1M is treated as L: a bigger window never changes the loading structure) |
+
+**How it is declared**: an instance declares `context_tier` (S/M/L, optional) in `team.json`. Once declared, the compiler's Budget stage enforces the resident token cap from §5.2 (over = fail, never truncate); when absent, only the line gates apply and tokens are reported.
 
 **Capacity ≠ attention**: tiers only change the numbers (concurrency, summary counts, inline caps), never the structure (three-layer loading, spawn-first, state on disk).
 
@@ -124,7 +126,7 @@ The protocol does not assume a model window size. **The window size is declared 
 | Soft reset (reload signal refs + task state) | **60%** of working budget | 60% | 60% | Soft reset loses dialogue detail, not the task |
 | Hard reset (rebuild context) | **80%** of working budget | 80% | 80% | State is re-read from CAP-STATE; outputs are persisted before the reset |
 
-Token estimation: the compiler reports `token_shadow = chars/4` (reported only, not a hard gate); the line gates in the compiler's Budget stage remain hard.
+Token estimation: `token_estimate` = CJK chars + non-CJK chars / 4; `token_shadow` (chars/4) is kept for compatibility only. The line gates are always hard; the resident token cap is a hard gate (fail) when `context_tier` is declared, report-only otherwise.
 
 ### 5.3 Loading matrix (when to load which md / skill)
 

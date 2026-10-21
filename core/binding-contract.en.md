@@ -5,7 +5,7 @@
 > Core clauses may reference only CAP-* ids and invariants — never any concrete component.
 > Paradigm: the contract contains no provider type; the adapter translates concrete runtime semantics into the unified contract.
 > durable collaboration is separated from native execution: the harness owns persistent state, the provider is only responsible for execution.
-> Runtime-specific-name mapping: see `bindings/agentteams/reference-mappings.md` (English twin `.en.md`) — a non-normative appendix; the contract body contains no runtime-specific names.
+> Runtime-specific-name mapping: see `bindings/reference-mappings.md` (English twin `.en.md`) — a non-normative appendix; the contract body contains no runtime-specific names.
 
 ## Design Principles
 
@@ -217,6 +217,8 @@ A runtime constitutes a **legal binding** if and only if:
 2. it provides CAP-EXEC able to run `core/scripts/` (or declares an equivalent implementation and passes the golden tests)
 3. it declares: runtime version matrix / primitive mapping table (every §01 primitive → concrete mechanism) / mode matrix / timer granularity / persistent-display-surface list
 4. it passes the `golden-tests/` regression (L5)
+
+**Compliant binding** = all of 1–4 hold. **Reference implementation** = a binding that does not satisfy the hard gates but declares its coverage levels and gaps item by item in the Capability Declaration (`compliance.json`, machine-readable): it may be published and used as an integration reference, but **must not be cited as a compliant sample**, and the protocol surfaces that depend on hard gates (loop/attention, etc.) must degrade per the "protocol ↔ binding dependency table". A reference implementation never relaxes the hard gates; once an upstream gap closes, updating `compliance.json` flips the status automatically (`make compliance`).
 
 ## Capability List (overview)
 

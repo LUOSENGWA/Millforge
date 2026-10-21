@@ -3,6 +3,8 @@
 > The mapping between the Millforge core and a **coding CLI** (one-shot coding agent). **This binding is generic across coding CLIs**: product matrix = Claude Code / QwenCode / OpenCode / Codex CLI / … (Claude Code is the reference product); X1 is judged per product.
 > The thinnest binding: no team/room/loop driver — it carries only the **task + spawn + acceptance evidence chain** trio.
 > Applicable scenario: single-task-level coding work (spec → bounded execution → structured return → fingerprint acceptance), used as an **execution backend** for larger orchestration; it does not carry the full NMH/NMA flow.
+> **Status: reference — not compliant** (`compliance.json`: X1 not satisfied (one-shot, no session isolation); STATE/TIMER/NOTIFY/ROSTER declared-degraded). Legality: `core/binding-contract.md` §5.
+
 
 ## Index (full documents)
 

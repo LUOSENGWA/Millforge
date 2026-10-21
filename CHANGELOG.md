@@ -18,6 +18,13 @@
 - 能力声明改用「覆盖等级（完整/部分/声明降级）」；L1/L2/L3 仅用于可靠性分层。
 - 仓内清理：移除内部轮次/日期/版本注记与 PR 进度表；README 结构树修正。
 
+### 工程
+
+- 编译器：`team.json` 新增可选 `context_tier`（S/M/L）；Budget 段新增常驻 token 门（`token_estimate` = CJK 字符数 + 非 CJK ÷ 4；声明 tier 时超限 fail，未声明只报告）；新增 `golden-tests/tests/test_tier_gate.py`。
+- 绑定合规状态机：`bindings/*/compliance.json`（机器可读覆盖等级 + 缺口）+ `make compliance`；两级状态 `compliant` / `reference`（当前三绑定均为 reference）。
+- 证据登记：`docs/EVIDENCE.md`（`[E#]` 外部引用 / 内部观察）+ `make evidence`。
+- 附录上移：`bindings/reference-mappings.md`（跨绑定非规范附录）。
+
 ### 修复
 
 - 不变式计数 46→55；死链；`spawn context_refs` 上限 4/6/8（含必填集）。

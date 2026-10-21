@@ -3,6 +3,8 @@
 > 千锻核心与**编程 CLI**（one-shot coding agent）的映射。**本绑定对所有编程 CLI 通用**：产品矩阵 = Claude Code / QwenCode / OpenCode / Codex CLI / …（Claude Code 为参考产品）；X1 逐产品判定。
 > 最薄的绑定：无团队/room/loop driver，只承载 **task + spawn + 验收证据链** 三件套。
 > 适用场景：单任务级编码工作（spec → 有界执行 → 结构化返回 → 指纹验收），作为更大编排的**执行后端**，不承载 NMH/NMA 全流程。
+> **状态：reference — 非 compliant**（`compliance.json`：X1 未满足（one-shot 无会话隔离）；STATE/TIMER/NOTIFY/ROSTER 声明降级）。合规判定见 `core/binding-contract.md` §5。
+
 
 ## 索引（正文文档）
 

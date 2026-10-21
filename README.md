@@ -41,17 +41,17 @@ millforge/
 │   └── INDEX.yaml       #   片段注册表
 ├── bindings/            # 运行时绑定（agentteams 参考 / standalone-agent / coding-cli）
 ├── migration/           # 存量团队迁移（scaffold-team.py + MIGRATION-CHECKLIST）
-├── golden-tests/        # 确定性回归（T1–T10 门 / 13 用例 / 83 脚本断言）
+├── golden-tests/        # 确定性回归（T1–T10 门 / 13 用例 / 83 脚本断言 + 证据/合规/tier 单元门）
 └── docs/                # 绑定指南（adding-a-binding）+ provenance/（源流原文归档）
 ```
 
 **三种绑定形态**：
 
-| 形态 | 目录 | 适用 | 能力覆盖 |
-|------|------|------|----------|
-| 团队平台 | `bindings/agentteams/` | 多团队 / 跨团队 handoff / 多 human 隔离 | 8/8（CAP-NOTIFY 部分） |
-| 独立 agent 运行时 | `bindings/standalone-agent/` | 单宿主、多 agent 实例、无编排层 | 8/8（CAP-NOTIFY 部分） |
-| 编程 CLI 执行后端 | `bindings/coding-cli/` | 作为执行后端，由父执行体补全状态类能力 | 4/8（声明降级） |
+| 形态 | 目录 | 适用 | 能力覆盖 | 状态 |
+|------|------|------|----------|------|
+| 团队平台 | `bindings/agentteams/` | 多团队 / 跨团队 handoff / 多 human 隔离 | 8/8（CAP-NOTIFY 部分） | reference（非 compliant） |
+| 独立 agent 运行时 | `bindings/standalone-agent/` | 单宿主、多 agent 实例、无编排层 | 8/8（CAP-NOTIFY 部分） | reference（非 compliant） |
+| 编程 CLI 执行后端 | `bindings/coding-cli/` | 作为执行后端，由父执行体补全状态类能力 | 4/8（声明降级） | reference（非 compliant） |
 
 ## 快速开始
 

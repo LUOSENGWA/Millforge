@@ -51,6 +51,23 @@ EXIT_USAGE = 64
 BUDGETS = {"coordinator": 500, "leader": 250, "worker": 150, "critic": 150}
 STAGES = ["validate", "assemble", "budget", "render", "selfcheck", "provenance"]  # 6 段管线（O7 自报）
 
+# 上下文档位（12-REDLINES §5.2）：常驻身份文件 token 上限；声明 context_tier 时为硬门
+TIER_CAPS = {"S": 8000, "M": 10000, "L": 12000}
+
+
+def estimate_tokens(text: str) -> int:
+    """Bilingual-aware token estimate: CJK chars ≈1 token, other chars ≈1/4 token."""
+    cjk = sum(1 for ch in text if "\u4e00" <= ch <= "\u9fff" or ch in "，。；：！？（）【】、“”‘’")
+    return cjk + (len(text) - cjk) // 4
+
+
+def tier_exceeded(tier, text):
+    """Return (exceeded, estimate, cap). No tier → never exceeded."""
+    cap = TIER_CAPS.get(tier) if tier else None
+    est = estimate_tokens(text)
+    return (cap is not None and est > cap), est, cap
+
+
 # 生产专名 scrub 词表（核心层通用词纪律；出现 = SelfCheck fail）
 SCRUB_WORDS = [
     "spawn_subagent", "QwenPaw", "qwenpaw", "TeamHarness", "teamharness",
@@ -381,6 +398,8 @@ def compile_team(doc, outdir, overrides=None, lang=None):
         rule_hits = sum(final.count(t) for t in ("MUST", "SHALL", "必须", "不得"))
         rule_density = round(rule_hits * 100.0 / max(len(final.splitlines()), 1), 2)
         token_shadow = len(final) // 4
+        tier_over_role, token_estimate, tier_cap = tier_exceeded(doc.get("context_tier"), final)
+        tier_status = "EXCEEDED" if tier_over_role else "ok"
         out_path = os.path.join(outdir, f"{role['id']}.soul.md")
         # 片段部署（共享，去重）
         for lbl, src, rel, sha in deploy:
@@ -393,7 +412,8 @@ def compile_team(doc, outdir, overrides=None, lang=None):
             "lines": len(final.splitlines()), "budget": budget,
             "budget_status": "ok" if lines <= budget else "EXCEEDED",
             "rule_density": rule_density, "density_soft_warn": rule_density > 12.0,
-            "token_shadow": token_shadow,
+            "token_shadow": token_shadow, "token_estimate": token_estimate,
+            "context_tier": doc.get("context_tier"), "tier_status": tier_status,
             "unresolved": unresolved, "fragments": [d[0] for d in deploy],
             "_final": final,
         })
@@ -403,6 +423,11 @@ def compile_team(doc, outdir, overrides=None, lang=None):
     if over:
         fail("budget", EXIT_BUDGET, "行硬门超出——超支清单（绝不截断，回模板层减片段或提预算走人审）",
              {"over_budget": [{"role": o["role"], "lines": o["lines"], "budget": o["budget"]} for o in over]})
+    tier_over = [o for o in outputs if o["tier_status"] == "EXCEEDED"]
+    if tier_over:
+        fail("budget", EXIT_BUDGET, "常驻 token 超出上下文档位上限（声明 context_tier 时强制；绝不截断）",
+             {"over_tier": [{"role": o["role"], "token_estimate": o["token_estimate"],
+                             "tier": o["context_tier"], "cap": TIER_CAPS[o["context_tier"]]} for o in tier_over]})
     unres = [(o["role"], k) for o in outputs for k in o["unresolved"]]
     if unres:
         fail("render", EXIT_RENDER, "未解析占位符（实例参数缺失）", {"unresolved": unres})
@@ -444,8 +469,9 @@ def compile_team(doc, outdir, overrides=None, lang=None):
     result = {
         "ok": True,
         "team": doc["name"], "mode": doc["mode"],
-        "outputs": [{k: o[k] for k in ("role", "kind", "path", "lines", "budget", "budget_status", "rule_density", "density_soft_warn", "token_shadow")} for o in outputs],
-        "budget_gates": {"line_hard_gate": "fail", "rule_density_soft_gate": "warn(>12/100L)", "token_shadow": "report-only"},
+        "outputs": [{k: o[k] for k in ("role", "kind", "path", "lines", "budget", "budget_status", "rule_density", "density_soft_warn", "token_shadow", "token_estimate", "context_tier", "tier_status")} for o in outputs],
+        "budget_gates": {"line_hard_gate": "fail", "rule_density_soft_gate": "warn(>12/100L)", "token_shadow": "report-only",
+                          "token_estimate": "report", "resident_token_tier_gate": "fail(when context_tier declared)"},
         "stages_run": STAGES,
         "deployed_fragments": sorted(deployed.keys()),
         "deterministic_note": "同 team.json 同模板库 → 同产出（provenance 头时间戳除外，golden diff 时忽略）",

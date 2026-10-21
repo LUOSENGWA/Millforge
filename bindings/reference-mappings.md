@@ -3,6 +3,7 @@
 > 版本: v1.0 | 许可: Apache-2.0
 > 来源: 自 `core/binding-contract.md` 的 reference mappings 表迁出（按通用词纪律移出核心契约本体）；表内容逐行保留，未重写。
 > 范围: 非规范附录——运行时专名仅在本文件与各 `bindings/<runtime>/` 实现文档中出现（见 `core/binding-contract.md` 头注）。
+> 归属：**跨绑定附录**；各绑定 README 的「能力声明」是该绑定状态与覆盖等级的权威来源。
 
 ## CAP-STATE
 

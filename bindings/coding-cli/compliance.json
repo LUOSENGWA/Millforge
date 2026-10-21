@@ -1,0 +1,51 @@
+{
+  "binding": "coding-cli",
+  "status": "reference",
+  "compliant": false,
+  "capabilities": {
+    "CAP-STATE": "declared-degraded",
+    "CAP-STORE": "full",
+    "CAP-TIMER": "declared-degraded",
+    "CAP-NOTIFY": "declared-degraded",
+    "CAP-ATTN": "full",
+    "CAP-SPAWN": "full",
+    "CAP-EXEC": "full",
+    "CAP-ROSTER": "declared-degraded"
+  },
+  "hard_gates": {
+    "X1": "not-enforced",
+    "X4": "pass"
+  },
+  "gaps": [
+    {
+      "id": "X1",
+      "scope": "hard-gate",
+      "ref": "one-shot CLI design",
+      "note": "no session-isolation primitive; parent must provide"
+    },
+    {
+      "id": "STATE",
+      "scope": "CAP-STATE",
+      "ref": "parent execution unit",
+      "note": "state held by the parent"
+    },
+    {
+      "id": "TIMER",
+      "scope": "CAP-TIMER",
+      "ref": "parent execution unit",
+      "note": "no scheduling; per-run wall-time only"
+    },
+    {
+      "id": "NOTIFY",
+      "scope": "CAP-NOTIFY",
+      "ref": "parent execution unit",
+      "note": "no notification surface"
+    },
+    {
+      "id": "ROSTER",
+      "scope": "CAP-ROSTER",
+      "ref": "single execution body",
+      "note": "no roster"
+    }
+  ]
+}

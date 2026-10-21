@@ -6,6 +6,7 @@
 |---|---|
 | `README.md` (this file) | documentation index and reading order |
 | `adding-a-binding.md` | how to add a runtime binding (three shapes, 8 capabilities, product matrix, compliance declaration) |
+| `EVIDENCE.md` | evidence register: `[E#]` claims → external citations / internal observations (not externally verifiable) |
 | `provenance/grill/` | verbatim session records from the design phase (provenance only; Chinese-only, exempt from the bilingual gate) |
 
 ## Suggested reading order

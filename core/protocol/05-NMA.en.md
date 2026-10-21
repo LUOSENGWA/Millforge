@@ -141,7 +141,7 @@ Escalation content = both positions (one paragraph each) + the divergence point 
 
 ### 12. Multi-Critic Voting (MC-1~10, extending B-6)
 
-**Empirical premise**: a panel of 9 frontier LLMs (7 model families) yields effective independent votes ≈2 — majority voting among isomorphic critics is statistically equivalent to a single critic plus noise (panel accuracy 8–22pp lower than independent voting). **Therefore: no blanket adoption — conditional enablement + heterogeneity constraint.**
+**Empirical premise**: an isomorphic-critic panel yields far fewer effective independent votes than its nominal count (internal observation [E3], not externally verifiable; the protocol does not rely on specific numbers) — majority voting is not equivalent to independent verification. **Therefore: no blanket adoption — conditional enablement + heterogeneity constraint.**
 
 **Enablement conditions (all must hold)**:
 - **MC-1** the delivery is a human-locked critical delivery: `critical_delivery: true` (declared explicitly by the accountable stakeholder in loop_spec/task spec; never self-judged by an execution unit as "this is important")

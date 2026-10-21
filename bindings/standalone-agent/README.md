@@ -3,6 +3,8 @@
 > 千锻核心与**独立 agent 运行时**（无编排层）的映射。**本绑定对所有独立 agent 运行时通用**：产品矩阵 = QwenPaw / OpenClaw / Hermes / …（QwenPaw 为参考产品）。
 > 适用场景：单 Docker 宿主、多 QwenPaw agent 实例（无 K8s/Controller/Team CRD）、无 MinIO（本地盘/共享卷做对象存储）。
 > 与 `bindings/agentteams` 的差异 = 去掉平台编排层，**全部能力由 QwenPaw 原生机制 + 本地文件承载**。
+> **状态：reference — 非 compliant**（`compliance.json`：X4 未强制；CAP-NOTIFY V3/V5 缺口）。合规判定见 `core/binding-contract.md` §5。
+
 
 ## 索引（正文文档）
 

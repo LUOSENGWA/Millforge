@@ -4,6 +4,8 @@
 > 本绑定是**参考绑定，不是唯一绑定**——协议合法性由 `core/binding-contract.md` 的 8 能力判定，
 > 任何运行时满足 8 能力 + 不变式即可构成合法绑定（`bindings/standalone-agent`、`bindings/coding-cli` 是另两个参考实现）。
 > **通用词纪律**：本目录是运行时专名（spawn_subagent / QwenPaw cron / channels send / mc / Matrix / MinIO-RustFS / dashboard）的**唯一合法出现面**。
+> **状态：reference — 非 compliant**（`compliance.json`：X4 未强制；CAP-NOTIFY V3/V5/V6 缺口）。合规判定见 `core/binding-contract.md` §5。
+
 
 ## 索引（正文文档）
 
@@ -14,7 +16,8 @@
 | `cron-spec.md` | CAP-TIMER 绑定规格（U1–U4 + 注册/清理 + 兜底唤醒红线） |
 | `deployment-guide.md` | 拓扑 + 编译→部署链 + filesync 写后协议 + 失败序列与恢复 |
 | `s3-storage.md` | S3 对象存储语义核验（T1–T3）+ CAS 定位 + storage_adapter 枚举 + 8 脚本审计 |
-| `reference-mappings.md` | 运行时专名对照（非规范附录；自 core/binding-contract 迁出，逐行保留；英文孪生 `.en.md`） |
+
+> 运行时专名对照（**跨绑定**非规范附录）见 [`../reference-mappings.md`](../reference-mappings.md)（英文孪生 `.en.md`）。
 
 ## 能力声明（CAP-*）
 

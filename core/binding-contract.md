@@ -5,7 +5,7 @@
 > 核心条文只能引用 CAP-* 编号和不变式，不得引用任何具体组件。
 > 范式：contract 不包含任何 provider 类型，adapter 把具体运行时语义翻译成统一 contract。
 > durable collaboration 与 native execution 分离：harness 拥有持久状态，provider 只负责执行。
-> 运行时专名对照见 `bindings/agentteams/reference-mappings.md`（英文孪生 `.en.md`）——非规范附录；本契约本体不含任何运行时专名。
+> 运行时专名对照见 `bindings/reference-mappings.md`（英文孪生 `.en.md`）——非规范附录；本契约本体不含任何运行时专名。
 
 ## 设计原则
 
@@ -217,6 +217,8 @@ delegation_chain(task_id) -> [{delegator, delegatee, scope, granted_at}] | []
 2. 提供 CAP-EXEC 可运行 `core/scripts/`（或声明等价实现并过 golden test）
 3. 声明：运行时版本矩阵 / 原语映射表（§01 每个原语 → 具体机制）/ 模式矩阵 / 定时器粒度 / 持久展示面清单
 4. 通过 `golden-tests/` 回归（L5）
+
+**合规绑定（compliant）** = 上述 1–4 全过。**参考实现（reference）** = 未满足硬门、但已按「能力声明」逐项声明覆盖等级与缺口的绑定（`compliance.json`，机器可读）：可发布、可作接入参考，但**不得作为合规样本引用**，且依赖硬门的协议面（loop/attention 等）必须按「协议 ↔ 绑定依赖总表」降级。参考实现的存在不改变合规判定的硬门；上游缺口闭合后只需更新 `compliance.json`，状态自动转绿（`make compliance`）。
 
 ## 能力清单（速览）
 
