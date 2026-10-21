@@ -25,18 +25,33 @@ millforge/
 ├── core/
 │   ├── protocol/        # 协议层 v1.0（13 篇，冻结基线）
 │   ├── invariants/      # 状态机不变量（4 篇：task/decision/loop/attention）
-│   └── schemas/         # team.schema.json（实例 Schema）
-├── compiler/            # 编译器（Python，零 LLM，6 段流水线）
+│   ├── schemas/         # JSON Schema ×11（team/spec/task_meta/decision_log/…）
+│   ├── scripts/         # 确定性脚本 ×9（计票/超时/冲突/一致性…）
+│   ├── binding-contract.md    # 8 能力契约 + 绑定合法性判定
+│   ├── security.md      # 威胁模型 + 机制矩阵
+│   ├── cost-model-tiering.md  # 人类触达三档
+│   ├── production-harden.md   # 生产化补丁
+│   └── calibration/     # token 影子计数校准
+├── compiler/            # 编译器（Python，零 LLM，6 段流水线）+ profiles/
 ├── templates/           # 模板库（43 件，全部双语：X.md + X.en.md）
 │   ├── skeleton/        #   角色骨架 ×4（coordinator/leader/worker/critic）
 │   ├── fragments/       #   协议片段 ×12（NMH/NMA/双通道/熔断/契约/治理/loop/signal/handoff…）
 │   ├── industry/        #   行业模板 ×6（software/embedded/data/content/business/custom）
 │   ├── domain/          #   域片段 ×21（web/mcu/数据/市场/办公…）
 │   └── INDEX.yaml       #   片段注册表
-├── bindings/            # 运行时绑定层（agentteams（参考绑定）/ standalone-agent / coding-cli，产品做矩阵行）
+├── bindings/            # 运行时绑定（agentteams 参考 / standalone-agent / coding-cli）
+├── migration/           # 存量团队迁移（scaffold-team.py + MIGRATION-CHECKLIST）
 ├── golden-tests/        # 确定性回归（T1–T10 门 / 13 用例 / 83 脚本断言）
-└── docs/                # provenance/（照搬源流原文归档）
+└── docs/                # 绑定指南（adding-a-binding）+ provenance/（源流原文归档）
 ```
+
+**三种绑定形态**：
+
+| 形态 | 目录 | 适用 | 能力覆盖 |
+|------|------|------|----------|
+| 团队平台 | `bindings/agentteams/` | 多团队 / 跨团队 handoff / 多 human 隔离 | 8/8（CAP-NOTIFY 部分） |
+| 独立 agent 运行时 | `bindings/standalone-agent/` | 单宿主、多 agent 实例、无编排层 | 8/8（CAP-NOTIFY 部分） |
+| 编程 CLI 执行后端 | `bindings/coding-cli/` | 作为执行后端，由父执行体补全状态类能力 | 4/8（声明降级） |
 
 ## 快速开始
 

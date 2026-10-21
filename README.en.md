@@ -25,18 +25,33 @@ millforge/
 ├── core/
 │   ├── protocol/        # protocol layer v1.0 (13 documents, frozen baseline)
 │   ├── invariants/      # state-machine invariants (4: task/decision/loop/attention)
-│   └── schemas/         # team.schema.json (instance schema)
-├── compiler/            # compiler (Python, zero LLM, 6-stage pipeline)
+│   ├── schemas/         # JSON Schema ×11 (team/spec/task_meta/decision_log/…)
+│   ├── scripts/         # deterministic scripts ×9 (voting/timeout/conflict/consistency…)
+│   ├── binding-contract.md    # 8-capability contract + binding legality
+│   ├── security.md      # threat model + mechanism matrix
+│   ├── cost-model-tiering.md  # three human-touch tiers
+│   ├── production-harden.md   # production hardening
+│   └── calibration/     # token shadow-count calibration
+├── compiler/            # compiler (Python, zero LLM, 6-stage pipeline) + profiles/
 ├── templates/           # template library (43 files, all bilingual: X.md + X.en.md)
 │   ├── skeleton/        #   role skeletons ×4 (coordinator/leader/worker/critic)
 │   ├── fragments/       #   protocol fragments ×12 (NMH/NMA/dual-channel/fuse/contract/governance/loop/signal/handoff…)
 │   ├── industry/        #   industry templates ×6 (software/embedded/data/content/business/custom)
 │   ├── domain/          #   domain fragments ×21 (web/mcu/data/market/office…)
 │   └── INDEX.yaml       #   fragment registry
-├── bindings/            # runtime binding layer (agentteams (reference) / standalone-agent / coding-cli; products as matrix rows)
-├── golden-tests/        # deterministic regression (10 gates: byte-identity/line budget/scrub/frozen baseline/production traceability)
-└── docs/                # provenance/ (verbatim-inheritance source archives)
+├── bindings/            # runtime bindings (agentteams reference / standalone-agent / coding-cli)
+├── migration/           # migrating existing teams (scaffold-team.py + MIGRATION-CHECKLIST)
+├── golden-tests/        # deterministic regression (T1–T10 gates / 13 cases / 83 script assertions)
+└── docs/                # binding guide (adding-a-binding) + provenance/ (verbatim-inheritance source archives)
 ```
+
+**Three binding shapes**:
+
+| Shape | Directory | Applies to | Capability coverage |
+|-------|-----------|-----------|---------------------|
+| team platform | `bindings/agentteams/` | multi-team / cross-team handoff / multi-human isolation | 8/8 (CAP-NOTIFY partial) |
+| standalone agent runtime | `bindings/standalone-agent/` | single host, multiple agent instances, no orchestration layer | 8/8 (CAP-NOTIFY partial) |
+| coding-CLI execution backend | `bindings/coding-cli/` | execution backend; the parent provides state-class capabilities | 4/8 (declared-degraded) |
 
 ## Quick Start
 
