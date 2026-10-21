@@ -1,8 +1,8 @@
 <!-- MILLFORGE-COMPILED — 勿手编
      team: example-biz-team | role: biz-coordinator(coordinator) | mode: single_user | lang: zh
      template: business | experimental: True
-     instance_fp: ad2df093afd46691 | compiled: 2026-10-21T15:32:00Z | millforge: 1.0
-     fragments: 13 | protocol/attention-ux@ec9af819,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/governance@8afbfcad,protocol/handoff@c714fcad,protocol/loop@5943b35a,protocol/nma@cfd9bbff,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@f26a255d
+     instance_fp: ad2df093afd46691 | compiled: 2026-10-21T16:13:40Z | millforge: 1.0
+     fragments: 13 | protocol/attention-ux@ec9af819,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/governance@8afbfcad,protocol/handoff@c714fcad,protocol/loop@5943b35a,protocol/nma@9f566dbe,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@f26a255d
      layer1: fragments/（触发装载） layer2: spawn-specs/（spawn 注入）
      recompile: millforge compile <team.json> -->
 # biz-coordinator — 集群协调角色（coordinator）

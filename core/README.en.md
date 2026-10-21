@@ -14,21 +14,21 @@ core/
     02-MODES         single_user / multi_user phase transition
     03-DECISIONS     R1-R6 + decision_log + closed type set
     04-NMH           human↔agent collaborative exploration (explore / lock / seven questions / evolution)
-    05-NMA           peer review (checklist / peer review / multi-critic MC-1~10 / B-6)
+    05-NMA           agent-to-agent structured communication (Part A) + peer review (Part B: checklist / multi-critic MC-1~10 / B-6)
     06-LIFECYCLE     recursive decomposition / completion signal / dual channel / declare-verify / failure SOP
     07-HANDOFF       cross-team (compiled in single_user only)
     08-CONTRACT      contract pinning + structured spec
     09-GOVERNANCE    voting / arbitration / state mapping (B-4/B-5/B-8/C-3)
     10-LOOP          the 14th primitive: loop_spec / five phases / driver / anti-bypass
     11-SIGNAL        the 15th primitive: 7 closed markers / three effects / layered reset
-    12-REDLINES      safety redlines S1-S5 / trust boundary / reliability layering / attention loading
+    12-REDLINES      safety redlines S1-S5 / trust boundary / reliability layering / attention loading / context tiers
   security.md        threat model + security chapter v1.0 (trust boundary / integrity mechanism matrix / 5 adversarial scenarios / minimum channel-identity requirements / escalation rules; bilingual)
   cost-model-tiering.md  protocol cost model + three tiers v1.0 (simple/standard/full; the tier is locked at spec creation; bilingual)
   production-harden.md   production hardening, 4 patches v1.0 (protocol versioning / native context budget / batched delegation / clock authority; bilingual)
   calibration/       calibration procedure (token-shadow-calibration v1.0, token shadow counting; bilingual)
-  schemas/           JSON Schemas (11, consumed by the compiler's Validate stage)
+  schemas/           JSON Schemas (11: team.schema for compile-time Validate; the rest for runtime artifacts)
   invariants/        state-machine invariants (task/decision/loop/attention, 4 files; bilingual)
-  scripts/           8 deterministic scripts + timer-derive (the executable part of the protocol semantics)
+  scripts/           9 deterministic scripts (8 + timer-derive; the executable part of the protocol semantics)
   binding-contract.md 8-capability interface (CAP-STATE/STORE/TIMER/NOTIFY/ATTN/SPAWN/EXEC/ROSTER; bilingual)
 compiler/            6-stage compiler (Validate→Assemble→Budget→Render→SelfCheck→Provenance)
 templates/           template library (skeleton 4 + fragment 12 + domain 21 + industry 6; all bilingual X.md + X.en.md)

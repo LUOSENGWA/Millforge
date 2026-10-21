@@ -4,6 +4,24 @@
 
 ## [Unreleased]
 
+### 新增
+
+- **NMA 恢复结构化通信**：`05-NMA` 拆 Part A（8 型消息封闭清单 + 字段 + 7 条纪律）/ Part B（审查）；`06-LIFECYCLE` 派发三要素 = `DELEGATE` 必填字段。
+- **NMH 来源判定 + 执行期随时问**：§7「未取得可验证来源」（fail-closed，弃权合法）；§8 结构化决策请求（CAP-ATTN 持久展示面 + CAP-NOTIFY 代码级事件）。
+- **上下文窗口分档（S/M/L）**：`12-REDLINES §5.1–5.4`（分档预算 + 装载矩阵 + 越界行为）。
+- **binding-contract 新增 21 条编号条目**（S5–S7 / T4–T6 / U5–U7 / V7–V8 / W8–W10 / X5–X7 / Y4–Y7；合计 55 条编号）。
+- **绑定改名**：`bindings/single-agent` → `bindings/standalone-agent`（三形态：agentteams / standalone-agent / coding-cli）。
+
+### 变更
+
+- Loop 协议阶段 ↔ Loop CRD `status.state` 映射（`10-LOOP §2.1`）；task 运行时 9 态对齐上游任务契约。
+- 能力声明改用「覆盖等级（完整/部分/声明降级）」；L1/L2/L3 仅用于可靠性分层。
+- 仓内清理：移除内部轮次/日期/版本注记与 PR 进度表；README 结构树修正。
+
+### 修复
+
+- 不变式计数 46→55；死链；`spawn context_refs` 上限 4/6/8（含必填集）。
+
 ## [1.0.0] - 2026-10-20
 
 ### 新增

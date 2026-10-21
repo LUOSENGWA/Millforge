@@ -37,6 +37,8 @@
 
 **Forbidden**: the protocol layer writes runtime state directly (only the single BLOCKED convergence point may be written); runtime state changes do not automatically change decision_status (the script derives, then writes back).
 
+> Note: the upstream task contract treats `blocked` as **terminal** (no outgoing edges). The protocol `decision_status` blocked→open is a **protocol-substate** recovery; if the runtime implements blocked as terminal, recovery must land as a **new task / re-dispatch**, never by modifying the runtime state machine (this protocol does not rewrite the upstream).
+
 ## 3. Invariant Assertions (golden-test checkable)
 
 1. **I-T1** decision_status ∈ {open, blocked, frozen, paused, spec_conflict}; no other values

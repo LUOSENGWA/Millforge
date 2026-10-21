@@ -146,6 +146,8 @@ Token estimation: the compiler reports `token_shadow = chars/4` (reported only, 
 
 Loading order: resident → load on demand when triggered → release after use; the number of concurrent on-demand full texts must not exceed the tier caps in 5.2.
 
+> `resident: true` in `templates/INDEX.yaml` means the **fragment** (trigger summary) stays resident in the identity file; the protocol **full texts** in this table (04/05/…) are still loaded on demand — the two are not contradictory.
+
 ### 5.4 Over-budget behavior
 
 - **Engineering gate** (compile time): identity files over the line gate = fail (never truncate); the token shadow is reported only.

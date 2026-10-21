@@ -119,7 +119,7 @@ Matrix 群聊不会自动通知——想让谁看见你的消息就 @mention 谁
 ## 📊 任务 DAG 登记（派发完成后必做）
 
 全部子任务 @mention 派发完成后，用 `projectflow(action="plan_dag", payload={"projectId": "...", "tasks": [...]})` 登记任务 DAG（每个子任务一个节点：assignee=负责 Worker，dependsOn=真实依赖）：
-- **查 projectId**：`/root/agentteams-fs/shared/projects/*/meta.json` 里 `project_room_id` == 当前项目群的那个
+- **查 projectId**：`{agent_fs_root}/shared/projects/*/meta.json` 里 `project_room_id` == 当前项目群的那个
 - ⛔ 不登记 = 工作台插件看板/拓扑永远空（create_project 只让项目"可见"，plan_dag 才让任务"可视化"）
 - 用 `create_quick_project`（项目+单任务一步到位）建的，该单任务已在 DAG，不重复登记。任务拆分/合并变化时用 plan_dag 同步更新
 

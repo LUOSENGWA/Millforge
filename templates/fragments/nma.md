@@ -1,6 +1,8 @@
-## NMA 同行审查（精简装载版 · 全文 = 协议 §05-NMA）
+## NMA（结构化通信 + 同行审查，精简装载版 · 全文 = 协议 §05-NMA）
 
-**触发**：Worker 交付件属需审核类别（代码/配置/方案/文档）｜ 显式请求审核 ｜ 项目验收前终审。**日常派发/协调/状态同步 = 发消息即可，不走 NMA。**
+**Part A 通信**：派发/回报/查询/交接一律走结构化消息（`DELEGATE/ACK/PROGRESS/COMPLETE/QUERY/DECISION_REQUEST/HANDOFF/ESCALATE`），必填 `message_id/task_id/from/to/type/refs[]/status`；**内容给 ref 不内联**；每条落 CAP-STATE；ACK 必回（超时 = 异常）；终态任务不再收消息。自由文本不是协作载体。
+
+**Part B 审查——触发**：Worker 交付件属需审核类别（代码/配置/方案/文档）｜ 显式请求审核 ｜ 项目验收前终审。
 
 **审核方 ≠ 被审核方**（角色实例表定；谁审谁 = 违规）。human 同行在场 → 先给人审（Agent 审核是替代不是补充）。
 

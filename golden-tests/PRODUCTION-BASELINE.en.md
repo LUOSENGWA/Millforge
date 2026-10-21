@@ -75,6 +75,7 @@
 | `matrix.example.org` | private Matrix server endpoint | topology |
 | `<gpu-node>` / `<port>` | GPU node name + text-to-image service port | topology |
 | `shared/users/human-owner/` | object-storage human-user path segment | instance param |
+| `{agent_fs_root}` | internal agent filesystem root | topology |
 | `owner` | human accountable's form of address | instance param |
 | `platform-incident C1..C7/P3..P15` | internal incident docket numbers | incident signatures (content kept, numbering de-internalized) |
 | `historical incident` | internal incident date | time desensitization |

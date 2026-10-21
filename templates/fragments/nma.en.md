@@ -1,6 +1,8 @@
-## NMA Peer Review (condensed load · full text = protocol §05-NMA)
+## NMA (structured communication + peer review, condensed load · full text = protocol §05-NMA)
 
-**Triggers**: a worker deliverable belongs to a review category (code/config/plan/document) ｜ explicit review request ｜ final review before project acceptance. **Routine dispatch/coordination/status sync = just send a message; no NMA.**
+**Part A communication**: delegation / reporting / queries / handoff always use structured messages (`DELEGATE/ACK/PROGRESS/COMPLETE/QUERY/DECISION_REQUEST/HANDOFF/ESCALATE`), with required `message_id/task_id/from/to/type/refs[]/status`; **content by ref, never inline**; every message lands in CAP-STATE; ACK is mandatory (timeout = anomaly); terminal tasks accept no further messages. Free text is not a collaboration carrier.
+
+**Part B review — triggers**: a worker deliverable belongs to a review category (code/config/plan/document) | explicit review request | final review before project acceptance.
 
 **Reviewer ≠ reviewed party** (fixed by the role instance table; reviewing your own output = violation). A human peer is present → give them the review first (agent review is a substitute, not a supplement).
 

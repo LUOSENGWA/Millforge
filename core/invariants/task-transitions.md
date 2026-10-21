@@ -37,6 +37,8 @@
 
 **禁止**：协议层直接写运行时状态（只能写 BLOCKED 这一个收敛点）；运行时状态变化不自动改变 decision_status（由脚本派生后写回）。
 
+> 注：上游任务契约把 `blocked` 列为**终态**（无出边）。协议 `decision_status` 的 blocked→open 是**协议子状态**恢复；若运行时按终态实现，恢复必须以**新任务/重新派发**落地，不修改运行时状态机（本协议不改写上游）。
+
 ## 3. 不变式断言（golden test 可检）
 
 1. **I-T1** decision_status ∈ {open, blocked, frozen, paused, spec_conflict}，无其他值

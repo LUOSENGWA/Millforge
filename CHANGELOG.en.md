@@ -4,6 +4,24 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 
 ## [Unreleased]
 
+### Added
+
+- **NMA regains structured communication**: `05-NMA` split into Part A (8-message closed list + fields + 7 disciplines) / Part B (review); the `06-LIFECYCLE` dispatch triad = required `DELEGATE` fields.
+- **NMH source discipline + execution-time ask**: §7 "no verifiable source" (fail-closed, abstention is legal); §8 structured decision requests (CAP-ATTN persistent surface + CAP-NOTIFY code-level event).
+- **Context-window tiers (S/M/L)**: `12-REDLINES §5.1–5.4` (tier budgets + loading matrix + over-budget behavior).
+- **21 new numbered entries in binding-contract** (S5–S7 / T4–T6 / U5–U7 / V7–V8 / W8–W10 / X5–X7 / Y4–Y7; 55 numbered entries in total).
+- **Binding rename**: `bindings/single-agent` → `bindings/standalone-agent` (three shapes: agentteams / standalone-agent / coding-cli).
+
+### Changed
+
+- Loop protocol phases ↔ Loop CRD `status.state` mapping (`10-LOOP §2.1`); the 9 task runtime states aligned with the upstream task contract.
+- Capability declarations now use coverage levels (full/partial/declared-degraded); L1/L2/L3 reserved for reliability layering.
+- Repository cleanup: internal round/date/version notes and PR progress tables removed; README tree corrected.
+
+### Fixed
+
+- Invariant count 46→55; broken link; `spawn context_refs` cap 4/6/8 (including the mandatory set).
+
 ## [1.0.0] - 2026-10-20
 
 ### Added

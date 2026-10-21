@@ -1,8 +1,8 @@
 <!-- MILLFORGE-COMPILED — 勿手编
      team: bizmarket | role: bizmarket-critic(critic) | mode: multi_user | lang: zh
      template: business | experimental: False
-     instance_fp: fa348ecb1c82fa54 | compiled: 2026-10-21T15:32:02Z | millforge: 1.0
-     fragments: 9 | domain/test-qa@88cb69b8,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/nma@cfd9bbff,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@96ce5f5b
+     instance_fp: fa348ecb1c82fa54 | compiled: 2026-10-21T16:13:41Z | millforge: 1.0
+     fragments: 9 | domain/test-qa@88cb69b8,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/nma@9f566dbe,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@96ce5f5b
      layer1: fragments/（触发装载） layer2: spawn-specs/（spawn 注入）
      recompile: millforge compile <team.json> -->
 # bizmarket-critic — Critic（专职审核）

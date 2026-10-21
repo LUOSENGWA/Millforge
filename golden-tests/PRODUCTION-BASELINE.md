@@ -75,6 +75,7 @@
 | `matrix.example.org` | 私有 Matrix 服务端点 | 拓扑 |
 | `<gpu-node>` / `<port>` | GPU 节点名 + 文生图服务端口 | 拓扑 |
 | `shared/users/human-owner/` | MinIO 人类用户路径段 | 实例参数 |
+| `{agent_fs_root}` | 内部 agent 文件系统根 | 拓扑 |
 | `owner` | 人类责任人称呼 | 实例参数 |
 | `platform-incident C1..C7/P3..P15` | 内部事故案卷编号 | 事故签名（内容保留，编号去内部化） |
 | `历史事故` | 内部事故日期 | 时间脱敏 |
