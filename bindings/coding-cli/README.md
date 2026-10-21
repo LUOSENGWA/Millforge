@@ -57,7 +57,7 @@
 ## 部署/调用
 
 ```
-父执行体（AgentTeams worker / single-agent runtime）
+父执行体（AgentTeams worker / standalone-agent runtime）
   → 构造 task spec（core/schemas/spec.schema.json）
   → 调 coding-CLI（one-shot，flags 含 --max-wall-time + --approval-mode）
   → exit 0: 读 coding-runs 证据链 → 指纹验证（CAP-STORE T2）→ 验收

@@ -7,7 +7,7 @@
 | Shape | Directory | Fits | Product examples |
 |---|---|---|---|
 | **orchestrated** | `bindings/agentteams/` | orchestration platforms with a control plane + worker pool | AgentTeams (any worker runtime) |
-| **single-agent** | `bindings/single-agent/` | single-agent runtimes without an orchestration layer | QwenPaw / OpenClaw / Hermes |
+| **standalone-agent** | `bindings/standalone-agent/` | standalone-agent runtimes without an orchestration layer | QwenPaw / OpenClaw / Hermes |
 | **coding-cli** | `bindings/coding-cli/` | one-shot coding CLIs | Claude Code / QwenCode / OpenCode / Codex CLI |
 
 > A shape is an **architecture shape**; product differences become **matrix rows** — never open a directory per product.

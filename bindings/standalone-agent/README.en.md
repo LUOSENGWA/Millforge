@@ -1,6 +1,6 @@
-# Single-Agent Runtime Binding (reference)
+# Standalone-Agent Runtime Binding (reference)
 
-> The mapping between the Millforge core and a **single-agent runtime** (no orchestration layer). **This binding is generic across single-agent runtimes**: product matrix = QwenPaw / OpenClaw / Hermes / … (QwenPaw is the reference product).
+> The mapping between the Millforge core and a **standalone-agent runtime** (no orchestration layer). **This binding is generic across standalone-agent runtimes**: product matrix = QwenPaw / OpenClaw / Hermes / … (QwenPaw is the reference product).
 > Applicable scenario: a single Docker host, multiple QwenPaw agent instances (no K8s/Controller/Team CRD), no MinIO (local disk / shared volume as object storage).
 > The difference from `bindings/agentteams` = removing the platform orchestration layer; **all capabilities are carried by QwenPaw native mechanisms + local files**.
 
@@ -42,14 +42,14 @@
 
 ## Capability Gap vs the agentteams Binding
 
-| Surface | agentteams | single-agent |
+| Surface | agentteams | standalone-agent |
 |----|-----------|--------------|
 | cross-team handoff | ✅ (MinIO project space + Manager) | ❌ (no object-storage project space; a shared volume can simulate it, permissions via directory convention) |
 | multi-user isolation | Controller + Matrix permissions | none (same host, same permissions = isolation is not guaranteed at the protocol layer; the deployment layer owns it) |
 | team/roster management | Team CRD | manual roster file |
 | off-host state replica | MinIO | none (host disk is a single point) |
 
-**Applicability verdict**: personal experiments / single-team production / quick protocol-behavior validation → the single-agent binding is enough (the L1–L3 protocol layer is fully usable); multi-team + cross-team handoff + multi-human isolation → use agentteams.
+**Applicability verdict**: personal experiments / single-team production / quick protocol-behavior validation → the standalone-agent binding is enough (the L1–L3 protocol layer is fully usable); multi-team + cross-team handoff + multi-human isolation → use agentteams.
 
 ## Deployment
 

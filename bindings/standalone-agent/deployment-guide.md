@@ -1,6 +1,6 @@
 # 部署指南（裸 QwenPaw 绑定专属）
 
-> 本文件是 `bindings/single-agent/` 的部署/运维规格；映射见 `mapping-table.md`。
+> 本文件是 `bindings/standalone-agent/` 的部署/运维规格；映射见 `mapping-table.md`。
 
 ## 1. 拓扑（本绑定专有名词面）
 

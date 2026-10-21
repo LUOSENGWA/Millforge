@@ -15,13 +15,13 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 - **Invariant documents ×4 bilingual**: attention-state / decision-state / loop-state / task-transitions.
 - **Compiler**: 6-stage zero-LLM pipeline (Validate → Assemble → Budget → Render → SelfCheck → Provenance), `validate` / `compile` subcommands.
 - **Templates ×43 bilingual**: skeleton ×4 / fragments ×12 / domain ×21 / industry ×6, registry `templates/INDEX.yaml` with three-level provenance discipline (production / reference / llm).
-- **Reference bindings ×3**: `bindings/agentteams` (with mapping-table / skill-fragments / cron-spec / deployment-guide / s3-storage body docs), `bindings/single-agent` (bare single-agent runtimes such as QwenPaw), `bindings/coding-cli` (coding-CLI runtimes such as Claude Code / QwenCode / OpenCode).
+- **Reference bindings ×3**: `bindings/agentteams` (with mapping-table / skill-fragments / cron-spec / deployment-guide / s3-storage body docs), `bindings/standalone-agent` (bare standalone-agent runtimes such as QwenPaw), `bindings/coding-cli` (coding-CLI runtimes such as Claude Code / QwenCode / OpenCode).
 - **golden-tests**: 35-clause production baseline (`PRODUCTION-BASELINE.md`) + 13 compile gates + 83 script assertions + assertion-coverage record (`ASSERTION-COVERAGE.md`).
 - **CI**: GitHub Actions three jobs (golden / bilingual completeness / sensitive scrub) + `requirements.txt` + `Makefile` + SECURITY / VERSION.
 
 ### Changed
 
-- **Binding layer reorganised by architecture shape**: `bindings/agentteams` (AgentTeams reference binding, runtime-agnostic) / `bindings/single-agent` (single-agent runtimes: QwenPaw / OpenClaw / Hermes…) / `bindings/coding-cli` (coding CLIs: Claude Code / QwenCode / OpenCode…); product differences become matrix rows. State-directory paths corrected to `.qwenpaw/workspaces/` (qwenpaw >= 2.1; `.copaw` was the legacy copaw runtime).
+- **Binding layer reorganised by architecture shape**: `bindings/agentteams` (AgentTeams reference binding, runtime-agnostic) / `bindings/standalone-agent` (standalone-agent runtimes: QwenPaw / OpenClaw / Hermes…) / `bindings/coding-cli` (coding CLIs: Claude Code / QwenCode / OpenCode…); product differences become matrix rows. State-directory paths corrected to `.qwenpaw/workspaces/` (qwenpaw >= 2.1; `.copaw` was the legacy copaw runtime).
 
 - Binding/protocol layer separation finalized: runtime-specific names are allowed only under `bindings/`.
 - The compiler does not implement a `binding_profile` parameter (downgraded: binding differences are carried by `bindings/` docs + runtime-side fragment injection).

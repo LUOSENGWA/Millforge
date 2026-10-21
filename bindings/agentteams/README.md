@@ -2,7 +2,7 @@
 
 > 千锻核心与 **AgentTeams 编排层**（controller + worker 池）的映射。**本绑定运行时不敏感**：控制面 = AgentTeams；worker 运行时可替换（参考运行时：QwenPaw；亦含 copaw / OpenClaw / Hermes 等）。
 > 本绑定是**参考绑定，不是唯一绑定**——协议合法性由 `core/binding-contract.md` 的 8 能力判定，
-> 任何运行时满足 8 能力 + 不变式即可构成合法绑定（`bindings/single-agent`、`bindings/coding-cli` 是另两个参考实现）。
+> 任何运行时满足 8 能力 + 不变式即可构成合法绑定（`bindings/standalone-agent`、`bindings/coding-cli` 是另两个参考实现）。
 > **通用词纪律**：本目录是运行时专名（spawn_subagent / QwenPaw cron / channels send / mc / Matrix / MinIO-RustFS / dashboard）的**唯一合法出现面**。
 
 ## 索引（正文文档）

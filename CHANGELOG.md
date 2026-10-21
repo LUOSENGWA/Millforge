@@ -15,13 +15,13 @@
 - **不变式文档 ×4 双语**：attention-state / decision-state / loop-state / task-transitions。
 - **编译器**：6 阶段零 LLM 管线（Validate → Assemble → Budget → Render → SelfCheck → Provenance），`validate` / `compile` 子命令。
 - **模板 ×43 双语**：skeleton ×4 / fragments ×12 / domain ×21 / industry ×6，注册表 `templates/INDEX.yaml` 带三级出处纪律（production / reference / llm）。
-- **参考绑定 ×3**：`bindings/agentteams`（含 mapping-table / skill-fragments / cron-spec / deployment-guide / s3-storage 五件正文）、`bindings/single-agent`（裸 QwenPaw 等单 agent 运行时）、`bindings/coding-cli`（Claude Code / QwenCode / OpenCode 等编程 CLI 运行时）。
+- **参考绑定 ×3**：`bindings/agentteams`（含 mapping-table / skill-fragments / cron-spec / deployment-guide / s3-storage 五件正文）、`bindings/standalone-agent`（裸 QwenPaw 等独立 agent 运行时）、`bindings/coding-cli`（Claude Code / QwenCode / OpenCode 等编程 CLI 运行时）。
 - **golden-tests**：生产基线 35 条（`PRODUCTION-BASELINE.md`）+ 编译门 13 + 脚本断言 83 + 断言覆盖记档（`ASSERTION-COVERAGE.md`）。
 - **CI**：GitHub Actions 三门（golden / 双语完整性 / 敏扫）+ `requirements.txt` + `Makefile` + SECURITY / VERSION。
 
 ### 变更
 
-- **绑定层按架构形态重组**：`bindings/agentteams`（AgentTeams 参考绑定，运行时不敏感）/ `bindings/single-agent`（单 agent 运行时：QwenPaw / OpenClaw / Hermes…）/ `bindings/coding-cli`（编程 CLI：Claude Code / QwenCode / OpenCode…）；产品差异改为矩阵行。状态目录路径更正为 `.qwenpaw/workspaces/`（qwenpaw ≥2.1；`.copaw` 为旧 copaw 运行时）。
+- **绑定层按架构形态重组**：`bindings/agentteams`（AgentTeams 参考绑定，运行时不敏感）/ `bindings/standalone-agent`（独立 agent 运行时：QwenPaw / OpenClaw / Hermes…）/ `bindings/coding-cli`（编程 CLI：Claude Code / QwenCode / OpenCode…）；产品差异改为矩阵行。状态目录路径更正为 `.qwenpaw/workspaces/`（qwenpaw ≥2.1；`.copaw` 为旧 copaw 运行时）。
 
 - 绑定层与协议层分离定案：运行时专名仅允许出现在 `bindings/`。
 - 编译器不实现 `binding_profile` 参数（降级定案：绑定差异由 `bindings/` 文档 + 运行时片段注入承载）。

@@ -1,6 +1,6 @@
 # Deployment Guide (Bare QwenPaw Binding, exclusive)
 
-> This file is the deployment/operations specification of `bindings/single-agent/`; the mapping is in `mapping-table.md`.
+> This file is the deployment/operations specification of `bindings/standalone-agent/`; the mapping is in `mapping-table.md`.
 
 ## 1. Topology (this binding's proper-noun surface)
 

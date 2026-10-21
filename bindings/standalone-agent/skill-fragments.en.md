@@ -1,6 +1,6 @@
 # Skill Fragments (CAP-SPAWN / CAP-EXEC Binding Implementation)
 
-> This file is the skill-surface specification of `bindings/single-agent/`; the mapping is in `mapping-table.md`.
+> This file is the skill-surface specification of `bindings/standalone-agent/`; the mapping is in `mapping-table.md`.
 > Generic-word discipline: this directory is the only legitimate surface for runtime-specific names (`core/protocol/00-OVERVIEW.md` §S).
 
 ## 1. In-Tree Script List (core/scripts/, 9 items)

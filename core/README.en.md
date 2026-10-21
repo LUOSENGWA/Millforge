@@ -33,7 +33,7 @@ core/
 compiler/            6-stage compiler (Validate→Assemble→Budget→Render→SelfCheck→Provenance)
 templates/           template library (skeleton 4 + fragment 12 + domain 21 + industry 6; all bilingual X.md + X.en.md)
 golden-tests/        L5 regression (T1-T10 / 13 cases / 83 script assertions + frozen baseline + production provenance)
-bindings/            runtime bindings (agentteams reference binding / single-agent / coding-cli; products are matrix rows)
+bindings/            runtime bindings (agentteams reference binding / standalone-agent / coding-cli; products are matrix rows)
 migration/           B-7 migration kit (scaffold-team.py skeleton generator + MIGRATION-CHECKLIST.md human confirmation list)
 docs/                general documentation + provenance/ (verbatim source records)
 ```

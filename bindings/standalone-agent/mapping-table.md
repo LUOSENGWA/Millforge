@@ -1,6 +1,6 @@
 # 机制 × 运行时映射表（裸 QwenPaw）
 
-> 本文件是 `bindings/single-agent/` 映射的**单一事实源**（`README.md`「CAP 映射」为其一致摘要）。
+> 本文件是 `bindings/standalone-agent/` 映射的**单一事实源**（`README.md`「CAP 映射」为其一致摘要）。
 > 通用词纪律：本目录是运行时专名的唯一合法出现面（`core/protocol/00-OVERVIEW.md` §S：核心条文只允许 CAP-* 编号 + 通用词）。
 
 ## 1. CAP → 机制映射（8 能力基线）

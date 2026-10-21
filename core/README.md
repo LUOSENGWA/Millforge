@@ -33,7 +33,7 @@ core/
 compiler/            6 段编译器（Validate→Assemble→Budget→Render→SelfCheck→Provenance）
 templates/           模板库（skeleton 4 + fragment 12 + domain 21 + industry 6；全双语 X.md + X.en.md）
 golden-tests/        L5 回归（T1–T10 / 13 用例 / 83 脚本断言 + 冻结基线 + 生产溯源）
-bindings/            运行时绑定（agentteams 参考绑定 / single-agent / coding-cli；产品做矩阵行）
+bindings/            运行时绑定（agentteams 参考绑定 / standalone-agent / coding-cli；产品做矩阵行）
 migration/           B-7 迁移工具（scaffold-team.py 骨架生成 + MIGRATION-CHECKLIST.md 人工确认清单）
 docs/                通用文档 + provenance/（照搬源流原文归档）
 ```

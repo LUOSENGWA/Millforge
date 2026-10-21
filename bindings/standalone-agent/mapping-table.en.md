@@ -1,6 +1,6 @@
 # Mechanism × Runtime Mapping Table (Bare QwenPaw)
 
-> This file is the **single source of truth** for the `bindings/single-agent/` mapping (the `README.md` "CAP Mapping" table is its consistent summary).
+> This file is the **single source of truth** for the `bindings/standalone-agent/` mapping (the `README.md` "CAP Mapping" table is its consistent summary).
 > Generic-word discipline: this directory is the only legitimate surface for runtime-specific names (`core/protocol/00-OVERVIEW.md` §S: core documents may only reference CAP-* numbers + generic words).
 
 ## 1. CAP → Mechanism Mapping (8-capability baseline)

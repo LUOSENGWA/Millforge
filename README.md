@@ -33,7 +33,7 @@ millforge/
 │   ├── industry/        #   行业模板 ×6（software/embedded/data/content/business/custom）
 │   ├── domain/          #   域片段 ×21（web/mcu/数据/市场/办公…）
 │   └── INDEX.yaml       #   片段注册表
-├── bindings/            # 运行时绑定层（agentteams（参考绑定）/ single-agent / coding-cli，产品做矩阵行）
+├── bindings/            # 运行时绑定层（agentteams（参考绑定）/ standalone-agent / coding-cli，产品做矩阵行）
 ├── golden-tests/        # 确定性回归（T1–T10 门 / 13 用例 / 83 脚本断言）
 └── docs/                # provenance/（照搬源流原文归档）
 ```

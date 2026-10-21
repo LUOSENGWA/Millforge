@@ -7,7 +7,7 @@
 | 形态 | 目录 | 适用 | 产品示例 |
 |---|---|---|---|
 | **orchestrated** | `bindings/agentteams/` | 有控制面 + worker 池的编排平台 | AgentTeams（worker 运行时任意） |
-| **single-agent** | `bindings/single-agent/` | 无编排层的单 agent 运行时 | QwenPaw / OpenClaw / Hermes |
+| **standalone-agent** | `bindings/standalone-agent/` | 无编排层的独立 agent 运行时 | QwenPaw / OpenClaw / Hermes |
 | **coding-cli** | `bindings/coding-cli/` | 一键执行的编程 CLI | Claude Code / QwenCode / OpenCode / Codex CLI |
 
 > 形态是"架构形状"；同一形态下的**产品差异写进产品矩阵行**，不要为每个产品新开目录。

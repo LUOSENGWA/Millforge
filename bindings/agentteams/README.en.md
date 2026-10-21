@@ -2,7 +2,7 @@
 
 > The mapping between the Millforge core and the **AgentTeams orchestration layer** (controller + worker pool). **This binding is runtime-agnostic**: control plane = AgentTeams; worker runtime is replaceable (reference runtime: QwenPaw; also copaw / OpenClaw / Hermes).
 > This binding is a **reference binding, not the only binding** — protocol legality is judged by the 8 capabilities in `core/binding-contract.md`;
-> any runtime satisfying the 8 capabilities + invariants constitutes a legal binding (`bindings/single-agent` and `bindings/coding-cli` are two other reference implementations).
+> any runtime satisfying the 8 capabilities + invariants constitutes a legal binding (`bindings/standalone-agent` and `bindings/coding-cli` are two other reference implementations).
 > **Generic-terminology discipline**: this directory is the **only legal surface** for runtime-specific names (spawn_subagent / QwenPaw cron / channels send / mc / Matrix / MinIO-RustFS / dashboard).
 
 ## Index (full documents)

@@ -1,6 +1,6 @@
 # skill 片段（CAP-SPAWN / CAP-EXEC 绑定实现）
 
-> 本文件是 `bindings/single-agent/` 的 skill 面规格；映射见 `mapping-table.md`。
+> 本文件是 `bindings/standalone-agent/` 的 skill 面规格；映射见 `mapping-table.md`。
 > 通用词纪律：本目录是运行时专名的唯一合法出现面（`core/protocol/00-OVERVIEW.md` §S）。
 
 ## 1. 在树脚本清单（core/scripts/，9 件）

@@ -57,7 +57,7 @@
 ## Deployment / Invocation
 
 ```
-parent execution unit (AgentTeams worker / single-agent runtime)
+parent execution unit (AgentTeams worker / standalone-agent runtime)
   → construct the task spec (core/schemas/spec.schema.json)
   → invoke the coding-CLI (one-shot; flags include --max-wall-time + --approval-mode)
   → exit 0: read the coding-runs evidence chain → fingerprint verification (CAP-STORE T2) → accept

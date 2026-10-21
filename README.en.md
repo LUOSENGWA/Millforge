@@ -33,7 +33,7 @@ millforge/
 │   ├── industry/        #   industry templates ×6 (software/embedded/data/content/business/custom)
 │   ├── domain/          #   domain fragments ×21 (web/mcu/data/market/office…)
 │   └── INDEX.yaml       #   fragment registry
-├── bindings/            # runtime binding layer (agentteams (reference) / single-agent / coding-cli; products as matrix rows)
+├── bindings/            # runtime binding layer (agentteams (reference) / standalone-agent / coding-cli; products as matrix rows)
 ├── golden-tests/        # deterministic regression (10 gates: byte-identity/line budget/scrub/frozen baseline/production traceability)
 └── docs/                # provenance/ (verbatim-inheritance source archives)
 ```

@@ -1,6 +1,6 @@
-# 单 agent 运行时参考绑定（single-agent binding，reference）
+# 独立 agent 运行时参考绑定（standalone-agent binding，reference）
 
-> 千锻核心与**单 agent 运行时**（无编排层）的映射。**本绑定对所有单 agent 运行时通用**：产品矩阵 = QwenPaw / OpenClaw / Hermes / …（QwenPaw 为参考产品）。
+> 千锻核心与**独立 agent 运行时**（无编排层）的映射。**本绑定对所有独立 agent 运行时通用**：产品矩阵 = QwenPaw / OpenClaw / Hermes / …（QwenPaw 为参考产品）。
 > 适用场景：单 Docker 宿主、多 QwenPaw agent 实例（无 K8s/Controller/Team CRD）、无 MinIO（本地盘/共享卷做对象存储）。
 > 与 `bindings/agentteams` 的差异 = 去掉平台编排层，**全部能力由 QwenPaw 原生机制 + 本地文件承载**。
 
@@ -42,14 +42,14 @@
 
 ## 与 agentteams 绑定的能力差距
 
-| 面 | agentteams | single-agent |
+| 面 | agentteams | standalone-agent |
 |----|-----------|--------------|
 | 跨团队 handoff | ✅（MinIO 项目空间 + Manager） | ❌（无对象存储项目空间；共享卷可模拟，权限靠目录约定） |
 | 多 user 隔离 | Controller + Matrix 权限 | 无（同宿主同权限 = 协议层不保证隔离，部署层自担） |
 | 团队/roster 管理 | Team CRD | 手工 roster 文件 |
 | 状态异地副本 | MinIO | 无（宿主盘单点） |
 
-**适用判定**：个人实验 / 单团队生产 / 快速验证协议行为 → single-agent 绑定足够（L1-L3 协议层完整可用）；多团队 + 跨团队 handoff + 多 human 隔离 → 上 agentteams。
+**适用判定**：个人实验 / 单团队生产 / 快速验证协议行为 → standalone-agent 绑定足够（L1-L3 协议层完整可用）；多团队 + 跨团队 handoff + 多 human 隔离 → 上 agentteams。
 
 ## 部署
 
