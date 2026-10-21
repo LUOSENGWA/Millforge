@@ -93,3 +93,13 @@
 | 代码级事件（V5） | 事件订阅面 | ⚠️ 缺口（V5 未实现，见 README §4） |
 | 应答写 CAP-STATE → 从状态恢复 | `request_attention` `payload.resolved=true` 关闭记录 + 任务态重读 | ✅ 在树 |
 | 超时兜底 | CAP-TIMER（due_at + cron 判定） | ✅ 在树（无 deadline 字段，CAP-TIMER 外部兜底） |
+
+## 6. 上下文分档 → 部署参数（12-REDLINES §5.1-5.2）
+
+| 档 | 部署声明 | 本绑定落地 |
+|----|---------|-----------|
+| **S** | 部署模型窗口 ≤256K | native 同时只装 1 份按需协议全文；大 artifact 一律 spawn（只回 ref+摘要）；loop 摘要 3 条；60%/80% 软/硬重置 |
+| **M** | 256K–512K | 2 份；摘要 5 条；其余同 S |
+| **L** | 512K–1M（>1M 按 L） | 3 份；摘要 8 条；其余同 S |
+
+**声明方式**：`team.json`（或部署清单）声明每个团队的窗口档；同一团队不同角色可分档（各自满足即可）。绑定侧的硬性落地：native 只做调度+审查（06-LIFECYCLE），实现走 `spawn_subagent(fork=False)`，状态落 task meta / project meta，大读取走 review spawn。

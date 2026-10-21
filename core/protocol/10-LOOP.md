@@ -85,7 +85,7 @@ loop_spec = {
 4. driver 崩溃/缺席不影响权威状态；CAP-TIMER 以持久化 next_check_at 兜底唤醒；缺席超声明时限 → 升级
 5. driver **不得自行判定 stop_condition 达成**——达成判定来自谓词/critic 写入 CAP-STATE 后才被读取
 
-**native 上下文预算**：driver 的 native 上下文只保留迭代摘要（{index, verdict, progress_signal, key_refs[]}），**默认不装载**完整产物；需看全量 → 派发 review spawn。
+**native 上下文预算**：driver 的 native 上下文只保留迭代摘要（{index, verdict, progress_signal, key_refs[]}），**默认不装载**完整产物；需看全量 → 派发 review spawn。摘要保留条数按 `12-REDLINES §5.2` 的档位（S=3 / M=5 / L=8），更早只留 key_refs。
 
 ## 4. 触发档位
 

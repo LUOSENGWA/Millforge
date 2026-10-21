@@ -93,3 +93,13 @@
 | code-level event (V5) | event subscription surface | ⚠️ gap (V5 not implemented; see README §4) |
 | answer written to CAP-STATE → resume from state | `request_attention` `payload.resolved=true` closes the record + task-state re-read | ✅ in tree |
 | timeout fallback | CAP-TIMER (due_at + cron judgment) | ✅ in tree (no deadline field; CAP-TIMER external fallback) |
+
+## 6. Context Tiers → Deployment Parameters (12-REDLINES §5.1-5.2)
+
+| Tier | Deployment declaration | How this binding lands it |
+|------|-----------------------|---------------------------|
+| **S** | deployment model window ≤256K | native holds at most 1 on-demand protocol full text; large artifacts always go through spawn (ref + summary only); loop summaries 3; soft/hard reset at 60%/80% |
+| **M** | 256K–512K | 2 full texts; 5 summaries; the rest as S |
+| **L** | 512K–1M (>1M treated as L) | 3 full texts; 8 summaries; the rest as S |
+
+**How it is declared**: `team.json` (or the deployment manifest) declares the window tier per team; different roles in one team may use different tiers (each satisfying its own). Binding-side hard landing: native does scheduling + review only (06-LIFECYCLE), implementation goes through `spawn_subagent(fork=False)`, state lands in task meta / project meta, and large reads go through a review spawn.

@@ -97,6 +97,61 @@ Layer 2 · reference layer (on-demand grep/read)
 2. Is it reversible if wrong? (irreversible → it needs an L1/L2 backstop; residency is only a reminder)
 3. Can it be a standalone file with only a one-line trigger on the hot path? (yes → split. The default answer = split)
 
+
+### 5.1 Context-Window Tiers (S / M / L)
+
+The protocol does not assume a model window size. **The window size is declared by the binding** (a deployment parameter); the protocol only defines three tiers and their budgets:
+
+| Tier | Window | Applies to |
+|------|--------|-----------|
+| **S** | ≤256K tokens | small/medium-window deployments, the tightest context |
+| **M** | 256K–512K | medium-window deployments |
+| **L** | 512K–1M | large-window deployments (>1M is treated as L: a bigger window never changes the loading structure) |
+
+**Capacity ≠ attention**: tiers only change the numbers (concurrency, summary counts, inline caps), never the structure (three-layer loading, spawn-first, state on disk).
+
+### 5.2 Tier budgets
+
+| Budget item | S | M | L | Notes |
+|-------------|:--:|:--:|:--:|-------|
+| Resident layer (identity file) tokens | ≤8K or ≤3% of window (whichever is smaller) | ≤10K or ≤3% | ≤12K or ≤2% | The compiler line gates (500/250/150) are unchanged; tokens are the second gate |
+| Non-reasoning occupancy per turn (dialogue + tool output + on-demand docs) | ≤50% of window | ≤50% | ≤50% | Keep ≥25% for reasoning/output; never fill an S window (a full window = zero completion) |
+| Concurrent on-demand protocol full texts | **1** | **2** | **3** | Only trigger descriptions stay resident; release after use |
+| Concurrent skill full texts | **1** | **2** | **3** | Skills are reference layer, not resident |
+| Loop iteration summaries retained | last **3** | last **5** | last **8** | Older ones keep `key_refs` only; never replay full text |
+| Spawn `context_refs` cap | **3** | **5** | **8** | Each ref = a CAP-STORE artifact (no inline body) |
+| Single inline-read cap | **5%** of window | **8%** | **10%** | Beyond it → dispatch a review spawn, return ref + summary |
+| Soft reset (reload signal refs + task state) | **60%** of working budget | 60% | 60% | Soft reset loses dialogue detail, not the task |
+| Hard reset (rebuild context) | **80%** of working budget | 80% | 80% | State is re-read from CAP-STATE; outputs are persisted before the reset |
+
+Token estimation: the compiler reports `token_shadow = chars/4` (reported only, not a hard gate); the line gates in the compiler's Budget stage remain hard.
+
+### 5.3 Loading matrix (when to load which md / skill)
+
+| Object | Layer | Trigger | Release | Tier differences |
+|--------|-------|---------|---------|------------------|
+| Identity file (compiled skeleton) | 0 resident | always | — | line gates unchanged |
+| This file (12-REDLINES, incl. §5) | 0 resident | always | — | all tiers |
+| 06-LIFECYCLE core loop | 0 resident (loop section) | always | — | all tiers |
+| 04-NMH | 1 on demand | the human gives a fuzzy requirement (trigger list in 04 §1) | decision tree locked | release right after locking; keep only the decision-tree file ref |
+| 05-NMA Part A (communication) | 1 on demand | delegation / report / query / handoff | task phase ends | — |
+| 05-NMA Part B (review) | 1 on demand | submission / review request / acceptance | acceptance closed | — |
+| 07-HANDOFF | 1 on demand | cross-team task (single_user only) | handoff complete | — |
+| 08-CONTRACT | 1 on demand | spec contains `contract_refs` / contract locked | acceptance | — |
+| 09-GOVERNANCE | 1 on demand | R5 reopen / weighted vote / escalation | ruling made | multi_user |
+| 10-LOOP | 1 on demand | `loop_spec` arrives / `iteration > 1` | loop ends | summary count per 5.2 |
+| 11-SIGNAL | 1 on demand | acceptance / closure / verdict citation | closure | — |
+| Skill full text | 2 reference | the capability is invoked | invocation ends | concurrency per 5.2 |
+| Protocol source docs / binding mapping / decision history | 2 reference | details needed → grep/read | — | read fragments only, never whole files |
+
+Loading order: resident → load on demand when triggered → release after use; the number of concurrent on-demand full texts must not exceed the tier caps in 5.2.
+
+### 5.4 Over-budget behavior
+
+- **Engineering gate** (compile time): identity files over the line gate = fail (never truncate); the token shadow is reported only.
+- **Runtime gate** (execution time): when non-reasoning occupancy exceeds 50%, stop loading, persist first, and soft/hard reset per 5.2; to read a large artifact, dispatch a review spawn (CAP-SPAWN X1) and take back only ref + summary.
+- **Acceptance**: every on-demand file gets at least one standard trigger sentence as a smoke test (trigger-rate verification, see the trigger acceptance above), and the tier's concurrency/summary caps are re-checked.
+
 ## 6. Redline Quick Reference (violation = protocol violation)
 
 1. never lock on behalf of the human (recommending is allowed; the nod must be the human's)
