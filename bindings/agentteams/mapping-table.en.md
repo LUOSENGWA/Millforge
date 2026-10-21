@@ -13,7 +13,7 @@
 | **CAP-NOTIFY** | QwenPaw `channels send` (QQ/Matrix channels) + Matrix Room @mention | V1 ✅ (notifications not persisted as state) V2 ✅ (state in CAP-STATE, rebuildable) V3 ⚠️ **known defect: allowlist silent drop leaves no gaps** (#160/#169 production-verified) V4 ✅ (message_id dedup) V5 ⚠️ no code-level event surface V6 ⚠️ delivered ≠ accepted | **V3/V5/V6 gaps are known implementation gaps (closed by later versions)**; until they close, the binding marks "partially satisfied"; the protocol must not rely on gaps being absent |
 | **CAP-ATTN** | QwenPaw channel DM (DM Room) + local state file recording replies | W1 ✅ (idempotency key in filename/state) W2 ✅ (reply lands in CAP-STATE) W3 ✅ (timeout_at in state, cron verdict) W4 ⚠️ **DM identity = Matrix user_id mapping (usable)**; group-chat @mention must not resolve (S4) W5 ✅ (DM Room = persistent display surface: persists + revisitable) W6 ⚠️ no multi-surface sync (single surface OK) W7 ✅ (structured options + option_id) | group chat not being a response surface is a **protocol redline** (S4); the binding-layer bot must steer to DM |
 | **CAP-SPAWN** | QwenPaw `spawn_subagent(fork=False)` (fresh session) | X1 ✅ (fork=False = does not inherit the parent session; **fork=True violates X1**) X2 ✅ (structured return) X3 ✅ (state via return value) X4 ⚠️ **no enforced bound = upstream gap** | context isolation: the worker native session only schedules + reviews; all implementation goes to spawns; until X4 bounds are enforced, the binding layer uses the timeout parameter best-effort (not enforced) |
-| **CAP-EXEC** | shell inside the worker container (`/opt/venv/copaw/bin/python3` + stdlib); **pip is always the venv version** (#226 iron rule) | Y1 ✅ Y2 ✅ (exit-code semantics see the core/scripts headers) Y3 ✅ | scripts ship with the core (the runtime is not asked to rewrite them); the **scheduling part** of the watchdog is this binding's implementation (cron + state-file paths); the logic part = the core reference implementation |
+| **CAP-EXEC** | shell inside the worker container (`/opt/venv/copaw/bin/python3` + stdlib); **pip is always the venv version** (runtime constraint) | Y1 ✅ Y2 ✅ (exit-code semantics see the core/scripts headers) Y3 ✅ | scripts ship with the core (the runtime is not asked to rewrite them); the **scheduling part** of the watchdog is this binding's implementation (cron + state-file paths); the logic part = the core reference implementation |
 | **CAP-ROSTER** | Team CRD / agent config (roster file: member_id/role/weight) | Z1 ✅ (role weights) Z2 ⚠️ (accountable is explicitly configured; ABSENT must be explicitly returned by the binding layer) Z3 ✅ (delegation chain = config change records) | roster change = R1 human-locked; allowlist config changes must be verified to take effect (the permission-wall fuse companion) |
 
 **Legality verdict**: this binding is currently **7.5/8 satisfied** — CAP-NOTIFY V3/V5/V6 partially satisfied (until the upstream PR line closes); CAP-SPAWN X4 best-effort, not enforced. **Marked reference, not compliant, until the gaps close + X4 enforced bounds land.**
@@ -68,3 +68,28 @@
 | attention | DM Room + state file (§CAP-ATTN) |
 | loop | CAP-STATE loop_state + cron fallback + spawn X4 |
 | signal | CAP-STATE event_type (closed list) + channel message marker (derived view) |
+
+## 4. NMA Message Types → Execution Carriers (Part A, communication layer)
+
+| NMA type | Carrier in this binding | Status |
+|----------|------------------------|--------|
+| `DELEGATE` | taskflow `delegate_task` (`spec` + `assignedTo` + `taskId` + `projectId`) | ✅ in tree |
+| `ACK` | taskflow `ack_task` | ✅ in tree |
+| `PROGRESS` | taskflow `report_progress` (state unchanged, no leader notification) | ✅ in tree |
+| `COMPLETE` | taskflow `submit_task` (`summary` + `deliverables`) + SIG-COMPLETE | ✅ in tree |
+| `QUERY` | no structured carrier (taskflow explicitly excludes direct questions) → group-chat text | ⚠️ gap: a structured QUERY needs a new action (or `request_attention(kind=other)` as an interim) |
+| `DECISION_REQUEST` | taskflow `request_attention` (kind=decision) + CAP-ATTN W7 | ✅ in tree |
+| `HANDOFF` | `07-HANDOFF` document + shared-storage handoff file (no API) | ✅ document carrier |
+| `ESCALATE` | taskflow `request_attention` (kind=escalation) | ✅ in tree |
+
+**Field landing and gaps**: `taskId` / `projectId` = action parameters; `refs[]` ≈ `deliverables` / artifact ref. There is no standalone `message_id` parameter — idempotency is guaranteed at the action layer (`submit_task`'s `submissionId` identity + task-state checks); `deadline` / `deadline_fallback` have no carrier (CAP-TIMER provides external fallback).
+
+## 5. NMH §8 Execution-Time Ask → Carriers
+
+| Clause | Carrier | Status |
+|--------|---------|--------|
+| structured decision request (options / recommendation / impact / deadline) | taskflow `request_attention` (kind=decision; payload shape by call convention, not schema-enforced) | ✅ in tree (option shape not enforced) |
+| persistent display surface (W5) | DM Room (W5 satisfied); dashboard todo as a second surface | ✅ DM / ⚠️ dashboard surface gap (see README §4) |
+| code-level event (V5) | event subscription surface | ⚠️ gap (V5 not implemented; see README §4) |
+| answer written to CAP-STATE → resume from state | `request_attention` `payload.resolved=true` closes the record + task-state re-read | ✅ in tree |
+| timeout fallback | CAP-TIMER (due_at + cron judgment) | ✅ in tree (no deadline field; CAP-TIMER external fallback) |

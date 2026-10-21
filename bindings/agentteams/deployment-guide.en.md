@@ -30,7 +30,7 @@ deploy (per role):
 
 **Hard constraints**:
 - **State must be synced to object-storage backup** — a container rebuild loses state (S4 ⚠️); before the `mc` push confirmation, it is not durable (T2).
-- **pip is always the venv version** (`/opt/venv/copaw/bin/pip`) — the system pip installs to the wrong path; version misreads are a production-incident source (#226 iron rule).
+- **pip is always the venv version** (`/opt/venv/copaw/bin/pip`) — the system pip installs to the wrong path; version misreads are a production-incident source (runtime constraint).
 - Identity files are deployed to **dual locations**; deploying before restart gets overwritten by the runtime's restore.
 
 ## 3. filesync Sync Layer (CAP-STORE T2 Execution Detail)

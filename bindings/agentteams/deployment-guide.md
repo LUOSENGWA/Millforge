@@ -30,7 +30,7 @@ millforge compile <team.json> --out /tmp/build/<team>
 
 **硬约束**：
 - **状态必须同步对象存储备份**——容器重建丢状态（S4 ⚠️）；`mc` 推送确认前不算持久（T2）。
-- **pip 一律 venv 版**（`/opt/venv/copaw/bin/pip`）——系统 pip 装到错误路径，版本误判是生产事故源（#226 铁律）。
+- **pip 一律 venv 版**（`/opt/venv/copaw/bin/pip`）——系统 pip 装到错误路径，版本误判是生产事故源（运行时约束）。
 - 身份文件**双位置**部署；restart 前部署会被 runtime 恢复覆盖。
 
 ## 3. filesync 同步层（CAP-STORE T2 执行细则）

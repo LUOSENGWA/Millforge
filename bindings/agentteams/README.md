@@ -26,7 +26,7 @@
 | **CAP-NOTIFY** | QwenPaw `channels send`（QQ/Matrix 频道）+ Matrix Room @mention | V1 ✅（通知不落状态）V2 ✅（状态在 CAP-STATE 可重建）V3 ⚠️ **已知缺陷：allowlist 静默丢弃无 gaps**（#160/#169 生产实证）V4 ✅（message_id 去重）V5 ⚠️ 无代码级事件面V6 ⚠️ delivered ≠ accepted | **V3/V5/V6 缺口为已知实现缺口（后续版本闭合）**；缺口闭合前绑定标注"部分满足"，协议不得依赖 gaps 缺失 |
 | **CAP-ATTN** | QwenPaw 频道私聊（DM Room）+ 本地状态文件记录应答 | W1 ✅（幂等键写文件名/状态）W2 ✅（应答落 CAP-STATE）W3 ✅（timeout_at 存状态，cron 判定）W4 ⚠️ **DM 身份 = Matrix user_id 映射（可用）**；群聊 @mention 不得作 resolve（S4）W5 ✅（DM Room = 持久展示面：持续存在+可回访）W6 ⚠️ 无多面同步（单面可用）W7 ✅（结构化选项 + option_id） | 群聊非应答面是**协议红线**（S4），绑定层 bot 必须引导至 DM |
 | **CAP-SPAWN** | QwenPaw `spawn_subagent(fork=False)`（fresh session） | X1 ✅（fork=False = 不继承父会话；**fork=True 违反 X1**）X2 ✅（结构化返回）X3 ✅（状态经返回值）X4 ⚠️ **无限时强制 = 上游缺口** | 上下文隔离：worker native session 只调度+审查，实现全进 spawn；X4 合入前绑定层用 timeout 参数尽力（非强制） |
-| **CAP-EXEC** | Worker 容器内 shell（`/opt/venv/copaw/bin/python3` + 标准库）；**pip 一律 venv 版**（#226 铁律） | Y1 ✅ Y2 ✅（退出码语义见 core/scripts 头注释）Y3 ✅ | 脚本随核心分发（不要求运行时重写）；watchdog **调度部分**是本绑定实现（cron + 状态文件路径），逻辑部分 = 核心参考实现 |
+| **CAP-EXEC** | Worker 容器内 shell（`/opt/venv/copaw/bin/python3` + 标准库）；**pip 一律 venv 版**（运行时约束） | Y1 ✅ Y2 ✅（退出码语义见 core/scripts 头注释）Y3 ✅ | 脚本随核心分发（不要求运行时重写）；watchdog **调度部分**是本绑定实现（cron + 状态文件路径），逻辑部分 = 核心参考实现 |
 | **CAP-ROSTER** | Team CRD / agent 配置（roster 文件：member_id/role/weight） | Z1 ✅（角色权重）Z2 ⚠️（accountable 显式配置，ABSENT 需绑定层显式返回）Z3 ✅（委托链 = 配置变更记录） | roster 变更 = R1 人锁；allowlist 配置变更必须验证生效（权限墙熔断配套） |
 
 **合法性判定**：本绑定当前 = **7.5/8 满足**——CAP-NOTIFY V3/V5/V6 部分满足（上游 PR 线闭合前），CAP-SPAWN X4 尽力非强制。**标注为 reference 而非 compliant，直到缺口闭合 + X4 时限强制落地。**
