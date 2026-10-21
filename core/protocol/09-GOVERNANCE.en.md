@@ -1,6 +1,6 @@
 # Governance: Voting, Ruling, State Mapping
 
-> v1.0 | Provenance: round-2 multi-user aggregation ruling + B-4/B-5/B-8/C-3 patches (round 3) + T3 state mapping (runtime ruling)
+> v1.0
 > **Aggregation execution boundary**: vote counting, timeout judgment, escalation triggering are all **pure-function logic** (core/scripts/, L2) — humans only supply vote/ruling inputs; execution units only execute the result the protocol layer computes.
 
 ## 1. Vote Execution (deterministic)

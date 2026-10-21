@@ -1,7 +1,6 @@
 # 千锻（Millforge）协议总则
 
-> 版本: v1.0（协议层冻结基线，2026-10-19）| 许可: Apache-2.0
-> 来源: NMProtocol 方案 v3.0（语义基座）+ DeepSeek 八轮审查（2026-10-17~19，全采纳）
+> 版本: v1.0 | 许可: Apache-2.0
 >
 > **通用词纪律（核心层铁律）**：本目录（含 schemas/、invariants/、scripts/、compiler/、templates/、golden-tests/）
 > 只允许 **CAP-\* 能力编号 + 通用词**（子代理/subagent、父执行体、主会话、持久展示面、运行时调度器、
@@ -35,7 +34,7 @@
 | 02-MODES | 部署模式（single_user / multi_user 相变） |
 | 03-DECISIONS | 决策类 R1-R6 + decision_log + 类型封闭（B-1/B-10/C-1） |
 | 04-NMH | 人↔Agent 协作探索协议 |
-| 05-NMA | 同行审查协议 + 多 critic 投票（MC-1~10） |
+| 05-NMA | Agent 间结构化通信 + 同行审查协议 + 多 critic 投票（MC-1~10） |
 | 06-LIFECYCLE | 任务生命周期契约（递归拆解/完成信号/双通道/故障 SOP/熔断） |
 | 07-HANDOFF | 跨团队扩展（仅 single_user） |
 | 08-CONTRACT | 契约 pinning + spec 结构化（B-3/C-2/B-9） |

@@ -1,6 +1,6 @@
 # Deployment Guide (Bare QwenPaw Binding, exclusive)
 
-> Provenance: reference binding body, final (2026-10-20). This file is the deployment/operations specification of `bindings/single-agent/`; the mapping is in `mapping-table.md`.
+> This file is the deployment/operations specification of `bindings/single-agent/`; the mapping is in `mapping-table.md`.
 
 ## 1. Topology (this binding's proper-noun surface)
 

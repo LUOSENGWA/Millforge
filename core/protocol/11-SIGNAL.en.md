@@ -1,6 +1,6 @@
 # Signal Primitive (15th Primitive)
 
-> v1.0 | Provenance: round-8 ruling (fully adopted; a+c hybrid attribution)
+> v1.0
 > **Positioning**: a signal is a protocol marker on "key messages." It **creates no new storage form** — it grants events already in CAP-STATE the qualification to be "cited by review/acceptance/closure." **An unmarked message may not serve as acceptance evidence, review input, or closure proof.**
 > **Attribution**: "which events are authoritative; review/acceptance/closure may cite only them" = protocol semantics (core — the completeness constraint cannot be left to binding-layer free interpretation); "when to soft/hard reset; reset granularity" = context-management policy (binding layer).
 

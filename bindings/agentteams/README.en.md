@@ -22,14 +22,14 @@
 |------|------------------------|--------------|-----------|
 | **CAP-STATE** | worker-container-local JSON (state files under `.qwenpaw/workspaces/default/`) + file-lock CAS; task-level state may additionally live in TeamHarness task meta | S1 ✅ (local-disk persistent) S2 ✅ (file lock; single-node single-writer) S3 ✅ (JSONL append) S4 ⚠️ | container rebuild loses state → **state must be synced to a MinIO backup** (see §3 filesync); before the `mc` push confirmation, it is not durable (T2 execution detail) |
 | **CAP-STORE** | MinIO / RustFS (S3-compatible), path addressing; `mc cp` writes | T1 ✅ (**client-side sha256**; ETag is not a fingerprint) T2 ✅ (S3 strong read-after-write consistency + sync-layer uploaded receipt) T3 ✅ (**chained simulation**: `decisions/<task>/<seq>.json` new-object chain; no same-key append) | hot keys never appended to the same object (S3 conditional PUT serialization); CAP-STATE must not simulate CAS via object-store conditional PUT (object level ≠ key-value level) |
-| **CAP-TIMER** | QwenPaw cron (`qwenpaw cron create --agent-id ...`) + `timer-derive.sh` idempotent derivation | U1 ✅ (due_at in CAP-STATE, container clock) U2 ✅ (callback idempotently re-derives) U3 ✅ (verdict recomputed from state; no "processed" marker stored) U4 ⚠️ granularity = cron check period (binding-declared; default 5min) | **heartbeat/cron only does fallback wake, never real-time driving** (v2.41 ruling); real-time driving = event triggers + state-machine side effects |
-| **CAP-NOTIFY** | QwenPaw `channels send` (QQ/Matrix channels) + Matrix Room @mention | V1 ✅ (notifications not persisted as state) V2 ✅ (state in CAP-STATE, rebuildable) V3 ⚠️ **known defect: allowlist silent drop leaves no gaps** (#160/#169 production-verified) V4 ✅ (message_id dedup) V5 ⚠️ no code-level event surface (= PR-UX-2 gap) V6 ⚠️ delivered ≠ accepted | **V3/V5/V6 gaps = the upstream PR line (PR-UX-2/3/4)**; until the PRs merge, the binding marks "partially satisfied"; the protocol must not rely on gaps being absent |
+| **CAP-TIMER** | QwenPaw cron (`qwenpaw cron create --agent-id ...`) + `timer-derive.sh` idempotent derivation | U1 ✅ (due_at in CAP-STATE, container clock) U2 ✅ (callback idempotently re-derives) U3 ✅ (verdict recomputed from state; no "processed" marker stored) U4 ⚠️ granularity = cron check period (binding-declared; default 5min) | **heartbeat/cron only does fallback wake, never real-time driving** ; real-time driving = event triggers + state-machine side effects |
+| **CAP-NOTIFY** | QwenPaw `channels send` (QQ/Matrix channels) + Matrix Room @mention | V1 ✅ (notifications not persisted as state) V2 ✅ (state in CAP-STATE, rebuildable) V3 ⚠️ **known defect: allowlist silent drop leaves no gaps** (#160/#169 production-verified) V4 ✅ (message_id dedup) V5 ⚠️ no code-level event surface V6 ⚠️ delivered ≠ accepted | **V3/V5/V6 gaps are known implementation gaps (closed by later versions)**; until they close, the binding marks "partially satisfied"; the protocol must not rely on gaps being absent |
 | **CAP-ATTN** | QwenPaw channel DM (DM Room) + local state file recording replies | W1 ✅ (idempotency key in filename/state) W2 ✅ (reply lands in CAP-STATE) W3 ✅ (timeout_at in state, cron verdict) W4 ⚠️ **DM identity = Matrix user_id mapping (usable)**; group-chat @mention must not resolve (S4) W5 ✅ (DM Room = persistent display surface: persists + revisitable) W6 ⚠️ no multi-surface sync (single surface OK) W7 ✅ (structured options + option_id) | group chat not being a response surface is a **protocol redline** (S4); the binding-layer bot must steer to DM |
-| **CAP-SPAWN** | QwenPaw `spawn_subagent(fork=False)` (fresh session) | X1 ✅ (fork=False = does not inherit the parent session; **fork=True violates X1**) X2 ✅ (structured return) X3 ✅ (state via return value) X4 ⚠️ **no enforced bound = upstream gap** (PR line) | v2.40 context-isolation ruling: the worker native session only schedules + reviews; all implementation goes to spawns; until X4 merges, the binding layer uses the timeout parameter best-effort (not enforced) |
+| **CAP-SPAWN** | QwenPaw `spawn_subagent(fork=False)` (fresh session) | X1 ✅ (fork=False = does not inherit the parent session; **fork=True violates X1**) X2 ✅ (structured return) X3 ✅ (state via return value) X4 ⚠️ **no enforced bound = upstream gap** | context isolation: the worker native session only schedules + reviews; all implementation goes to spawns; until X4 bounds are enforced, the binding layer uses the timeout parameter best-effort (not enforced) |
 | **CAP-EXEC** | shell inside the worker container (`/opt/venv/copaw/bin/python3` + stdlib); **pip is always the venv version** (#226 iron rule) | Y1 ✅ Y2 ✅ (exit-code semantics see the core/scripts headers) Y3 ✅ | scripts ship with the core (the runtime is not asked to rewrite them); the **scheduling part** of the watchdog is this binding's implementation (cron + state-file paths); the logic part = the core reference implementation |
 | **CAP-ROSTER** | Team CRD / agent config (roster file: member_id/role/weight) | Z1 ✅ (role weights) Z2 ⚠️ (accountable is explicitly configured; ABSENT must be explicitly returned by the binding layer) Z3 ✅ (delegation chain = config change records) | roster change = R1 human-locked; allowlist config changes must be verified to take effect (the permission-wall fuse companion) |
 
-**Legality verdict**: this binding is currently **7.5/8 satisfied** — CAP-NOTIFY V3/V5/V6 partially satisfied (until the upstream PR line closes); CAP-SPAWN X4 best-effort, not enforced. **Marked reference, not compliant, until PR-UX-2/3/4 merge + X4 enforced bounds land.**
+**Legality verdict**: this binding is currently **7.5/8 satisfied** — CAP-NOTIFY V3/V5/V6 partially satisfied (until the upstream PR line closes); CAP-SPAWN X4 best-effort, not enforced. **Marked reference, not compliant, until the gaps close + X4 enforced bounds land.**
 
 ## 2. Primitive Mapping (each §01 primitive → mechanism)
 
@@ -98,35 +98,15 @@ cleanup: task terminal state (completed/cancelled) → cron delete (prevent orph
 | spawn hangs without return | X4 bound (best-effort) | bounded_failure semantics; 3 times → escalate |
 | SOUL.md rolled back after restart | file mtime/line count | redeploy both locations (after the restart) |
 
-## 4. Upstream PR Line (closing this binding's gaps)
+## 4. Known Gaps (closed by later versions)
 
-| PR | Gap closed | Status |
-|----|------------|------|
-| PR-UX-4 delivery_report V3 | CAP-NOTIFY V3 gaps visible (allowlist silent drop observable) | draft pending review |
-| PR-UX-2 event surface (code-level subscription) | CAP-NOTIFY V5 | draft pending review |
-| PR-UX-3 multi-channel adaptation | CAP-NOTIFY V6 delivered/accepted distinction | draft pending review |
-| PR-UX-1 dashboard todo | CAP-ATTN W5 persistent display surface (a second surface) | draft pending review |
-| PR-UX-5 IM card (optional) | W6 multi-surface close | optional |
-| (X4 enforced bound) | CAP-SPAWN X4 | pending scoping |
+| Gap | Protocol clause affected |
+|-----|--------------------------|
+| delivery_report does not report gaps (allowlist silent drop unobservable) | CAP-NOTIFY V3 |
+| No code-level event subscription surface | CAP-NOTIFY V5 |
+| delivered / accepted not distinguished | CAP-NOTIFY V6 |
+| Dashboard todo list (a second persistent display surface) | CAP-ATTN W5 |
+| IM card (optional extra surface) | W6 |
+| CAP-SPAWN enforced bound not landed | CAP-SPAWN X4 |
 
-**Merge order**: UX-4 → UX-2 → UX-3 → UX-1 → UX-5 (dependency order).
-
-### 4.1 Platform Line (separate from the UX line: TeamHarness filesync + AgentTeams platform layer)
-
-| Issue | Gap closed | Status |
-|----|------------|------|
-| TH-1 filesync startup mirror clobber | CAP-STATE S4 no-silent-loss (the post-write 45–60s protocol in §3.3 is a manual stopgap today) | filed (#1391) |
-| AT-1 worker join path | Task reachability (room membership = task visibility; create-project.sh's credential proxy-join dead-ends on missing credentials) | filed (#1390) |
-| AT-2 create-project.sh --team expansion | Roster-completeness rule (whole team joins; the Manager expands the roster by hand per invocation today) | filed (#1389) |
-| AT-3 allowlists exclude humans by default + two-system field-dialect tug-of-war | CAP-NOTIFY V3 generator side (zero-signal silent drop; the cluster is "safe" only via permissive fall-through) | filed (#1388) |
-| AT-4 image does not pin pydantic | Runtime startability (2026-07 production incident: qwenpaw uses a 2.12-only API while the image resolves 2.11.1 → workspace startup cascade failure) | filed (#1392) |
-
-**Relation to the UX line**: AT-3 is the generator-side root cause of UX-4's `gaps[]` (the generator never puts humans into the allowlist, so a delivery_report could not enumerate who was supposed to receive); suggested filing order: AT-3 → TH-1 → AT-1 → AT-2 → AT-4.
-
-## 5. S3 Insensitive Verification (MinIO → RustFS migration)
-
-- fingerprint = **client-side SHA-256** (ETag is not a content hash; multi-part upload ETags are hashes of part hashes)
-- 32-concurrent `If-None-Match: *` PUT verifies exactly-one-winner (must test before migration)
-- append = a chain of new objects (never same-key append)
-- the 8 core scripts make **zero object-storage CLI calls** (they only handle local files/stdin/stdout; all I/O is the CAP-STORE adapter's job)
-- after migration, full golden-test regression (decision_log/contract/handoff behavior parity)
+Platform-side hardening (CAP-STATE durability / task reachability / roster completeness / notification generation / runtime startability) proceeds on the implementation side; this table declares gaps, not progress.

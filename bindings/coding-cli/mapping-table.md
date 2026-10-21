@@ -1,6 +1,6 @@
 # 机制 × 运行时映射表（Claude Code / coding-CLI）
 
-> Provenance：参考绑定正文定案（2026-10-20）。本文件是 `bindings/coding-cli/` 映射的**单一事实源**（`README.md`「CAP 映射」为其一致摘要）。
+> 本文件是 `bindings/coding-cli/` 映射的**单一事实源**（`README.md`「CAP 映射」为其一致摘要）。
 > 定位：本绑定是**执行后端**（one-shot coding CLI），缺失的 4 能力（CAP-STATE / CAP-TIMER / CAP-NOTIFY / CAP-ROSTER）由**父执行体**提供；§1 表为**组合视角**（本运行时 + 父执行体）。
 > 通用词纪律：本目录是运行时专名的唯一合法出现面（`core/protocol/00-OVERVIEW.md` §S）。
 

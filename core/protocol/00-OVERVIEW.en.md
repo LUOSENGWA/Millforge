@@ -1,7 +1,6 @@
 # Millforge Protocol Overview
 
-> Version: v1.0 (frozen protocol-layer baseline, 2026-10-19) | License: Apache-2.0
-> Provenance: NMProtocol design v3.0 (semantic base) + eight-round DeepSeek review (2026-10-17~19, fully adopted)
+> Version: v1.0 | License: Apache-2.0
 >
 > **Generic-terminology discipline (core-layer iron rule)**: this directory (including schemas/, invariants/, scripts/, compiler/, templates/, golden-tests/)
 > admits only **CAP-\* capability numbers + generic terms** (subagent, parent execution unit, main session, persistent display surface, runtime scheduler,
@@ -35,7 +34,7 @@ the protocol does not depend on any specific runtime existing.
 | 02-MODES | deployment modes (single_user / multi_user phase transition) |
 | 03-DECISIONS | decision classes R1-R6 + decision_log + type closure (B-1/B-10/C-1) |
 | 04-NMH | human↔agent collaborative exploration protocol |
-| 05-NMA | peer review protocol + multi-critic voting (MC-1~10) |
+| 05-NMA | agent-to-agent structured communication + peer review + multi-critic voting (MC-1~10) |
 | 06-LIFECYCLE | task lifecycle contract (recursive decomposition / completion signal / dual channel / failure SOP / fuse) |
 | 07-HANDOFF | cross-team extension (single_user only) |
 | 08-CONTRACT | contract pinning + structured spec (B-3/C-2/B-9) |

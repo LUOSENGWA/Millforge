@@ -1,7 +1,7 @@
 # skill 片段（CAP-SPAWN / CAP-EXEC 绑定实现）
 
-> Provenance：运行时绑定审查（第四轮，2026-10-18）定案 + v2.40 上下文隔离定案 + 在树 `core/scripts/` 实测（9 件）。本文件是 `bindings/agentteams/` 的 skill 面规格。通用词纪律见 `README.md` 头注。
-> 甄别注记：底稿（第四轮）中 B-5/B-6 标注 [NO-CARRIER]、规划 `nmh-watchdog.sh` 新模式；在树实测两者已是独立脚本（`attention-stall.sh` / `verification-mismatch-window.sh`）。本文件以在树为准，底稿规划仅存 `mapping-table.md` §2.1。
+> 本文件是 `bindings/agentteams/` 的 skill 面规格。通用词纪律见 `README.md` 头注。
+> **在树状态**：B-5/B-6 已有独立脚本（`attention-stall.sh` / `verification-mismatch-window.sh`）；规划载体（`nmh-watchdog.sh` 新模式）仅存 `mapping-table.md` §2.1。
 
 ## 1. 在树脚本清单（core/scripts/，9 件）
 
@@ -21,11 +21,11 @@
 
 **8 核心脚本 I/O 纪律**：只处理本地文件 / stdin / stdout，**不得调用任何对象存储 CLI**（`mc` 等）；对象存储 I/O 全由 CAP-STORE adapter 负责（`s3-storage.md` §4 审计表）。
 
-## 2. spawn 片段（CAP-SPAWN，v2.40 上下文隔离定案）
+## 2. spawn 片段（CAP-SPAWN，上下文隔离）
 
 - **worker native session = 调度 + 审查，不执行任何实现工作。** 所有实现工作进 `spawn_subagent(fork=False)`（fresh session，不继承父会话——**fork=True 违反 X1**）。
 - 结构化返回（X2）；状态经返回值传递（X3），父 session 不读子 session 上下文。
-- X4（时限强制）= 上游缺口（PR 线）；合入前绑定层用 timeout 参数尽力（非强制），挂起无返回按 `bounded_failure` 语义处理，3 次升级。
+- X4（时限强制）= 上游缺口（上游缺口）；合入前绑定层用 timeout 参数尽力（非强制），挂起无返回按 `bounded_failure` 语义处理，3 次升级。
 - 三层缓存协同（绑定层事实）：MinIO artifacts（spawn 读上下文）→ 运行时 offload（执行中落盘）→ 模型服务端 KV Cache（硬件兜底）。
 
 ## 3. 审核链片段（B-1 三层校验，顺序不可换）

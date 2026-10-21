@@ -1,6 +1,6 @@
 # Mechanism × Runtime Mapping Table (Claude Code / coding-CLI)
 
-> Provenance: reference binding body, final (2026-10-20). This file is the **single source of truth** for the `bindings/coding-cli/` mapping (the `README.md` "CAP Mapping" table is its consistent summary).
+> This file is the **single source of truth** for the `bindings/coding-cli/` mapping (the `README.md` "CAP Mapping" table is its consistent summary).
 > Positioning: this binding is an **execution backend** (one-shot coding CLI); the 4 missing capabilities (CAP-STATE / CAP-TIMER / CAP-NOTIFY / CAP-ROSTER) are provided by the **parent execution unit**; the §1 table is the **combined view** (this runtime + parent execution unit).
 > Generic-word discipline: this directory is the only legitimate surface for runtime-specific names (`core/protocol/00-OVERVIEW.md` §S).
 

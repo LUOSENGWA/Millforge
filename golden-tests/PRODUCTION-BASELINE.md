@@ -1,6 +1,6 @@
 # 生产基线映射（golden gate 审计锚）
 
-> v1.0 | 2026-10-19 | 悬置问题 #1 闭合文档
+> v1.0 | 生产基线对照文档
 
 ## 1. 基线定义与门语义
 
@@ -22,7 +22,7 @@
 |:--:|------|------|:--:|
 | W1 | 第一规则：职责边界 + 拒绝必须上报 | `skeleton/worker.md` 铁律 + `fragments/protocol-contract.md`（scope/out_of_scope 契约） | ✅ 吸收（升级为结构化契约） |
 | W2 | 群聊 @mention 规则（不 @ = 自言自语） | `fragments/protocol-attention-ux.md` + binding 层（Matrix mention 格式见 bindings/agentteams/README） | ✅ 吸收（binding 特化保留在绑定层） |
-| W3 | v2.40 上下文隔离（native = 调度+审查；实现 = spawn） | `skeleton/worker.md` 铁律 #1（编译物显式保留 "v2.40 定案" 出处） | ✅ 吸收 |
+| W3 | 上下文隔离（native = 调度+审查；实现 = spawn） | `skeleton/worker.md` 铁律 #1 | ✅ 吸收 |
 | W4 | Spawn 可用性探测（工具列表无 spawn 类工具 → 原生执行） | `fragments/protocol-task-lifecycle.md` spawn 纪律（"不调用不存在的工具，不声称已 spawn" 语义） | ✅ 吸收 |
 | W5 | 核心循环（三要素 → 拆解 → spawn → 审查 → 整合） | `skeleton/worker.md` 工作流六步（三要素 + 结构化 acceptance + decision_class） | ✅ 吸收（升级：结构化验收 + 决策类） |
 | W6 | spawn 注入上下文五要素（数据路径/目标/禁止/交付契约/数据契约） | `spawn-specs/*.md` + `fragments/protocol-task-lifecycle.md`（context_refs 文件引用 + X4 时限 + return_schema） | ✅ 吸收（升级：长上下文走文件不进消息） |
@@ -54,7 +54,7 @@
 | L16 | DAG 登记（plan_dag 任务可视化） | binding 层（工作台插件正源） | 📋 binding 特定 |
 | L17 | 验收与汇总（先汇报再确认） | 同 L7 | ✅ 吸收 |
 | L18 | 应对审核（NMA 结构化审查） | `fragments/protocol-nma.md` | ✅ 吸收 |
-| L19 | spawn 规则（v2.40 隔离） | 同 W3 | ✅ 吸收 |
+| L19 | spawn 规则（上下文隔离） | 同 W3 | ✅ 吸收 |
 | L20 | @ 格式铁律（完整 MXID 四种 mention 格式） | binding 层（Matrix mention 格式规范，bindings/agentteams/README） | 📋 binding 特定 |
 
 ## 4. Critic 特有条款映射

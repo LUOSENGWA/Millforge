@@ -1,6 +1,6 @@
 # Loop 原语（第 14 原语）
 
-> v1.0 | 来源: 第七轮 Loop 专轮（全采纳含 4 处修正）
+> v1.0
 > **定位**：Loop 有自己的 spec（goal_ref/stop_condition/budget/convergence_rule）、自己的生命周期（迭代）、自己的 driver（accountable orchestrator）；它可以**包含** task，但不等同 task。
 > Loop 是上层容器：迭代内的 task 仍走 R1-R6 决策聚合、NMH spec 锁定、critic 验收。Loop 只负责**在预算内重复调用这些机制，直到 stop_condition 达成或预算耗尽**。
 > **为什么不是状态机扩展**：迭代不是生命周期阶段，是同一生命周期内的重复执行；扩态会污染任务状态机契约，"迭代中/执行中"区分对适配器无意义。
@@ -85,7 +85,7 @@ loop_spec = {
 4. driver 崩溃/缺席不影响权威状态；CAP-TIMER 以持久化 next_check_at 兜底唤醒；缺席超声明时限 → 升级
 5. driver **不得自行判定 stop_condition 达成**——达成判定来自谓词/critic 写入 CAP-STATE 后才被读取
 
-**native 上下文预算（修正第六轮）**：driver 的 native 上下文只保留迭代摘要（{index, verdict, progress_signal, key_refs[]}），**默认不装载**完整产物；需看全量 → 派发 review spawn。
+**native 上下文预算**：driver 的 native 上下文只保留迭代摘要（{index, verdict, progress_signal, key_refs[]}），**默认不装载**完整产物；需看全量 → 派发 review spawn。
 
 ## 4. 触发档位
 

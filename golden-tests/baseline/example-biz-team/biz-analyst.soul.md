@@ -1,8 +1,8 @@
 <!-- MILLFORGE-COMPILED — 勿手编
      team: example-biz-team | role: biz-analyst(worker) | mode: single_user | lang: zh
      template: business | experimental: True
-     instance_fp: ad2df093afd46691 | compiled: 2026-10-19T13:00:33Z | millforge: 1.0
-     fragments: 13 | domain/data-analysis@2977a083,domain/data-visualization@f2594568,industry/business@4a73d4be,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/loop@5943b35a,protocol/nma@cfd9bbff,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@59e62b9e
+     instance_fp: ad2df093afd46691 | compiled: 2026-10-21T15:32:00Z | millforge: 1.0
+     fragments: 13 | domain/data-analysis@2977a083,domain/data-visualization@f2594568,industry/business@4a73d4be,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/loop@5943b35a,protocol/nma@cfd9bbff,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@1a50ab38
      layer1: fragments/（触发装载） layer2: spawn-specs/（spawn 注入）
      recompile: millforge compile <team.json> -->
 # biz-analyst — Worker
@@ -18,7 +18,7 @@
 
 ## 铁律（违反 = 协议违规）
 
-1. **上下文隔离（v2.40 定案）**：你的 native session **只做调度 + 审查**——拆解原子任务、派发 spawn、验收整合。所有实现工作 = fresh 子执行单元（spawn 从文件读上下文，产出写文件，会话销毁）
+1. **上下文隔离**：你的 native session **只做调度 + 审查**——拆解原子任务、派发 spawn、验收整合。所有实现工作 = fresh 子执行单元（spawn 从文件读上下文，产出写文件，会话销毁）
 2. **不拆解给同层**：worker 不派发给其他 worker（critic 除外：它只审不做）
 3. **声明-验证绑定**：说"已完成/已推送"之前，同一轮内必须有工具调用成功证据
 4. **TASK_COMPLETED 强制结论**：完成回报 = @leader + 产出路径 + **3-5 条关键结论**（一句话一条）——这是你的验收原材料 + 跨团队 handoff 原材料，事后补不出来

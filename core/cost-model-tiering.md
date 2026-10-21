@@ -1,7 +1,6 @@
 # Task 3：协议成本模型 + 分层定案
 
 > 版本: v1.0 | 许可: Apache-2.0
-> 来源: DeepSeek 第六轮审查（生产化 + 开源就绪轮，2026-10-18）定案
 
 ## 3.1 每机制触发条件审计
 
@@ -79,8 +78,8 @@
 **结论**：成本模型完全从 CAP-STATE 事件流派生，不依赖任何特定运行时的 dashboard 统计。dashboard 只是这些事件的可视化视图，不是数据源。
 
 
-## 多 Critic 预算注记（第八轮 2026-10-19）
+## 多 Critic 预算注记
 
 多 critic 投票的 N 个 critic = N 个 fresh spawn，**全部计入 spawn 预算**（无折扣）。
 超预算时**不降级为纯单 critic**——降级路径 = "单 critic + 强制 dissent + 人锁验收"
-（人必须显式确认单 critic 结论）。详见 `core/protocol/05-NMA.md` §7 成本集成。
+（人必须显式确认单 critic 结论）。详见 `core/protocol/05-NMA.md` §12 成本集成。

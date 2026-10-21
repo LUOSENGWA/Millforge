@@ -1,7 +1,6 @@
 # Task 3: Protocol Cost Model + Tiering Final Decision
 
 > Version: v1.0 | License: Apache-2.0
-> Provenance: finalized in the sixth-round DeepSeek review (production + open-source readiness round, 2026-10-18)
 
 ## 3.1 Per-mechanism Trigger Audit
 
@@ -79,8 +78,8 @@
 **Conclusion**: the cost model is derived entirely from the CAP-STATE event stream and does not depend on any specific runtime's dashboard statistics. A dashboard is only a visualization view of these events, not a data source.
 
 
-## Multi-critic Budget Note (eighth round, 2026-10-19)
+## Multi-critic Budget Note
 
 The N critics of multi-critic voting = N fresh spawns, **all counted in the spawn budget** (no discount).
 On budget excess, **do not downgrade to a pure single critic** — the downgrade path = "single critic + mandatory dissent + human-locked acceptance"
-(a human must explicitly confirm the single critic's conclusion). See `core/protocol/05-NMA.md` §7 Cost integration.
+(a human must explicitly confirm the single critic's conclusion). See `core/protocol/05-NMA.md` §12 Cost integration.

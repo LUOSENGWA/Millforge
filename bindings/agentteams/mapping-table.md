@@ -1,6 +1,6 @@
 # 机制 × 运行时映射表（AgentTeams + QwenPaw）
 
-> Provenance：运行时绑定审查（第四轮，2026-10-18）定案；采纳状态 = 全采纳。本文件是 `bindings/agentteams/` 映射的**单一事实源**（`README.md` §1 为其一致摘要）。
+> 本文件是 `bindings/agentteams/` 映射的**单一事实源**（`README.md` §1 为其一致摘要）。
 > 通用词纪律：本目录是运行时专名的唯一合法出现面（`core/protocol/00-OVERVIEW.md` §S：核心条文/契约/模板/测试只允许 CAP-* 编号 + 通用词）。
 
 ## 1. CAP → 机制映射（8 能力基线）
@@ -9,14 +9,14 @@
 |------|------------------------|--------------|-----------|
 | **CAP-STATE** | Worker 容器本地 JSON（`.qwenpaw/workspaces/default/` 下的状态文件）+ 文件锁 CAS；任务级状态另可落 TeamHarness task meta | S1 ✅（本地盘持久）S2 ✅（文件锁；单机单写者）S3 ✅（JSONL append）S4 ⚠️ | 容器重建丢状态 → **状态必须同步 MinIO 备份**（见 `deployment-guide.md` filesync 节）；`mc` 推送确认前不算持久（T2 执行细则） |
 | **CAP-STORE** | MinIO / RustFS（S3 兼容），路径寻址；`mc cp` 写入 | T1 ✅（**客户端算 sha256**，ETag 不可当指纹）T2 ✅（S3 read-after-write 强一致 + 同步层 uploaded 回执）T3 ✅（**链式模拟**：`decisions/<task>/<seq>.json` 新对象链，不做同 key append） | 热 key 不做同对象 append（S3 conditional PUT 串行化）；CAP-STATE 不用对象存储 conditional PUT 模拟 CAS（对象级 ≠ 键值级） |
-| **CAP-TIMER** | QwenPaw cron（`qwenpaw cron create --agent-id ...`）+ `timer-derive.sh` 幂等派生 | U1 ✅（due_at 存 CAP-STATE，容器时钟）U2 ✅（callback 幂等重派生）U3 ✅（判定从状态重算，不存"已处理"标记）U4 ⚠️ 粒度 = cron 检查周期（绑定声明，默认 5min） | **心跳/cron 只做兜底唤醒，不做实时驱动**（v2.41 定案）；实时驱动 = 事件触发 + 状态机副作用 |
-| **CAP-NOTIFY** | QwenPaw `channels send`（QQ/Matrix 频道）+ Matrix Room @mention | V1 ✅（通知不落状态）V2 ✅（状态在 CAP-STATE 可重建）V3 ⚠️ **已知缺陷：allowlist 静默丢弃无 gaps**（#160/#169 生产实证）V4 ✅（message_id 去重）V5 ⚠️ 无代码级事件面（= PR-UX-2 缺口）V6 ⚠️ delivered ≠ accepted | **V3/V5/V6 缺口 = 上游 PR 线（PR-UX-2/3/4）**；PR 合入前绑定标注"部分满足"，协议不得依赖 gaps 缺失 |
+| **CAP-TIMER** | QwenPaw cron（`qwenpaw cron create --agent-id ...`）+ `timer-derive.sh` 幂等派生 | U1 ✅（due_at 存 CAP-STATE，容器时钟）U2 ✅（callback 幂等重派生）U3 ✅（判定从状态重算，不存"已处理"标记）U4 ⚠️ 粒度 = cron 检查周期（绑定声明，默认 5min） | **心跳/cron 只做兜底唤醒，不做实时驱动**；实时驱动 = 事件触发 + 状态机副作用 |
+| **CAP-NOTIFY** | QwenPaw `channels send`（QQ/Matrix 频道）+ Matrix Room @mention | V1 ✅（通知不落状态）V2 ✅（状态在 CAP-STATE 可重建）V3 ⚠️ **已知缺陷：allowlist 静默丢弃无 gaps**（#160/#169 生产实证）V4 ✅（message_id 去重）V5 ⚠️ 无代码级事件面V6 ⚠️ delivered ≠ accepted | **V3/V5/V6 缺口为已知实现缺口（后续版本闭合）**；缺口闭合前绑定标注"部分满足"，协议不得依赖 gaps 缺失 |
 | **CAP-ATTN** | QwenPaw 频道私聊（DM Room）+ 本地状态文件记录应答 | W1 ✅（幂等键写文件名/状态）W2 ✅（应答落 CAP-STATE）W3 ✅（timeout_at 存状态，cron 判定）W4 ⚠️ **DM 身份 = Matrix user_id 映射（可用）**；群聊 @mention 不得作 resolve（S4）W5 ✅（DM Room = 持久展示面：持续存在+可回访）W6 ⚠️ 无多面同步（单面可用）W7 ✅（结构化选项 + option_id） | 群聊非应答面是**协议红线**（S4），绑定层 bot 必须引导至 DM |
-| **CAP-SPAWN** | QwenPaw `spawn_subagent(fork=False)`（fresh session） | X1 ✅（fork=False = 不继承父会话；**fork=True 违反 X1**）X2 ✅（结构化返回）X3 ✅（状态经返回值）X4 ⚠️ **无限时强制 = 上游缺口**（PR 线） | v2.40 上下文隔离定案：worker native session 只调度+审查，实现全进 spawn；X4 合入前绑定层用 timeout 参数尽力（非强制） |
+| **CAP-SPAWN** | QwenPaw `spawn_subagent(fork=False)`（fresh session） | X1 ✅（fork=False = 不继承父会话；**fork=True 违反 X1**）X2 ✅（结构化返回）X3 ✅（状态经返回值）X4 ⚠️ **无限时强制 = 上游缺口** | 上下文隔离：worker native session 只调度+审查，实现全进 spawn；X4 合入前绑定层用 timeout 参数尽力（非强制） |
 | **CAP-EXEC** | Worker 容器内 shell（`/opt/venv/copaw/bin/python3` + 标准库）；**pip 一律 venv 版**（#226 铁律） | Y1 ✅ Y2 ✅（退出码语义见 core/scripts 头注释）Y3 ✅ | 脚本随核心分发（不要求运行时重写）；watchdog **调度部分**是本绑定实现（cron + 状态文件路径），逻辑部分 = 核心参考实现 |
 | **CAP-ROSTER** | Team CRD / agent 配置（roster 文件：member_id/role/weight） | Z1 ✅（角色权重）Z2 ⚠️（accountable 显式配置，ABSENT 需绑定层显式返回）Z3 ✅（委托链 = 配置变更记录） | roster 变更 = R1 人锁；allowlist 配置变更必须验证生效（权限墙熔断配套） |
 
-**合法性判定**：本绑定当前 = **7.5/8 满足**——CAP-NOTIFY V3/V5/V6 部分满足（上游 PR 线闭合前），CAP-SPAWN X4 尽力非强制。**标注为 reference 而非 compliant，直到 PR-UX-2/3/4 合入 + X4 时限强制落地。**
+**合法性判定**：本绑定当前 = **7.5/8 满足**——CAP-NOTIFY V3/V5/V6 部分满足（缺口闭合前），CAP-SPAWN X4 尽力非强制。**标注为 reference 而非 compliant，直到缺口闭合 + X4 时限强制落地。**
 
 ## 2. 机制 → 执行载体映射（14 机制）
 
@@ -47,7 +47,7 @@
 | B-6 mismatch 窗口 | `nmh-watchdog.sh` 新模式 | 同上 |
 | decision record | MinIO append-only JSONL + skill 写脚本 | 放 task meta 会撑爆 meta；Matrix 不可靠 |
 
-> **在树状态标注（甄别注记）**：上表载体中，`aggregate-vote.sh` / `validate-decision-log.sh` / `detect-conflict.py` / `contract-revalidate.sh` / `attention-stall.sh` / `verification-mismatch-window.sh` / `saga-compensate.py` / `consistency-check.py` / `timer-derive.sh` 已在树（`core/scripts/`，9 件）；`nmh-watchdog.sh` / `emit-class-mismatch.sh` / `write-contract-snapshot.sh` / `write-aggregation-result.sh` / `write-decision-record.sh` 为规划载体，**尚未实现**，实现前相关机制只能按"协议层触发 + 人工兜底"运行。
+> **在树状态**：上表载体中，`aggregate-vote.sh` / `validate-decision-log.sh` / `detect-conflict.py` / `contract-revalidate.sh` / `attention-stall.sh` / `verification-mismatch-window.sh` / `saga-compensate.py` / `consistency-check.py` / `timer-derive.sh` 已在树（`core/scripts/`，9 件）；`nmh-watchdog.sh` / `emit-class-mismatch.sh` / `write-contract-snapshot.sh` / `write-aggregation-result.sh` / `write-decision-record.sh` 为规划载体，**尚未实现**，实现前相关机制只能按"协议层触发 + 人工兜底"运行。
 
 ## 3. 原语映射
 

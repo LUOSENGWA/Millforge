@@ -1,6 +1,6 @@
 # Deployment Guide (AgentTeams + QwenPaw Binding-Specific)
 
-> Provenance: runtime-binding review (round 4, 2026-10-18) finalized + production failure-sequence evidence (T5). This file is the deployment/ops spec for `bindings/agentteams/`. Generic-terminology discipline: see the `README.md` header.
+> This file is the deployment/ops spec for `bindings/agentteams/`. Generic-terminology discipline: see the `README.md` header.
 
 ## 1. Topology (binding-specific naming surface)
 

@@ -1,6 +1,6 @@
 # Loop Primitive (14th Primitive)
 
-> v1.0 | Provenance: round-7 loop-special round (fully adopted, incl. 4 corrections)
+> v1.0
 > **Positioning**: a Loop has its own spec (goal_ref / stop_condition / budget / convergence_rule), its own lifecycle (iterations), its own driver (accountable orchestrator). It may **contain** tasks, but is not equal to a task.
 > The Loop is an upper-level container: tasks inside iterations still go through R1-R6 decision aggregation, NMH spec locking, and critic acceptance. The Loop is only responsible for **repeatedly invoking these mechanisms within budget, until the stop_condition is met or the budget is exhausted**.
 > **Why not a state-machine extension**: iteration is not a lifecycle phase — it is repeated execution within the same lifecycle; extending the states would pollute the task state-machine contract, and the "iterating vs executing" distinction means nothing to adapters.
@@ -85,7 +85,7 @@ loop_spec = {
 4. a driver crash/absence does not affect authoritative state; CAP-TIMER wakes via the persisted next_check_at as fallback; absence beyond the declared bound → escalate
 5. the driver **may not self-judge the stop_condition as met** — the "met" verdict is read only after the predicate/critic writes it to CAP-STATE
 
-**Native context budget (corrects round 6)**: the driver's native context keeps only iteration summaries ({index, verdict, progress_signal, key_refs[]}); full artifacts are **not loaded by default**; needing the full view → dispatch a review spawn.
+**Native context budget**: the driver's native context keeps only iteration summaries ({index, verdict, progress_signal, key_refs[]}); full artifacts are **not loaded by default**; needing the full view → dispatch a review spawn.
 
 ## 4. Activation Tiers
 

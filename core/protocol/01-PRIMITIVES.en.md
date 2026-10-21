@@ -1,6 +1,6 @@
 # Primitive Set (15 Primitives)
 
-> v1.0 | Provenance: NMProtocol §3 (13 primitives) + round-7 loop (14th) + round-8 signal (15th)
+> v1.0
 > Semantics are defined exactly once here. The binding layer may only map (primitive → concrete mechanism); it may not redefine.
 
 | Primitive | Definition | Note |

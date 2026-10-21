@@ -1,6 +1,6 @@
 # 契约 Pinning + Spec 结构化
 
-> v1.0 | 来源: 第五轮 8 能力定案（CAP-STORE/CAP-STATE）+ B-3/C-2/B-9 补丁（第三轮）
+> v1.0
 > 契约 = spec 中**对下游有约束力的可观察部分**（接口/格式/acceptance/锁定决策），以内容寻址 artifact 形式 pin 在共享存储。
 
 ## 1. 契约物（contract artifact）

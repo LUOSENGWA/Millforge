@@ -1,6 +1,6 @@
 # skill 片段（CAP-SPAWN / CAP-EXEC 绑定实现）
 
-> Provenance：参考绑定正文定案（2026-10-20）。本文件是 `bindings/single-agent/` 的 skill 面规格；映射见 `mapping-table.md`。
+> 本文件是 `bindings/single-agent/` 的 skill 面规格；映射见 `mapping-table.md`。
 > 通用词纪律：本目录是运行时专名的唯一合法出现面（`core/protocol/00-OVERVIEW.md` §S）。
 
 ## 1. 在树脚本清单（core/scripts/，9 件）
@@ -26,7 +26,7 @@
 - **worker native session = 只调度 + 审查，不执行任何实现工作。** 所有实现工作进 `spawn_subagent(fork=False)`（fresh session，不继承父会话——**fork=True 违反 X1**）。
 - 该机制在本绑定运行时**生产已验证**（X1 ✅）。
 - 结构化返回（X2）；状态经返回值传递（X3），父 session 不读子 session 上下文。
-- X4（时限强制）= 上游缺口（同 agentteams 绑定，PR 线）；合入前绑定层用 timeout 参数尽力（非强制），挂起无返回按 `bounded_failure` 语义处理，3 次升级。
+- X4（时限强制）= 上游缺口（同 agentteams 绑定，上游缺口）；合入前绑定层用 timeout 参数尽力（非强制），挂起无返回按 `bounded_failure` 语义处理，3 次升级。
 
 ## 3. 审核链片段（B-1 三层校验，顺序不可换）
 

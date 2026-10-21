@@ -1,6 +1,6 @@
 # Redlines, Security, Reliability Layering
 
-> v1.0 | Provenance: round-6 threat model + §10 reliability layering + §11 attention loading + all eight rounds of security patches
+> v1.0
 > **Threat-model boundary**: this protocol defends against = intra-collaboration mistakes (spec ambiguity / unverified declarations / implicit decision conflicts / non-independent verification) + malicious artifact content (indirect injection) + channel impersonation + cross-task replay.
 > This protocol does **not** defend against = the runtime itself being compromised, model-weight backdoors, a malicious or compromised human decision-maker, side channels / the physical layer — those rely on the deployment environment's security boundary.
 
@@ -114,3 +114,5 @@ Layer 2 · reference layer (on-demand grep/read)
 13. the orchestrator never does the work (failure SOP Step 0)
 14. a weighted majority never touches a locked spec (C-3 consistency check first)
 15. system correctness never depends on L3 (the L1/L2 backstop answer is mandatory)
+16. never assert a fact with no resolvable source (no source = 🏳️, fail-closed; see 04-NMH §7)
+17. never silently assume an execution-time unknown (ask, or record the assumption explicitly in the decision log; see 04-NMH §8)

@@ -1,6 +1,6 @@
 # 跨团队扩展（仅 single_user 模式）
 
-> v1.0 | 来源: NMProtocol §9（跨团队文档驱动设计定案）
+> v1.0
 > multi_user 模式下本文件**不存在**（用户隔离）。编译时条件装载：仅 single_user 编译进 arbitrator 身份文件。
 
 ## 1. 三条硬约束（设计定案）

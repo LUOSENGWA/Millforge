@@ -1,7 +1,7 @@
 # Assertion Coverage (ASSERTION-COVERAGE.en)
 
 > This file is updated as assertions are added; `PRODUCTION-BASELINE.md` is frozen and must not be modified.
-> Assertion entry point: `golden-tests/scripts/run-scripts-tests.sh` (new section 10 "PR-3 assertion completion" added in this batch, PASS 54 → 83).
+> Assertion entry point: `golden-tests/scripts/run-scripts-tests.sh` (section 10 "assertion completion", PASS 54 → 83).
 > Principle: every assertion value is taken from the existing output of `core/scripts/` and `core/schemas/` (exit codes / stdout JSON fields); the runner is zero-LLM and dependency-free (python3 stdlib only).
 > Purpose: explicitly separate protocol behaviors that are deterministically assertable from those that are unassertable due to a missing carrier, preventing the "assumed covered" illusion.
 

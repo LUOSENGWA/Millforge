@@ -1,6 +1,6 @@
 # Deployment Guide (Claude Code / coding-CLI Binding, exclusive)
 
-> Provenance: reference binding body, final (2026-10-20). This file is the deployment/invocation specification of `bindings/coding-cli/`; the mapping is in `mapping-table.md`.
+> This file is the deployment/invocation specification of `bindings/coding-cli/`; the mapping is in `mapping-table.md`.
 > Positioning: this binding has no platform layer and no identity-file concept — "deployment" = the invocation convention + the evidence-chain acceptance; the 4 missing capabilities are all carried by the parent execution unit.
 
 ## 1. Topology

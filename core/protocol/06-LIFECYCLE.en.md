@@ -1,6 +1,6 @@
 # Task Lifecycle Contract
 
-> v1.0 | Provenance: NMProtocol §8 (L4 retest, empirically validated)
+> v1.0
 > The complete contract from NMH locking (or a direct human triad instruction) to task closure. Every orchestration role (arbitrator/leader/worker) obeys the same set, at different granularity.
 
 ## 1. Recursive Decomposition Model (every layer is a mini-orchestrator)
@@ -18,11 +18,11 @@ human → [arbitrator] → leader → worker → spawn (sub-execution unit)
 | worker | task spec | atomic level (2–4 spawn sub-tasks) | spawn sub-tasks | self-review of spawn outputs |
 | spawn | atomic task description | — | output files | worker review |
 
-**The core loop is isomorphic at every layer**: task received → judge origin (human → NMH; agent → triad validation) → confirm understanding → decompose → dispatch to the next layer → accept & integrate → report upward.
+**The core loop is isomorphic at every layer**: task received → judge origin (human → NMH; agent → NMA message validation: type + triad + refs) → confirm understanding → decompose → dispatch to the next layer → accept & integrate → report upward.
 
 **Worker context-isolation principle (protocol-level)**: a worker's native session does **scheduling + review only** — decomposition, dispatch, acceptance, integration. All implementation work is done by fresh-session sub-execution units, which read context from **files** (never from conversation history) and are destroyed after writing outputs to files. Three-layer cache chain: shared storage (spawn reads context) → runtime automatic offload (persisted during execution) → hardware KV cache (fallback). **Violating this principle = the root cause of context overflow** (empirically validated three times in L4 testing).
 
-**Dispatch triad** (everyday dispatch needs no protocol, but must have these): task goal / acceptance criteria / delivery location. Missing any = invalid dispatch; the receiver may bounce it.
+**Dispatch triad** (required fields of a structured `DELEGATE` message, see §05-NMA §3): task goal / acceptance criteria / delivery location. Missing any = invalid dispatch; the receiver may bounce it.
 
 ## 2. Completion Signal (TASK_COMPLETED)
 

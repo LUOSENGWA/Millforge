@@ -1,6 +1,6 @@
 # Decision Classes R1-R6 + decision_log
 
-> v1.0 | Provenance: round-2 multi-user aggregation ruling (6-class matrix) + B-1/B-10/C-1 patches (round 3)
+> v1.0
 > Core stance: **grade by reversibility, not by "importance"** — reversibility is machine-decidable (rollback path exists? external side effect touched? non-reclaimable resources consumed?).
 
 ## 1. Decision Type × Aggregation Rule Matrix

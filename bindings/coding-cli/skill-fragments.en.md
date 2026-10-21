@@ -1,6 +1,6 @@
 # Skill Fragments (CAP-SPAWN / CAP-EXEC Binding Implementation)
 
-> Provenance: reference binding body, final (2026-10-20). This file is the skill-surface specification of `bindings/coding-cli/`; the mapping is in `mapping-table.md`.
+> This file is the skill-surface specification of `bindings/coding-cli/`; the mapping is in `mapping-table.md`.
 > Positioning: this binding is an **execution backend** (one-shot coding CLI), not a protocol agent — the skill surface = the spawn surface (with the X1 non-compliance declaration) + the acceptance evidence chain + the approval tiers.
 
 ## 1. Script Surface (CAP-EXEC)

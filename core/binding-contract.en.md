@@ -158,7 +158,7 @@ spawn(task_spec, context_refs[], return_schema, timeout?)
 - **X6 context_refs content restriction**: context_refs may contain only marked signals + CAP-STORE artifact refs (§11-SIGNAL)
 - **X7 worker context isolation (protocol rule)**: the worker's native session does only scheduling + acceptance; all implementation work must go through a CAP-SPAWN sub-execution unit (reads context from files, writes outputs to files, destroyed on completion). This is a protocol rule, not a binding feature — but the binding must provide the means to implement it
 
-**Millforge dependencies**: worker context isolation (the v2.40 ruling), critic independent execution, C-3 constrained classification, merge-semantics confirmation, loop iteration/re-plan spawn.
+**Millforge dependencies**: worker context isolation, critic independent execution, C-3 constrained classification, merge-semantics confirmation, loop iteration/re-plan spawn.
 
 ## CAP-EXEC — Deterministic Program Execution
 

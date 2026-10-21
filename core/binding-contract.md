@@ -158,7 +158,7 @@ spawn(task_spec, context_refs[], return_schema, timeout?)
 - **X6 context_refs 内容限制**：context_refs 只可包含标记信号 + CAP-STORE artifact refs（§11-SIGNAL）
 - **X7 worker 上下文隔离（协议规则）**：worker 的 native session 只做调度 + 验收，所有实现工作必须经 CAP-SPAWN 子执行体（读文件取上下文、写文件出结果、用完销毁）；这是协议规则而非绑定特性，但绑定必须提供实现手段
 
-**千锻依赖**：worker 上下文隔离（v2.40 定案）、critic 独立执行、C-3 受限分类、merge 语义确认、loop 迭代/re-plan spawn。
+**千锻依赖**：worker 上下文隔离、critic 独立执行、C-3 受限分类、merge 语义确认、loop 迭代/re-plan spawn。
 
 ## CAP-EXEC — 确定性程序执行
 

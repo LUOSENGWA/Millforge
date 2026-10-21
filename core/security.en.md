@@ -1,7 +1,6 @@
 # Task 2: Threat Model + Security Section
 
 > Version: v1.0 | License: Apache-2.0
-> Provenance: finalized in the sixth-round DeepSeek review (production + open-source readiness round, 2026-10-18)
 
 ## 2.1 Trust Boundary Inventory
 

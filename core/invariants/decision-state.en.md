@@ -7,7 +7,7 @@
 ```
  🔓 open ──human confirm/modify/veto──▶ ✅ locked
     ▲  │
-    │  └──parked 🏳️ / agent-doesn't-know 🏳️──▶ 🏳️ parked
+    │  └──parked 🏳️ / no-source 🏳️──▶ 🏳️ parked
     │
     └── R5 reopen succeeds (weighted majority + new evidence + original locker ×2 valid)
 ```
@@ -39,4 +39,5 @@
 ## 4. Escalation Boundaries
 
 - parked past the task completion deadline → treated as "undecided"; at acceptance it is handled as blocked (never a default pass)
-- a 🏳️ "agent-doesn't-know" node: an execution unit must not fill it; only a human / external information may clear it
+- a 🏳️ "no verifiable source" node: an execution unit must not fill it; only a human / external information (with a source) may clear it
+- factual assertions must carry a resolvable source; an unsourced node may not become locked (I-D9)

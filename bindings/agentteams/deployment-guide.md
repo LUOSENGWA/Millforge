@@ -1,6 +1,6 @@
 # 部署指南（AgentTeams + QwenPaw 绑定专属）
 
-> Provenance：运行时绑定审查（第四轮，2026-10-18）定案 + 生产失败序列实证（T5）。本文件是 `bindings/agentteams/` 的部署/运维规格。通用词纪律见 `README.md` 头注。
+> 本文件是 `bindings/agentteams/` 的部署/运维规格。通用词纪律见 `README.md` 头注。
 
 ## 1. 拓扑（本绑定专有名词面）
 

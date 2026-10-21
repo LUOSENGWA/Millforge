@@ -1,6 +1,6 @@
 # S3 Object-Storage Semantics Verification (CAP-STORE)
 
-> Provenance: production-readiness + open-source-readiness review (round 6, 2026-10-18), finalized; adoption status = adopted. This file is the object-storage semantics verification for `bindings/agentteams/` (any S3-compatible store: MinIO / RustFS / others). This layer may name specific stores (generic-terminology discipline: see the `README.md` header).
+> This file is the object-storage semantics verification for `bindings/agentteams/` (any S3-compatible store: MinIO / RustFS / others). This layer may name specific stores (generic-terminology discipline: see the `README.md` header).
 
 ## 1. CAP-STORE T1–T3 Implementability under Pure S3 Semantics
 

@@ -1,13 +1,11 @@
 # Task 5: Final Self-Adversarial — the 3 Places You Will Hit in Production Week 1
 
 > Version: v1.0 | License: Apache-2.0
-> Provenance: finalized in the sixth-round DeepSeek review (production + open-source readiness round, 2026-10-18)
 
 ## 5.1 Protocol Self-Versioning: task meta Field Compatibility of In-flight Tasks
 
 **Problem**: when the protocol evolves from v1.0 → v1.1 (e.g., adding a `decision_status` sub-state, changing fields of `attention[]`), the in-flight task's task meta is in the v1.0 structure, while the new core scripts expect v1.1 fields. What happens when they run mixed?
 
-**Why it was not caught in 6 rounds**: the first five rounds focused on "does the mechanism exist" and did not review "the state compatibility of in-flight tasks when a mechanism is upgraded". The binding-contract defines the capabilities but does not define **version migration semantics**.
 
 **Fix**:
 
@@ -34,7 +32,6 @@ Core clause addition (protocol versioning):
 
 **Problem**: CAP-SPAWN's X1 guarantees that a spawn is a fresh context, but the parent Worker's native session carries scheduling + review + merge adjudication + B-2 Step 5 conflict adjudication + critic coordination — this work continuously inflates the native context. In production week 1, the native session will hit compaction due to an over-long context and lose early decisions.
 
-**Why it was not caught in 6 rounds**: the first five rounds focused attention on spawn isolation (the correct fix in v2.40) and assumed native only does "scheduling + review"; but the fourth round's B-2 put conflict adjudication back into native (Step 5), plus the critic reviews the full output in native, so the native's actual load far exceeds "scheduling + review".
 
 **Fix (binding rule + core constraint)**:
 
@@ -66,7 +63,6 @@ Binding rules (reference binding):
 
 **Problem**: every R1 irreversible decision blocks for 2h×N; the Z3 delegation chain exists, but in the "owner on vacation" scenario, the **initiation** of delegation, the **scope of the delegate's authority**, **batch delegation during the vacation**, and **how to audit the delegate's decisions after the return** — these operational paths are not refined in the protocol.
 
-**Why it was not caught in 6 rounds**: Z3 only defines "the delegation chain is queryable", assuming delegation is per-occurrence and explicit; "long-term absence", the most realistic scenario, was not reviewed.
 
 **Fix**:
 
@@ -119,12 +115,5 @@ timeout."
 | **Task 2** | Does the security section leak component names? | no runtime-specific names; the mechanism matrix references only CAP-* and protocol rules |
 | **Task 3** | Is the cost model derived only from CAP-STATE? | Yes; human_touch_count / spawn_count / artifact_count all come from the CAP-STATE event stream |
 | **Task 4** | Are CAP-STORE T1–T3 all implementable under S3? | T1 client-side hash; T2 strong consistency + conditional PUT; T3 chained append emulation. CAP-STATE is not recommended to use object-storage CAS |
-| **Task 5** | Are the 3 problems "hit in week 1, uncovered in 6 rounds"? | versioning / native context / long-term-absence delegation / clock — all production-ops aspects, not refined in the first five rounds |
+| **Task 5** | Are the 3 problems things you hit in production week 1? | versioning / native context / long-term-absence delegation / clock — all production-ops aspects |
 
-
-**Conflict Annotations Against Rounds 1–5**:
-
-- **Correcting the fifth round's PR-A ruling**: the fifth round said "PR-A is downgraded to a skill second-level routing"; in this round, per the new final decision, attention delivery quality is a core requirement, and the reference binding should implement the full UX (PR-UX-1~5); PR-A's "routing extension" is merged into PR-UX-1/3.
-- **Correcting the fifth round's CAP-STORE T3**: it is made explicit that append can be emulated by a "chained new object", without requiring a JSONL append to the same object; on S3, concurrent append to the same key is not recommended.
-- **Correcting the fourth round's F-1**: the "push confirmation" is abstracted into the execution detail of CAP-STORE T2 (returns only after the sync layer confirms), without binding to a specific object storage's push log; the sync layer is a binding parameter, and the confirmation semantics is the core.
-- **Correcting the third round's B-5**: blocked/frozen is mapped to the existing BLOCKED + decision_status sub-states (already decided in the fourth round); this round adds "long-term absence goes via delegation or project-owner escalation", without adding a new state.

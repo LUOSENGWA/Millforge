@@ -9,7 +9,7 @@
 # 幂等性: 读 task meta 的 verification_mismatch[] 派生状态；不修改 task meta（到期动作由绑定层 write 脚本执行）
 # 日志: $HOME/.millforge/logs/verification-mismatch-window.jsonl
 # 语义（B-6）: 超时=维持 spec+critic 记 dissent 且必须仍出评分卡；同一 criterion 最多 2 轮，第 3 轮冻结升级
-#             （第八轮扩展：多 critic 下按投票轮计——每轮 = 同一 criterion_id 的一条新记录）
+#             （多 critic 下按投票轮计——每轮 = 同一 criterion_id 的一条新记录）
 #
 # task meta 读取面:
 # {"task_id":"...", "verification_mismatch":[{"criterion_id","opened_at","window_hours":24,

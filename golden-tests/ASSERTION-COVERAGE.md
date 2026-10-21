@@ -1,7 +1,7 @@
 # 断言覆盖记档（ASSERTION-COVERAGE）
 
 > 本文件随断言增补更新；`PRODUCTION-BASELINE.md` 冻结不动。
-> 断言入口：`golden-tests/scripts/run-scripts-tests.sh`（本批新增 section 10「PR-3 断言补全」，PASS 54 → 83）。
+> 断言入口：`golden-tests/scripts/run-scripts-tests.sh`（section 10「断言补全」，PASS 54 → 83）。
 > 原则：断言值一律取自 `core/scripts/` 与 `core/schemas/` 的现有输出（退出码 / stdout JSON 字段）；runner 零 LLM、零外部依赖（python3 标准库 only）。
 > 目的：把「可确定性断言」与「载体缺失、不可断言」的协议行为显式分开，防止「以为覆盖了」。
 

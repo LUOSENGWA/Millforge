@@ -1,6 +1,6 @@
 # S3 对象存储语义核验（CAP-STORE）
 
-> Provenance：生产化+开源就绪审查（第六轮，2026-10-18）定案；采纳状态 = 采纳。本文件是 `bindings/agentteams/` 的对象存储语义核验（任意 S3 兼容存储：MinIO / RustFS / 其他）。本层允许点名具体存储（通用词纪律见 `README.md` 头注）。
+> 本文件是 `bindings/agentteams/` 的对象存储语义核验（任意 S3 兼容存储：MinIO / RustFS / 其他）。本层允许点名具体存储（通用词纪律见 `README.md` 头注）。
 
 ## 1. CAP-STORE T1–T3 在纯 S3 语义下的可实现性
 

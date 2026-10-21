@@ -1,6 +1,6 @@
 # Contract Pinning + Structured Spec
 
-> v1.0 | Provenance: round-5 8-capability ruling (CAP-STORE/CAP-STATE) + B-3/C-2/B-9 patches (round 3)
+> v1.0
 > Contract = the **observable part of a spec that is binding on downstream** (interface/format/acceptance/locked decisions), pinned in the shared store as a content-addressed artifact.
 
 ## 1. Contract Artifact

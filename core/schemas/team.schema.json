@@ -157,7 +157,7 @@
           "spawn": {
             "type": "boolean",
             "default": true,
-            "description": "v2.40 上下文隔离开关：worker=true（实现全进 spawn）；critic/leader=false（审核/native 上下文）"
+            "description": "上下文隔离开关：worker=true（实现全进 spawn）；critic/leader=false（审核/native 上下文）"
           },
           "model": {
             "type": [

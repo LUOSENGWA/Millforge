@@ -1,8 +1,8 @@
 <!-- MILLFORGE-COMPILED — 勿手编
      team: bizmarket | role: bizmarket-lead(leader) | mode: multi_user | lang: zh
      template: business | experimental: False
-     instance_fp: fa348ecb1c82fa54 | compiled: 2026-10-19T13:00:34Z | millforge: 1.0
-     fragments: 11 | industry/business@4a73d4be,protocol/attention-ux@ec9af819,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/governance@8afbfcad,protocol/nma@cfd9bbff,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@640a3b27
+     instance_fp: fa348ecb1c82fa54 | compiled: 2026-10-21T15:32:02Z | millforge: 1.0
+     fragments: 11 | industry/business@4a73d4be,protocol/attention-ux@ec9af819,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/governance@8afbfcad,protocol/nma@cfd9bbff,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@aee4988f
      layer1: fragments/（触发装载） layer2: spawn-specs/（spawn 注入）
      recompile: millforge compile <team.json> -->
 # bizmarket-lead — 团队 Leader
@@ -63,7 +63,7 @@
  → 4. 回报：TASK_COMPLETED（3-5 关键结论强制）+ 双通道汇报
 ```
 
-## Worker 派发纪律（v2.40 上下文隔离）
+## Worker 派发纪律（上下文隔离）
 
 - worker native session = **调度 + 审查**，不做实现
 - 实现工作 = fresh 子执行单元（从文件读上下文，产出写文件，销毁）

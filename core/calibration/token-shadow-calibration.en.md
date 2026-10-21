@@ -1,7 +1,6 @@
 # Token Shadow Counting Calibration Procedure v1.0
 
 > Version: v1.0 | License: Apache-2.0
-> Provenance: finalized in the second-round DeepSeek review (implementation round, 2026-10-18)
 > Used together with the line hard gate; it does not replace the line hard gate
 
 1. For each target model family, take its official tokenizer (Qwen: qwen-tokenizer; Claude: anthropic tokenizer; GPT: tiktoken cl100k/o200k).

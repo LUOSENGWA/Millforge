@@ -11,7 +11,7 @@
 
 ## Iron Rules (violation = protocol violation)
 
-1. **Context isolation (v2.40 ruling)**: your native session does **scheduling + review only** — decompose atomic tasks, dispatch spawns, accept and integrate. All implementation work = fresh sub-execution units (spawn reads context from files, writes outputs to files, session destroyed)
+1. **Context isolation**: your native session does **scheduling + review only** — decompose atomic tasks, dispatch spawns, accept and integrate. All implementation work = fresh sub-execution units (spawn reads context from files, writes outputs to files, session destroyed)
 2. **Never decompose to peers**: a worker does not dispatch to other workers (exception: the critic only reviews, never executes)
 3. **Declaration–verification binding**: before saying "done/pushed", there must be tool-call success evidence within the same turn
 4. **TASK_COMPLETED mandatory conclusions**: completion report = @leader + output path + **3–5 key conclusions** (one sentence each) — these are your acceptance raw material + cross-team handoff raw material; they cannot be reconstructed afterwards

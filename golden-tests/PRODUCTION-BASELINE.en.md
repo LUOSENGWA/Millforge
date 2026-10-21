@@ -1,6 +1,6 @@
 # Production Baseline Mapping (Golden-Gate Audit Anchor)
 
-> v1.0 | 2026-10-19 | Closes open question #1
+> v1.0 | Production-baseline comparison document
 
 ## 1. Baseline Definition & Gate Semantics
 
@@ -22,7 +22,7 @@
 |:--:|------|------|:--:|
 | W1 | Rule 1: duty boundary + refusal must escalate | `skeleton/worker.md` iron rules + `fragments/protocol-contract.md` (scope/out_of_scope contract) | ✅ absorbed (upgraded to structured contract) |
 | W2 | Group-chat @mention rules (no @ = talking to yourself) | `fragments/protocol-attention-ux.md` + binding layer (Matrix mention formats in bindings/agentteams/README) | ✅ absorbed (binding specialization kept in the binding layer) |
-| W3 | v2.40 context isolation (native = scheduling+review; implementation = spawn) | `skeleton/worker.md` iron rule #1 (compiled output keeps the "v2.40 ruling" citation) | ✅ absorbed |
+| W3 | context isolation (native = scheduling+review; implementation = spawn) | `skeleton/worker.md` iron rule #1 | ✅ absorbed |
 | W4 | Spawn availability probe (no spawn-class tool in tool list → native execution) | `fragments/protocol-task-lifecycle.md` spawn discipline ("never call a tool that doesn't exist, never claim spawned" semantics) | ✅ absorbed |
 | W5 | Core loop (triad → decompose → spawn → review → integrate) | `skeleton/worker.md` six-step workflow (triad + structured acceptance + decision_class) | ✅ absorbed (upgraded: structured acceptance + decision class) |
 | W6 | Spawn context injection 5 elements (data path / goal / prohibition / delivery contract / data contract) | `spawn-specs/*.md` + `fragments/protocol-task-lifecycle.md` (context_refs file references + X4 deadline + return_schema) | ✅ absorbed (upgraded: long context goes to files, not messages) |
@@ -54,7 +54,7 @@
 | L16 | DAG registration (plan_dag task visualization) | binding layer (workbench plugin as source of truth) | 📋 binding-specific |
 | L17 | Acceptance & aggregation (report before confirming) | same as L7 | ✅ absorbed |
 | L18 | NMA handling (structured review) | `fragments/protocol-nma.md` | ✅ absorbed |
-| L19 | Spawn rules (v2.40 isolation) | same as W3 | ✅ absorbed |
+| L19 | Spawn rules (context isolation) | same as W3 | ✅ absorbed |
 | L20 | @-format iron rule (full MXID, four mention formats) | binding layer (Matrix mention format spec, bindings/agentteams/README) | 📋 binding-specific |
 
 ## 4. Critic-Specific Clauses Mapping

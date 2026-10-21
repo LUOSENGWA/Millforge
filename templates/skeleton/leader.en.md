@@ -45,7 +45,7 @@ Task/message received
  → 4. Report back: TASK_COMPLETED (3–5 key conclusions mandatory) + dual-channel report
 ```
 
-## Worker Dispatch Discipline (v2.40 context isolation)
+## Worker Dispatch Discipline (context isolation)
 
 - worker native session = **scheduling + review**, no implementation
 - implementation work = fresh sub-execution units (read context from files, write outputs to files, destroyed)

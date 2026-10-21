@@ -2,7 +2,7 @@
 """millforge core script: consistency-check.py
 C-3 locked_spec_consistency_check —— 最关键的"规则 vs LLM"分界点
 
-加权多数可"程序合法"推翻人锁 spec（第六轮 C-3 定案漏洞）：
+加权多数可"程序合法"推翻人锁 spec（C-3 需防的漏洞）：
 R6 回答写回前强制本检查。机器可判的二元矛盾 → 拒收 → spec_conflict 升级链。
 规则层判不了的 → LLM 受限分类 spawn（输出 schema 固定）→ neutral 按 undecidable 升级 human，不自动放行。
 

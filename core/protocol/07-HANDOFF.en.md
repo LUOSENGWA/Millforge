@@ -1,6 +1,6 @@
 # Cross-Team Extension (single_user mode only)
 
-> v1.0 | Provenance: NMProtocol §9 (cross-team document-driven design ruling)
+> v1.0
 > In multi_user mode this file **does not exist** (user isolation). Conditional compilation: compiled into the arbitrator's identity file only for single_user.
 
 ## 1. Three Hard Constraints (design rulings)

@@ -50,13 +50,7 @@ The migration toolchain **ships with the release**: `migration/` (scaffold-team.
 
 ## Version
 
-- **Protocol v1.0** (frozen baseline, 2026-10-19): semantic changes = minor; primitive additions/removals or mode-definition changes = major
+- **Protocol v1.0** (frozen baseline): semantic changes = minor; primitive additions/removals or mode-definition changes = major
 - Bindings are versioned independently and declare "compatible with Millforge v1.x"
 - Old versions are archived, never deleted (audit chain)
 
-## Provenance chain (recast traceability)
-
-NMProtocol design v3.0 (721 lines, 2026-09-03 baseline)
-+ eight rounds of DeepSeek review (2026-10-17~19, verbatim in media/, fully adopted + 4+3 corrections on our side)
-+ production evidence (L4 retest 10 nodes / Manager five issues / #123 group history / #150 decision chain / #176 pydantic)
-→ final documents: `AgentCom/千锻-DS审查分析-20261018.md` §A-W (workspace-only, not part of the open-source release)

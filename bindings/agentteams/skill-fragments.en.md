@@ -1,6 +1,6 @@
 # Skill Fragments (CAP-SPAWN / CAP-EXEC Binding Implementation)
 
-> Provenance: runtime-binding review (round 4, 2026-10-18) finalized + v2.40 context-isolation ruling + in-tree `core/scripts/` verification (9 files). This file is the skill-surface spec for `bindings/agentteams/`. Generic-terminology discipline: see the `README.md` header.
+> This file is the skill-surface spec for `bindings/agentteams/`. Generic-terminology discipline: see the `README.md` header.
 > Verification note: the draft (round 4) marked B-5/B-6 as [NO-CARRIER] with a planned `nmh-watchdog.sh` new mode; in-tree verification shows both are already standalone scripts (`attention-stall.sh` / `verification-mismatch-window.sh`). This file follows the in-tree state; the draft's plan is preserved only in `mapping-table.md` §2.1.
 
 ## 1. In-Tree Script Inventory (core/scripts/, 9 files)
@@ -21,11 +21,11 @@ Scripts ship with the core (the runtime is not asked to rewrite them); exit-code
 
 **8-core-script I/O discipline**: local files / stdin / stdout only; **no object-storage CLI calls** (`mc` etc.); all object-storage I/O is owned by the CAP-STORE adapter (audit table in `s3-storage.md` §4).
 
-## 2. Spawn Fragments (CAP-SPAWN, v2.40 context-isolation ruling)
+## 2. Spawn Fragments (CAP-SPAWN, context isolation)
 
 - **The worker native session = scheduling + review only; it performs no implementation work.** All implementation work goes to `spawn_subagent(fork=False)` (fresh session, no parent-session inheritance — **fork=True violates X1**).
 - Structured return (X2); state travels via the return value (X3); the parent session never reads child-session context.
-- X4 (enforced bound) = upstream gap (PR line); until it merges, the binding layer uses the timeout parameter best-effort (not enforced); a hung spawn with no return follows `bounded_failure` semantics — escalate after 3.
+- X4 (enforced bound) = upstream gap (upstream gap); until it merges, the binding layer uses the timeout parameter best-effort (not enforced); a hung spawn with no return follows `bounded_failure` semantics — escalate after 3.
 - Three-tier cache cooperation (binding-layer fact): MinIO artifacts (spawn reads context) → runtime offload (persisted during execution) → model-server KV Cache (hardware backstop).
 
 ## 3. Review-Chain Fragments (B-1 three-layer check, order is fixed)

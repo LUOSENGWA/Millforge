@@ -1,6 +1,6 @@
 # 部署指南（Claude Code / coding-CLI 绑定专属）
 
-> Provenance：参考绑定正文定案（2026-10-20）。本文件是 `bindings/coding-cli/` 的部署/调用规格；映射见 `mapping-table.md`。
+> 本文件是 `bindings/coding-cli/` 的部署/调用规格；映射见 `mapping-table.md`。
 > 定位：本绑定无平台层、无身份文件概念——「部署」= 调用约定 + 证据链验收；缺失的 4 能力全部由父执行体承载。
 
 ## 1. 拓扑

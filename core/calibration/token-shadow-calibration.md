@@ -1,7 +1,6 @@
 # Token 影子计数校准规程 v1.0
 
 > 版本: v1.0 | 许可: Apache-2.0
-> 来源: DeepSeek 第二轮审查（做实轮，2026-10-18）定案
 > 配合行硬门使用，不替代行硬门
 
 1. 对每个目标模型族，取其官方 tokenizer（Qwen: qwen-tokenizer；

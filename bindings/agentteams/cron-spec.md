@@ -1,6 +1,6 @@
 # cron 规格（CAP-TIMER 绑定参数）
 
-> Provenance：运行时绑定审查（第四轮，2026-10-18）+ 流程连续性定案（v2.41）；本文件是 `bindings/agentteams/` 的 CAP-TIMER 绑定规格。通用词纪律见 `README.md` 头注。
+> 本文件是 `bindings/agentteams/` 的 CAP-TIMER 绑定规格。通用词纪律见 `README.md` 头注。
 
 ## 1. 不变式满足（U1–U4）
 
@@ -25,7 +25,7 @@
 - 派生幂等 = 容器重建/cron 丢失后，`timer-derive.sh` 从 CAP-STATE 重算并补齐定时器（U3 的运维形态）。
 - 孤儿定时器 = 清理遗漏的 cron 会持续唤醒无 task 的检查；task 终态钩子里必须 `cron delete`。
 
-## 3. 红线：兜底唤醒，不做实时驱动（v2.41 定案）
+## 3. 红线：兜底唤醒，不做实时驱动
 
 - **心跳/cron 只做兜底唤醒，不做实时驱动。** 实时驱动 = 事件触发（消息到达）+ 状态机副作用（`next_action` 推进）。
 - 理由：LLM 是消息驱动而非流程驱动；心跳作为用户消息注入会产生同一 turn 内的注意力冲突与 token 浪费，不可靠。

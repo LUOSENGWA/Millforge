@@ -1,6 +1,6 @@
 # skill 片段（CAP-SPAWN / CAP-EXEC 绑定实现）
 
-> Provenance：参考绑定正文定案（2026-10-20）。本文件是 `bindings/coding-cli/` 的 skill 面规格；映射见 `mapping-table.md`。
+> 本文件是 `bindings/coding-cli/` 的 skill 面规格；映射见 `mapping-table.md`。
 > 定位：本绑定是**执行后端**（one-shot coding CLI），不是协议 agent——skill 面 = spawn 面（含 X1 非合规声明）+ 验收证据链 + 审批档位。
 
 ## 1. 脚本面（CAP-EXEC）

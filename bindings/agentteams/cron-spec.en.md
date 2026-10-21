@@ -1,6 +1,6 @@
 # Cron Spec (CAP-TIMER Binding Parameters)
 
-> Provenance: runtime-binding review (round 4, 2026-10-18) + flow-continuity ruling (v2.41). This file is the CAP-TIMER binding spec for `bindings/agentteams/`. Generic-terminology discipline: see the `README.md` header.
+> This file is the CAP-TIMER binding spec for `bindings/agentteams/`. Generic-terminology discipline: see the `README.md` header.
 
 ## 1. Invariant Status (U1–U4)
 
@@ -25,7 +25,7 @@ cleanup: task terminal state (completed/cancelled) → cron delete (prevents orp
 - Idempotent derivation = after a container rebuild / cron loss, `timer-derive.sh` recomputes from CAP-STATE and restores missing timers (the ops form of U3).
 - Orphan timer = a cron left uncleaned keeps waking checks with no task; the task terminal-state hook must `cron delete`.
 
-## 3. Redline: Fallback Wake Only, Never Real-Time Driving (v2.41 ruling)
+## 3. Redline: Fallback Wake Only, Never Real-Time Driving
 
 - **Heartbeat/cron only does fallback wake, never real-time driving.** Real-time driving = event triggers (message arrival) + state-machine side effects (`next_action` progression).
 - Rationale: the LLM is message-driven, not flow-driven; injecting the heartbeat as a user message creates same-turn attention conflicts and token waste, and is unreliable.

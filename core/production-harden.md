@@ -1,7 +1,6 @@
 # Task 5：最终自对抗——生产第 1 周会撞上的 3 处
 
 > 版本: v1.0 | 许可: Apache-2.0
-> 来源: DeepSeek 第六轮审查（生产化 + 开源就绪轮，2026-10-18）定案
 
 ## 5.1 协议自身版本化：在飞任务的 task meta 字段兼容
 
@@ -33,7 +32,6 @@
 
 **问题**：CAP-SPAWN 的 X1 保证 spawn 是 fresh context，但父 Worker 的 native 会话承担调度 + 审查 + 合并裁决 + B-2 Step 5 冲突裁决 + critic 协调——这些工作会持续膨胀 native 上下文。生产第一周就会遇到 native session 因上下文过长而 compaction，丢失早期决策。
 
-**为什么 6 轮没抓到**：前五轮把注意力放在 spawn 隔离（v2.40 的正确修复），默认 native 只做“调度+审查”；但第四轮 B-2 把冲突裁决放回 native（Step 5），加上 critic 在 native 审核全量产物，native 的实际负载远超“调度+审查”。
 
 **修复（绑定规则 + 核心约束）** ：
 
@@ -114,12 +112,5 @@ CAP-TIMER U1 修订（补充时钟权威）：
 | **Task 2** | 安全章节是否泄漏组件名？ | 无运行时专名；机制矩阵只引用 CAP-* 和协议规则 |
 | **Task 3** | 成本模型是否只从 CAP-STATE 派生？ | 是；human_touch_count / spawn_count / artifact_count 均来自 CAP-STATE 事件流 |
 | **Task 4** | CAP-STORE T1–T3 在 S3 下是否全部可实现？ | T1 客户端哈希；T2 强一致 + conditional PUT；T3 链式 append 模拟。CAP-STATE 不建议用对象存储 CAS |
-| **Task 5** | 3 个问题是否是“第一周就会撞上、6 轮没覆盖”？ | 版本化 / native 上下文 / 长期缺席委托 / 时钟——都是生产运维面，前五轮未细化 |
+| **Task 5** | 3 个问题是否在生产第一周就会撞上？ | 版本化 / native 上下文 / 长期缺席委托 / 时钟——都是生产运维面 |
 
-
-**与第一至五轮冲突标注**：
-
-- **修正第五轮 PR-A 裁决**：第五轮说“PR-A 降级为 skill 二次路由”；本轮按新定案，attention 送达质量是核心要求，参考绑定应实现完整 UX（PR-UX-1~5），PR-A 的“路由扩展”并入 PR-UX-1/3。
-- **修正第五轮 CAP-STORE T3**：明确 append 可以用“新对象链式”模拟，不要求同对象 JSONL 追加；S3 上不推荐同 key 并发 append。
-- **修正第四轮 F-1**：“push 确认”抽象为 CAP-STORE T2 的执行细则（同步层确认后才返回），不绑定特定对象存储的 push 日志；同步层是绑定参数，确认语义是核心。
-- **修正第三轮 B-5**：blocked/frozen 映射到既有 BLOCKED + decision_status 子状态（第四轮已定），本轮补充“长期缺席走 delegation 或 project owner 升级”，不新增状态。

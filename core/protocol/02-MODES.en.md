@@ -1,6 +1,6 @@
 # Deployment Modes (mode)
 
-> v1.0 | Provenance: NMProtocol §4 (ruled 2026-09-03)
+> v1.0
 > Structural invariant: multi_user ⟹ user isolation ⟹ cross-team does not hold ⟹ the cluster-level coordination role loses its only core value (cross-team relay) ⟹ the role does not exist.
 > This is not an operational switch; it is a phase transition of the system form.
 
