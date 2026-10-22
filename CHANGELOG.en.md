@@ -2,6 +2,28 @@
 
 All notable changes to the Millforge protocol compiler and reference bindings are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/); versions follow Semantic Versioning.
 
+## [1.1.0] - 2026-10-22
+
+### Added
+
+- **M4 parallel-dispatch scene contract**: `bindings/agentteams/parallel-dispatch(.en).md` + golden seeds `golden-tests/fixtures/parallel-9/` (10 scenes) + `test_parallel_dispatch_contract.py` (82 assertions).
+- **M5 notification tiers (CAP-NOTIFY §8)**: exactly one `machine`/`agent`/`human` tier per notification; fixed 3-line human format; no default-tier fallback; IM text is a derived view. `compliance.json` hard gate + 18 contract assertions (`test_notify_tier_clause.py`).
+- **coding-cli binding reference composition**: `bindings/coding-cli/` records the QwenPaw × QwenCode bridge (7/8 capability declaration, X1 explicitly declared).
+- **Compliance / evidence / tier gates**: `compliance.json` ×3 + `make compliance`, `docs/EVIDENCE` + `make evidence`, `team.schema context_tier` + compiler token gate.
+
+### Changed
+
+- Binding rename: `bindings/single-agent` → `bindings/standalone-agent` (three shapes: agentteams / standalone-agent / coding-cli).
+- Context-window tiers S/M/L (`12-REDLINES §5.1–5.4`).
+- `binding-contract` gains 21 numbered clauses (55 total).
+- Structured communication: `05-NMA` split into Part A/B; `06-LIFECYCLE` dispatch triad; NMH §7 source verdict + §8 execution-time structured ask.
+- Compiler does not implement `binding_profile` (downgraded: binding differences live in `bindings/` docs + runtime fragment injection).
+
+### Known limitations
+
+- Event emission (SIG-*) and the Loop reconciler live in the downstream runtime; this repo defines schemas and invariants only.
+- Some golden assertions depend on the runtime event surface (see `golden-tests/ASSERTION-COVERAGE.md` blocked list).
+
 ## [Unreleased]
 
 ### Added

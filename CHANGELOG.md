@@ -2,6 +2,28 @@
 
 本文件记录 Millforge 协议编译器与参考绑定的对外可见变更。格式参照 [Keep a Changelog](https://keepachangelog.com/)，版本遵循语义化版本。
 
+## [1.1.0] - 2026-10-22
+
+### 新增
+
+- **M4 并行派发场景契约**：`bindings/agentteams/parallel-dispatch(.en).md` + golden 种子 `golden-tests/fixtures/parallel-9/`（10 场景：P2b/P2c/P3b/P3k/P4b/P4k/P4x…）+ `test_parallel_dispatch_contract.py`（82 项断言）。
+- **M5 通知分层（CAP-NOTIFY §8）**：每条通知恰好一个 `machine`/`agent`/`human` tier；human 固定 3 行；禁止默认 tier 兜底；IM 文本面为派生视图。`compliance.json` hard gate + 18 项契约断言（`test_notify_tier_clause.py`）。
+- **coding-cli 绑定参考实现**：`bindings/coding-cli/` 记录 QwenPaw × QwenCode bridge 作为参考组合（能力声明 7/8，X1 显式声明）。
+- **合规/证据/tier 门**：`compliance.json`×3 + `make compliance`、`docs/EVIDENCE` + `make evidence`、`team.schema context_tier` + 编译器常驻 token 门。
+
+### 变更
+
+- 绑定改名：`bindings/single-agent` → `bindings/standalone-agent`（三形态：agentteams / standalone-agent / coding-cli）。
+- 上下文窗口分档 S/M/L（`12-REDLINES §5.1–5.4`）。
+- `binding-contract` 新增 21 条编号条目（合计 55 条）。
+- 结构化通信：`05-NMA` 拆 Part A/B；`06-LIFECYCLE` 派发三要素；NMH §7 来源判定 + §8 执行期结构化提问。
+- 编译器不实现 `binding_profile` 参数（降级定案：绑定差异由 `bindings/` 文档 + 运行时片段注入承载）。
+
+### 已知限制
+
+- 事件面发射（SIG-*）与 Loop reconciler 在下游运行时侧实现，本仓只定义 schema 与不变式。
+- 部分 golden 断言依赖运行时事件面（见 `golden-tests/ASSERTION-COVERAGE.md` Blocked 清单）。
+
 ## [Unreleased]
 
 ### 新增
