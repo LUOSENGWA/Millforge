@@ -121,6 +121,7 @@ cleanup: task terminal state (completed/cancelled) → cron delete (prevent orph
 | delivery_report does not report gaps (allowlist silent drop unobservable) | CAP-NOTIFY V3 |
 | No code-level event subscription surface | CAP-NOTIFY V5 |
 | delivered / accepted not distinguished | CAP-NOTIFY V6 |
+| No declared notification tier (machine/agent/human); current state = single-path Matrix text, question-form with inlined question≤500 (`_send_attention_notification`, `server.py:5205`); no mandatory human-visible failure states | CAP-NOTIFY tiering clause (09-GOVERNANCE §8) + PD-5 (parallel-dispatch.md) |
 | Dashboard todo list (a second persistent display surface) | CAP-ATTN W5 |
 | IM card (optional extra surface) | W6 |
 | CAP-SPAWN enforced bound not landed | CAP-SPAWN X4 |

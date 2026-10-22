@@ -40,6 +40,12 @@
       "scope": "CAP-NOTIFY",
       "ref": "#1394 (notification line)",
       "note": "delivered vs accepted"
+    },
+    {
+      "id": "NOTIFY-TIER",
+      "scope": "CAP-NOTIFY",
+      "ref": "09-GOVERNANCE §8 (tiering); single path at server.py:5205",
+      "note": "no declared tier (machine/agent/human); notifications are question-form with inlined preview; failure states not mandatorily human-visible"
     }
   ]
 }

@@ -83,3 +83,45 @@ contract major / irreversible timeout / non-compensable side effect → straight
 ```
 
 **Final ruling authority is always = human** (agent arbitration only produces escalation signals).
+
+## 8. Notification Tiering (CAP-NOTIFY tier, normative)
+
+**Positioning**: the complete definition of observability = the agent sees it **+ a human sees it**. This section specifies "who receives the same protocol event, in which format"; delivery semantics remain CAP-NOTIFY's best-effort (V1/V2: loss is reconstructible from CAP-STATE).
+
+### 8.1 Tier declaration (normative)
+
+Every notification must declare **exactly one** tier:
+
+| tier | delivery surface | format requirements |
+|------|------------------|---------------------|
+| `machine` | code-level subscription surface (V5) | structured event + `event_ref` (pointing to the authoritative CAP-STATE record) |
+| `agent` | agent channel | structured + pointer form (3 lines, no payload, no questions — see 8.4) |
+| `human` | a channel where humans are present | fixed 3 lines, plain language (see 8.2) |
+
+- **No tier declared = violation** (the delivering side must not invent a default tier as a fallback)
+- The same protocol event may be delivered to multiple surfaces per tier (one event, many views); each surface's payload must independently satisfy its tier's format
+- IM text surfaces are always **derived views** (V5), never the sole observation surface
+
+### 8.2 Human tier format (normative)
+
+- **Fixed 3 lines**: ① what happened (task + state, in plain language) ② the outcome (succeeded / failed / blocked) ③ where to see the details (a pointer to state / receipt)
+- **Plain language, no jargon**: protocol jargon (clause numbers, raw state-enum values, capability numbers, raw exit codes) must not appear in the human tier; states must be translated into outcome language (e.g. "timed out and was terminated", never `killed/137`)
+- 3 lines is a **hard constraint**: more than 3 lines = format violation; when the content does not fit, rewrite it as a pointer — never expand it inline
+
+### 8.3 Failure states must enter the human tier (normative)
+
+- Failure states (bounded budget failure / killed / crash / stall / rejected at dispatch / any other bounded failure) must be delivered to the human tier with the **same priority as success states**
+- **No silent failure = a human sees the failure, not just the agent seeing the state**
+- Forbidden: delivering a failure state only to the machine / agent tier; forbidden: omitting or downgrading a failure state on the human surface to a mere "state change"
+
+### 8.4 Prohibitions (normative)
+
+- **No payload**: a notification must not inline any artifact content; full content is always obtained by reading state / receipt (pointer form)
+- **No question-form notifications**: a notification must not contain a question addressed to the reader. Questioning is the CAP-ATTN interface (the W series: persistent display surface + identity verification + idempotency), not the CAP-NOTIFY interface — anything requiring a response must go through CAP-ATTN
+- **No treating "sent" as evidence of "seen by a human"**: evidence that a human saw it can only be a CAP-ATTN resolve or an explicit channel-side read receipt (V6)
+
+### 8.5 Relation to existing clauses
+
+- V8 (originating-channel notification tiering) is elevated to **normative** by this section (it was previously advisory)
+- The delivery_report (delivered / failed / gaps, V3/V6) remains the delivery observability surface; tiering does not change CAP-NOTIFY's best-effort semantics
+- Each binding instantiates 8.1–8.4 into its own channel implementation (which surfaces count as the human tier comes from the binding's channel declaration, V7)

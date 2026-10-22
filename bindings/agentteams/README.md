@@ -121,6 +121,7 @@ millforge compile <team.json> --out /tmp/build/<team>
 | delivery_report 不报 gaps（allowlist 静默丢弃不可观测） | CAP-NOTIFY V3 |
 | 无代码级事件订阅面 | CAP-NOTIFY V5 |
 | 未区分 delivered / accepted | CAP-NOTIFY V6 |
+| 通知未声明 tier（machine/agent/human）；现状 = 单路径 Matrix 文本、提问式 + 内联 question≤500（`_send_attention_notification`，`server.py:5205`）；失败态无强制人可见 | CAP-NOTIFY 分层条款（09-GOVERNANCE §8）+ PD-5（parallel-dispatch.md） |
 | dashboard 待办（第二持久展示面） | CAP-ATTN W5 |
 | IM 卡片（可选多面） | W6 |
 | CAP-SPAWN 时限强制未落地 | CAP-SPAWN X4 |
