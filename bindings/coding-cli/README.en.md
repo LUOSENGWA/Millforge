@@ -68,3 +68,7 @@ parent execution unit (AgentTeams worker / standalone-agent runtime)
 ```
 
 This binding has no SOUL.md deployment (the CLI has no identity-file concept); protocol constraints are carried in three places: **task spec + invocation parameters + the parent execution unit's identity file**.
+
+## Composition (QwenPaw × Qwen Code, 2026-10-22)
+
+The `qwen-code-bridge` plugin is the **reference composition** of this binding on QwenPaw: dispatch records the session identity triple `(session_id, user_id, channel)` and replays it on the terminal wake; one CLI session per chat (first turn `--session-id`, later `-r` — explicit inheritance, no cross-chat leakage); file-backed task state (task/state/receipt) + session wake + room bell. **The composition satisfies X1 / CAP-STATE / CAP-NOTIFY** (see the `compositions` entry and evidence in `compliance.json`; release gate = `scripts/verify-bridge.sh`). The bare one-shot CLI verdict is unchanged (still reference: X1 provided by the parent execution unit; TIMER/ROSTER declared-degraded).

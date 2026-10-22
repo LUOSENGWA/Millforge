@@ -47,5 +47,25 @@
       "ref": "single execution body",
       "note": "no roster"
     }
+  ],
+  "compositions": [
+    {
+      "name": "qwenpaw-qwen-code-bridge",
+      "parent": "qwenpaw",
+      "child": "coding-cli (QwenCode)",
+      "scope": "QwenPaw x QwenCode only; other cells unverified",
+      "satisfies": [
+        "X1",
+        "CAP-STATE",
+        "CAP-NOTIFY"
+      ],
+      "evidence": [
+        "plugin qwen-code-bridge: session identity triple (session_id,user_id,channel) recorded at dispatch and replayed on wake",
+        "per-session CLI session map (--session-id first turn, -r resume later); no cross-chat context leakage",
+        "file-backed task state (task/state/receipt) + session wake + room bell (delivery surface)",
+        "release gate: scripts/verify-bridge.sh (dual-framework pytest + live E2E + evidence JSON)"
+      ],
+      "note": "composition level only: the bare one-shot CLI binding remains reference (X1 not-enforced; TIMER/ROSTER declared-degraded)."
+    }
   ]
 }

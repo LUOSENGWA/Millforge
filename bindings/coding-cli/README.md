@@ -68,3 +68,7 @@
 ```
 
 本绑定无 SOUL.md 部署（CLI 无身份文件概念）；协议约束通过 **task spec + 调用参数 + 父执行体身份文件** 三处承载。
+
+## 组合实现（QwenPaw × Qwen Code，10/22）
+
+`qwen-code-bridge` 插件是本绑定在 QwenPaw 上的**参考组合实现**：派单时记录会话身份三元组 `(session_id, user_id, channel)` 并在终态回放唤醒；每会话一个 CLI 会话（首轮 `--session-id`、后续 `-r` 显式继承，无跨会话泄漏）；文件态任务（task/state/receipt）+ 会话唤醒 + 房间门铃。**组合层满足 X1 / CAP-STATE / CAP-NOTIFY**（见 `compliance.json` 的 `compositions` 字段与证据；发布门 = `scripts/verify-bridge.sh`）。裸 one-shot CLI 的判定不变（仍为 reference：X1 由父执行体提供，TIMER/ROSTER 声明降级）。
