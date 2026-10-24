@@ -63,11 +63,15 @@
 | task | TeamHarness task + task meta (CAP-STATE) |
 | artifact | MinIO object (path contract + client-side sha256 fingerprint) |
 | decision node | NMH document decision tree + decision_log (MinIO `decisions/`) |
+| memory anchor | `teams/<team>/facts/`, `humans/<human>/facts/`, `agents/<agent>/facts/` (CAP-STORE; human surface via controller API only); entries = decision_log superset, see `memory-anchors.md` |
+| knowledge graph | derived projection of canonical memory + fact chain; `graph.snapshot/neighbors/search/path/timeline/capabilities`; default `file-graph` reads object storage, see `memory-anchors.md` §12 |
 | channel | QQ original channel / console |
 | mode | single_user (production status quo: one human per cluster) |
 | attention | DM Room + state file (§CAP-ATTN) |
 | loop | CAP-STATE loop_state + cron fallback + spawn X4 |
 | signal | CAP-STATE event_type (closed list) + channel message marker (derived view) |
+
+> **Role note**: `leader` ≡ `arbitrator` (same orchestrator role kind, functionally aligned; differ only in jurisdiction — team vs cluster — and existence — arbitrator only in single_user). Team-fact arbiter = Leader; cluster/ops = arbitrator; final authority = human.
 
 ## 4. NMA Message Types → Execution Carriers (Part A, communication layer)
 

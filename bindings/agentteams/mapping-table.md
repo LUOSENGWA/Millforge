@@ -63,11 +63,15 @@
 | task | TeamHarness task + task meta（CAP-STATE） |
 | artifact | MinIO 对象（路径契约 + 客户端 sha256 指纹） |
 | decision node | NMH 文档决策树 + decision_log（MinIO `decisions/`） |
+| memory anchor | `teams/<team>/facts/`、`humans/<human>/facts/`、`agents/<agent>/facts/`（CAP-STORE；human 面仅 controller API）；条目 = decision_log 超集，见 `memory-anchors.md` |
+| knowledge graph | canonical memory + fact 链的派生投影；`graph.snapshot/neighbors/search/path/timeline/capabilities`；默认 `file-graph` 读对象存储，见 `memory-anchors.md` §12 |
 | channel | QQ 原始通道 / 控制台 |
 | mode | single_user（生产现状：一个 human 一个集群） |
 | attention | DM Room + 状态文件（§CAP-ATTN） |
 | loop | CAP-STATE loop_state + cron 兜底 + spawn X4 |
 | signal | CAP-STATE event_type（封闭清单）+ 频道消息标记（派生视图） |
+
+> **角色注记**：`leader` ≡ `arbitrator`（同一编排者角色种类，功能核心相同；只差管辖范围——团队 vs 集群——与存在条件——arbitrator 仅 single_user）。团队事实的仲裁者 = Leader；集群/运维 = arbitrator；终裁 = human。
 
 ## 4. NMA 消息类型 → 执行载体（Part A 通信层）
 

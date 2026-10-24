@@ -16,6 +16,7 @@
 | `cron-spec.md` | CAP-TIMER binding spec (U1–U4 + registration/cleanup + fallback-wake redline) |
 | `deployment-guide.md` | topology + compile→deploy chain + filesync post-write protocol + failure sequences & recovery |
 | `s3-storage.md` | S3 object-storage semantics verification (T1–T3) + CAS positioning + storage_adapter enum + 8-script audit |
+| `memory-anchors.md` | Memory anchors (human/team/agent) + decision_log fact entries + conflict pipeline + lifecycle (`#1412`) |
 
 > The runtime-specific-name mapping (**cross-binding** non-normative appendix) is at [`../reference-mappings.md`](../reference-mappings.md) (English twin `.en.md`).
 

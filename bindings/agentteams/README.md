@@ -16,6 +16,7 @@
 | `cron-spec.md` | CAP-TIMER 绑定规格（U1–U4 + 注册/清理 + 兜底唤醒红线） |
 | `deployment-guide.md` | 拓扑 + 编译→部署链 + filesync 写后协议 + 失败序列与恢复 |
 | `s3-storage.md` | S3 对象存储语义核验（T1–T3）+ CAS 定位 + storage_adapter 枚举 + 8 脚本审计 |
+| `memory-anchors.md` | 记忆三锚点（human/team/agent）+ decision_log 事实条目 + 冲突流水线 + 生命周期（`#1412`） |
 
 > 运行时专名对照（**跨绑定**非规范附录）见 [`../reference-mappings.md`](../reference-mappings.md)（英文孪生 `.en.md`）。
 
