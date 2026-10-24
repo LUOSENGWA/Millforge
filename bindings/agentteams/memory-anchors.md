@@ -213,6 +213,12 @@ Reclassification: B-10 `decision_class_v2` new record, original not overwritten.
 
 **目标**：图 = canonical memory + fact chain 的派生投影；contract 化；引擎可换；任何 runtime 只要写 canonical 布局就有图。
 
+**三层解耦（runtime / memory engine / knowledge graph）**：
+- Runtime（QwenPaw/OpenClaw/Hermes/DSH）只调 memory contract（capture/recall/write/promote/resolve/capabilities），**不碰图**。
+- Memory engine（ReMe/新引擎/PowerContext）只实现 memory backend contract，持久化到 canonical；可选 `graph_native`。
+- 图只读 canonical + fact 链，**不依赖 runtime，也不依赖某个 engine**；换任一层只换对应 adapter。
+- 一句话：换 runtime / 换 engine / 换图后端，三者互不牵连；canonical 布局 + 契约不动。
+
 ```
 graph.snapshot(scope, {root, depth, budget}) -> {nodes, edges, meta}
 graph.neighbors(node_id, {direction, depth}) -> {nodes, edges}
@@ -229,7 +235,9 @@ graph.capabilities()                          -> {snapshot, neighbors, search, p
 - **源**：canonical 对象存储（`agents/`、`teams/`、`humans/`）+ fact 链；图是派生，**不是唯一真相**。
 - **默认适配器 `file-graph`**：纯解析器（Markdown + wikilink + fact 链），不依赖 ReMe、不依赖容器 FS、不新增服务；实现位置不限（controller 库或 dashboard 同构纯函数），但**数据源必须是对象存储**。
 - **暴露**：memory 模块的 MCP 面调用 controller 的只读图模型；默认 `file-graph` 在 controller 内跑。
-- **可选适配器**：`reme-file-graph`（现状）、`neo4j`、`nebulagraph`、`powercontext-graph`；从 canonical ingest/rebuild。
+- **Memory engine adapters**：ReMe / 新记忆引擎 / PowerContext；实现 memory backend contract。
+- **Graph backend adapters**：`file-graph`（默认）、`reme-file-graph`（现状）、`neo4j`、`nebulagraph`、`powercontext-graph`；从 canonical ingest/rebuild。
+- 两者是不同层：**换记忆引擎 ≠ 换图后端**。
 - **ingest 幂等**：按 `(kind, id, sha256_8)` 幂等；可从 canonical 全量重建。
 - **运行时无关**：图 API 读对象存储，不读容器 FS；Docker 代理只作 QwenPaw 回退。
 - **scope 过滤**：team 图 = `teams/<team>/` only（不含 `shared/*`——`shared/*` 不是记忆）；human 图 = `humans/<human>/` 仅该人 API；agent 图 = `agents/<agent>/`；跨 scope 不泄漏。
@@ -250,7 +258,8 @@ graph.capabilities()                          -> {snapshot, neighbors, search, p
 | # | 断言 | 期望 |
 |---|---|---|
 | V18a | `file-graph` 与现有 dashboard `assembleGraph` 同 fixture 等价 | memory-file 子图（structural + wikilink）一致；fact/provenance/temporal 边是增量，另行断言 |
-| V18b | 换图引擎（ReMe file_graph / file-graph / mock adapter）同 canonical 输入 | `graph.snapshot` 一致 |
-| V18c | 两 runtime（QwenPaw + OpenClaw）同团队，图从对象存储建 | 同图，无 Docker 代理依赖 |
-| V18d | team 图查询不含 `humans/*`；human 图仅本人 | 0 泄漏 |
+| V18b | **换 memory engine**（ReMe → 新引擎，同 runtime） | `graph.snapshot` 一致 |
+| V18c | **换 runtime**（QwenPaw → OpenClaw，同 engine） | `graph.snapshot` 一致；无 Docker 代理依赖 |
+| V18d | **换 graph backend**（file-graph → Neo4j / mock） | `graph.snapshot` 一致 |
+| V18e | team 图查询不含 `humans/*`；human 图仅本人 | 0 泄漏 |
 | V19 | 同 key 两写者并发（乐观重试） | 无丢更新；冲突被标记 |

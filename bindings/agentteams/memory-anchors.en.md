@@ -213,6 +213,12 @@ Reclassification: B-10 `decision_class_v2` new record, original not overwritten.
 
 **Goal**: graph = a derived projection of canonical memory + fact chain; contract-based; engine-swappable; any runtime that writes the canonical layout gets a graph.
 
+**Three independent boundaries (runtime / memory engine / knowledge graph)**:
+- A runtime (QwenPaw/OpenClaw/Hermes/DSH) only calls the memory contract (capture/recall/write/promote/resolve/capabilities); it **does not touch the graph**.
+- A memory engine (ReMe/new engine/PowerContext) only implements the memory backend contract and persists to canonical; optional `graph_native`.
+- The graph reads only canonical + the fact chain; it **does not depend on the runtime or on a specific engine**; swapping either layer changes only its adapter.
+- One line: runtime swap / engine swap / graph-backend swap are independent; the canonical layout + contract stay unchanged.
+
 ```
 graph.snapshot(scope, {root, depth, budget}) -> {nodes, edges, meta}
 graph.neighbors(node_id, {direction, depth}) -> {nodes, edges}
@@ -229,7 +235,9 @@ graph.capabilities()                          -> {snapshot, neighbors, search, p
 - **Source**: canonical object storage (`agents/`, `teams/`, `humans/`) + fact chain; the graph is derived, **not the source of truth**.
 - **Default adapter `file-graph`**: a pure parser (Markdown + wikilink + fact chain), no ReMe, no container FS, no new service; the implementation location is not mandated (controller library or an equivalent dashboard pure function), but the **data source must be object storage**.
 - **Exposure**: the memory module's MCP surface calls the controller's read-only graph model; the default `file-graph` runs in the controller.
-- **Optional adapters**: `reme-file-graph` (current), `neo4j`, `nebulagraph`, `powercontext-graph`; ingest/rebuild from canonical.
+- **Memory engine adapters**: ReMe / a new engine / PowerContext; they implement the memory backend contract.
+- **Graph backend adapters**: `file-graph` (default), `reme-file-graph` (current), `neo4j`, `nebulagraph`, `powercontext-graph`; ingest/rebuild from canonical.
+- These are different layers: **a memory-engine swap is not a graph-backend swap**.
 - **Idempotent ingest**: keyed by `(kind, id, sha256_8)`; full rebuild from canonical.
 - **Runtime neutrality**: the graph API reads object storage, not the container FS; the Docker proxy is a QwenPaw fallback only.
 - **Scope filtering**: team graph = `teams/<team>/` only (no `shared/*` — `shared/*` is not memory); human graph = `humans/<human>/` via that human's API only; agent graph = `agents/<agent>/`; no cross-scope leak.
@@ -250,7 +258,8 @@ graph.capabilities()                          -> {snapshot, neighbors, search, p
 | # | Assertion | Expected |
 |---|---|---|
 | V18a | `file-graph` vs the current dashboard `assembleGraph` on the same fixture | identical memory-file subgraph (structural + wikilink); fact/provenance/temporal edges are additive and asserted separately |
-| V18b | swap graph engines (ReMe file_graph / file-graph / mock adapter) on the same canonical input | identical `graph.snapshot` |
-| V18c | two runtimes (QwenPaw + OpenClaw), same team, graph from object storage | same graph, no Docker-proxy dependency |
-| V18d | team graph excludes `humans/*`; human graph is self-only | zero leak |
+| V18b | **memory-engine swap** (ReMe → new engine, same runtime) | identical `graph.snapshot` |
+| V18c | **runtime swap** (QwenPaw → OpenClaw, same engine) | identical `graph.snapshot`; no Docker-proxy dependency |
+| V18d | **graph-backend swap** (file-graph → Neo4j / mock) | identical `graph.snapshot` |
+| V18e | team graph excludes `humans/*`; human graph is self-only | zero leak |
 | V19 | two concurrent writers on the same key (optimistic retry) | no lost update; conflict marked |
