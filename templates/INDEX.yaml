@@ -53,31 +53,31 @@ industry:
 # ── T2 域片段（21 个，O5 矩阵）──────────────────────────────────
 domains:
   # 软件 10 子域
-  web-frontend:  { file: templates/domain/web-frontend.md,  source: production, applies_to: [worker] }
-  web-backend:   { file: templates/domain/web-backend.md,   source: production, applies_to: [worker] }
-  mobile:        { file: templates/domain/mobile.md,        source: production, applies_to: [worker] }
-  desktop:       { file: templates/domain/desktop.md,       source: reference,  applies_to: [worker] }
-  ml-data:       { file: templates/domain/ml-data.md,       source: reference,  applies_to: [worker] }
-  infra-ops:     { file: templates/domain/infra-ops.md,     source: production, applies_to: [worker] }
-  security:      { file: templates/domain/security.md,      source: reference,  applies_to: [worker, critic] }
-  docs-content:  { file: templates/domain/docs-content.md,  source: production, applies_to: [worker] }
-  test-qa:       { file: templates/domain/test-qa.md,       source: reference,  applies_to: [worker, critic] }
-  data-engineering: { file: templates/domain/data-engineering.md, source: reference, applies_to: [worker] }
+  web-frontend: { industry: software, file: templates/domain/web-frontend.md,  source: production, applies_to: [worker] }
+  web-backend: { industry: software, file: templates/domain/web-backend.md,   source: production, applies_to: [worker] }
+  mobile: { industry: software, file: templates/domain/mobile.md,        source: production, applies_to: [worker] }
+  desktop: { industry: software, file: templates/domain/desktop.md,       source: reference,  applies_to: [worker] }
+  ml-data: { industry: software, file: templates/domain/ml-data.md,       source: reference,  applies_to: [worker] }
+  infra-ops: { industry: software, file: templates/domain/infra-ops.md,     source: production, applies_to: [worker] }
+  security: { industry: software, file: templates/domain/security.md,      source: reference,  applies_to: [worker, critic] }
+  docs-content: { industry: software, file: templates/domain/docs-content.md,  source: production, applies_to: [worker] }
+  test-qa: { industry: software, file: templates/domain/test-qa.md,       source: reference,  applies_to: [worker, critic] }
+  data-engineering: { industry: software, file: templates/domain/data-engineering.md, source: reference, applies_to: [worker] }
   # 嵌入式 4
-  mcu:           { file: templates/domain/mcu.md,           source: production, applies_to: [worker] }
-  embedded-linux: { file: templates/domain/embedded-linux.md, source: reference, applies_to: [worker] }
-  hardware-bridge: { file: templates/domain/hardware-bridge.md, source: production, applies_to: [worker] }
-  rtos-firmware: { file: templates/domain/rtos-firmware.md, source: reference, applies_to: [worker] }
+  mcu: { industry: embedded, file: templates/domain/mcu.md,           source: production, applies_to: [worker] }
+  embedded-linux: { industry: embedded, file: templates/domain/embedded-linux.md, source: reference, applies_to: [worker] }
+  hardware-bridge: { industry: embedded, file: templates/domain/hardware-bridge.md, source: production, applies_to: [worker] }
+  rtos-firmware: { industry: embedded, file: templates/domain/rtos-firmware.md, source: reference, applies_to: [worker] }
   # 数据 2
-  data-analysis: { file: templates/domain/data-analysis.md, source: production, applies_to: [worker] }
-  data-visualization: { file: templates/domain/data-visualization.md, source: reference, applies_to: [worker] }
+  data-analysis: { industry: data, file: templates/domain/data-analysis.md, source: production, applies_to: [worker] }
+  data-visualization: { industry: data, file: templates/domain/data-visualization.md, source: reference, applies_to: [worker] }
   # 市场 2
-  market-research: { file: templates/domain/market-research.md, source: llm, experimental: true, applies_to: [worker] }
-  sales-outreach:  { file: templates/domain/sales-outreach.md,  source: llm, experimental: true, applies_to: [worker] }
+  market-research: { industry: business, file: templates/domain/market-research.md, source: llm, experimental: true, applies_to: [worker] }
+  sales-outreach: { industry: business, file: templates/domain/sales-outreach.md,  source: llm, experimental: true, applies_to: [worker] }
   # 通用 3
-  office-productivity: { file: templates/domain/office-productivity.md, source: reference, applies_to: [worker] }
-  research-reports: { file: templates/domain/research-reports.md, source: production, applies_to: [worker] }
-  general:       { file: templates/domain/general.md,       source: llm, experimental: true, applies_to: [worker] }
+  office-productivity: { industry: general, file: templates/domain/office-productivity.md, source: reference, applies_to: [worker] }
+  research-reports: { industry: general, file: templates/domain/research-reports.md, source: production, applies_to: [worker] }
+  general: { industry: general, file: templates/domain/general.md,       source: llm, experimental: true, applies_to: [worker] }
 
 # ── 协议片段（由 team.json protocol 开关选择，非域片段）──────────
 protocol:
