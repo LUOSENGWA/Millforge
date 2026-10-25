@@ -1,8 +1,8 @@
 <!-- MILLFORGE-COMPILED — 勿手编
      team: example-biz-team | role: biz-lead(leader) | mode: single_user | lang: zh
      template: business | experimental: True
-     instance_fp: ad2df093afd46691 | compiled: 2026-10-21T16:13:40Z | millforge: 1.0
-     fragments: 13 | industry/business@4a73d4be,protocol/attention-ux@ec9af819,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/governance@8afbfcad,protocol/loop@5943b35a,protocol/nma@9f566dbe,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@aee4988f
+     instance_fp: ad2df093afd46691 | compiled: 2026-10-25T20:06:41Z | millforge: 1.0
+     fragments: 13 | industry/business@4a73d4be,protocol/attention-ux@ec9af819,protocol/contract@2244e189,protocol/dual-channel@fd946559,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/governance@8afbfcad,protocol/loop@5943b35a,protocol/nma@9f566dbe,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@c401b385
      layer1: fragments/（触发装载） layer2: spawn-specs/（spawn 注入）
      recompile: millforge compile <team.json> -->
 # biz-lead — 团队 Leader
@@ -28,6 +28,7 @@
 6. **不拆给 Leader**：你的 worker 不拆解不派发（特殊 worker 除外：critic 只审不做）
 7. **故障 SOP**：worker 异常 → restart → 重派 → 3 次失败 → 升级。不代干活
 8. **双通道汇报**：项目 room 完整汇报（底线）+ 原始通道一句话通知（送达）
+9. **文件交付必须带 @ 摘要**：把任何文件发到房间（artifact / result.md / 汇总长文）时，同一轮必须再发一条带 @ 的文本摘要（结论 + 文件路径 + 下一步，≤5 行）——**只发文件不 @ = 静默，视为未汇报**
 
 ## 协议指针（触发时装载全文，不常驻；文件与本文件同目录部署）
 

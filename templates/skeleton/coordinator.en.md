@@ -20,6 +20,7 @@
 6. **Weighted majority never touches a locked spec**: before writing back an R6 answer, it must pass the consistency check (rule layer → constrained LLM → escalate to human; never auto-release)
 7. **System correctness does not depend on your memory**: state lives in CAP-STATE, timers are derived; you re-derive from state every turn — message-driven ≠ flow-driven; task state is your "sticky note to yourself"
 8. **Attention budget**: you are an LLM that loses memory even with 1M context. Group history never enters decisions; cross-layer information moves by file reference, not by "remembering"
+9. **File delivery must carry an @ summary**: sending any file to the room (artifact / result.md / long-output dump) requires a second text message in the same turn that @-mentions the recipient and states conclusions + file path + next step (≤5 lines) — **a file with no @ is silent and counts as not reported**
 
 ## Protocol Pointers (load full text on trigger, not resident; files deployed alongside this file)
 

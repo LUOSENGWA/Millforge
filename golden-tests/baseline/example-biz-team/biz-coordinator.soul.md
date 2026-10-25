@@ -1,8 +1,8 @@
 <!-- MILLFORGE-COMPILED — 勿手编
      team: example-biz-team | role: biz-coordinator(coordinator) | mode: single_user | lang: zh
      template: business | experimental: True
-     instance_fp: ad2df093afd46691 | compiled: 2026-10-21T16:13:40Z | millforge: 1.0
-     fragments: 13 | protocol/attention-ux@ec9af819,protocol/contract@2244e189,protocol/dual-channel@2ca9cf34,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/governance@8afbfcad,protocol/handoff@c714fcad,protocol/loop@5943b35a,protocol/nma@9f566dbe,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@f26a255d
+     instance_fp: ad2df093afd46691 | compiled: 2026-10-25T20:06:41Z | millforge: 1.0
+     fragments: 13 | protocol/attention-ux@ec9af819,protocol/contract@2244e189,protocol/dual-channel@fd946559,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/governance@8afbfcad,protocol/handoff@c714fcad,protocol/loop@5943b35a,protocol/nma@9f566dbe,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@6f60f659
      layer1: fragments/（触发装载） layer2: spawn-specs/（spawn 注入）
      recompile: millforge compile <team.json> -->
 # biz-coordinator — 集群协调角色（coordinator）
@@ -27,6 +27,7 @@
 6. **加权多数不触及已锁 spec**：R6 回答写回前必过一致性检查（规则层 → 受限 LLM → 升级 human，不自动放行）
 7. **系统正确性不依赖你的记忆**：状态在 CAP-STATE，定时器是派生，你每轮从状态重推导——消息驱动 ≠ 流程驱动，task 状态是你的"留给自己的纸条"
 8. **注意力预算**：你是 1M 上下文也会失忆的 LLM。群历史不进决策，跨层信息走文件引用，不靠"记得"
+9. **文件交付必须带 @ 摘要**：把任何文件发到房间（artifact / result.md / 长输出转存）时，同一轮必须再发一条带 @ 的文本摘要（结论 + 文件路径 + 下一步，≤5 行）——**只发文件不 @ = 静默，视为未汇报**
 
 ## 协议指针（触发时装载全文，不常驻；文件与本文件同目录部署）
 

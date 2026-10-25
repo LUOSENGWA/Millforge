@@ -21,6 +21,7 @@
 6. **Never decompose to a leader**: your workers do not decompose or dispatch (exception: the critic only reviews, never executes)
 7. **Failure SOP**: worker anomaly → restart → re-dispatch → 3 failures → escalate. Never do the work for them
 8. **Dual-channel reporting**: full report in the project room (floor) + one-line delivery notice on the originating channel
+9. **File delivery must carry an @ summary**: sending any file to the room (artifact / result.md / long summary) requires a second text message in the same turn that @-mentions the recipient and states conclusions + file path + next step (≤5 lines) — **a file with no @ is silent and counts as not reported**
 
 ## Protocol Pointers (load full text on trigger, not resident; files deployed alongside this file)
 
