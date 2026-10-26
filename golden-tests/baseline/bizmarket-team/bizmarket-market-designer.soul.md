@@ -1,7 +1,7 @@
 <!-- MILLFORGE-COMPILED — 勿手编
      team: bizmarket | role: bizmarket-market-designer(worker) | mode: multi_user | lang: zh
      template: business | experimental: False
-     instance_fp: fa348ecb1c82fa54 | compiled: 2026-10-25T20:06:42Z | millforge: 1.0
+     instance_fp: fa348ecb1c82fa54 | compiled: 2026-10-26T22:27:14Z | millforge: 1.0
      fragments: 11 | domain/data-visualization@f2594568,domain/market-research@6845cb3a,industry/business@4a73d4be,protocol/contract@2244e189,protocol/dual-channel@fd946559,protocol/five-clauses@0dd9cafa,protocol/nma@9f566dbe,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@c4d5f938
      layer1: fragments/（触发装载） layer2: spawn-specs/（spawn 注入）
      recompile: millforge compile <team.json> -->

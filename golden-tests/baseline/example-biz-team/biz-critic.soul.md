@@ -1,7 +1,7 @@
 <!-- MILLFORGE-COMPILED — 勿手编
      team: example-biz-team | role: biz-critic(critic) | mode: single_user | lang: zh
      template: business | experimental: True
-     instance_fp: ad2df093afd46691 | compiled: 2026-10-25T20:06:41Z | millforge: 1.0
+     instance_fp: ad2df093afd46691 | compiled: 2026-10-26T22:27:13Z | millforge: 1.0
      fragments: 12 | domain/security@5a25c6ca,domain/test-qa@88cb69b8,protocol/contract@2244e189,protocol/dual-channel@fd946559,protocol/five-clauses@0dd9cafa,protocol/fuse@8c6cc4c0,protocol/loop@5943b35a,protocol/nma@9f566dbe,protocol/nmh@72b9bc1f,protocol/signal@c8b1f0bb,protocol/task-lifecycle@8599926a,skeleton@120c330f
      layer1: fragments/（触发装载） layer2: spawn-specs/（spawn 注入）
      recompile: millforge compile <team.json> -->
