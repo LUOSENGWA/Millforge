@@ -133,7 +133,8 @@
               "coordinator",
               "leader",
               "worker",
-              "critic"
+              "critic",
+              "writer"
             ],
             "description": "角色种类 → skeleton 选择"
           },
