@@ -48,7 +48,7 @@ EXIT_RENDER = 5
 EXIT_SELFCHECK = 6
 EXIT_USAGE = 64
 
-BUDGETS = {"coordinator": 500, "leader": 250, "worker": 150, "critic": 150}
+BUDGETS = {"coordinator": 500, "leader": 250, "worker": 150, "critic": 150, "writer": 150}
 STAGES = ["validate", "assemble", "budget", "render", "selfcheck", "provenance"]  # 6 段管线（O7 自报）
 
 # 上下文档位（12-REDLINES §5.2）：常驻身份文件 token 上限；声明 context_tier 时为硬门

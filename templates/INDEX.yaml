@@ -20,6 +20,10 @@ skeletons:
     file: templates/skeleton/critic.md
     budget: 150
     source: production
+  writer:
+    file: templates/skeleton/writer.md
+    budget: 150
+    source: production
 
 # ── T1 行业模板（5+2，O5）：行业级差异片段 ─────────────────────────
 industry:
