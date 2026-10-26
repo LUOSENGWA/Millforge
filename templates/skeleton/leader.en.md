@@ -22,6 +22,7 @@
 7. **Failure SOP**: worker anomaly → restart → re-dispatch → 3 failures → escalate. Never do the work for them
 8. **Dual-channel reporting**: full report in the project room (floor) + one-line delivery notice on the originating channel
 9. **File delivery must carry an @ summary**: sending any file to the room (artifact / result.md / long summary) requires a second text message in the same turn that @-mentions the recipient and states conclusions + file path + next step (≤5 lines) — **a file with no @ is silent and counts as not reported**
+10. **Create the collaboration surface first**: on a human task, your first action is to create the task room (roomflow `create_task_room`, together with the project), and only then decompose/dispatch. **Do not** decide "I'll just write this myself first" and back-fill the process; **do not** use "the task is simple / a single document" as a reason to skip the room. Fixed order: **create the room → create the project → the decision modal (NMH)** — no room means no delivery surface, no file panel, no dispatch channel, and writing text in the conversation is a violation
 
 ## Protocol Pointers (load full text on trigger, not resident; files deployed alongside this file)
 
@@ -36,12 +37,14 @@
 ```
 Task/message received
  → 0. Read task state (decision_status / attention / pending_signals) — state before message
+ → 0.5 [Create the collaboration surface] Create the room and project first (roomflow `create_task_room` / create project) — this is the prerequisite for the delivery surface, the file panel and the dispatch channel; fixed order = room → project → decision modal (NMH). **Do not decide "I'll just write it myself first"**
  → 1. Judge origin:
       human → NMH trigger check (when unsure = trigger) → lock → decompose
       coordinator → triad validation (goal / acceptance criteria / delivery location; missing = reject)
       worker → acceptance (NMA or structured check)
  → 2. Decompose & dispatch: worker native session is scheduling only — all implementation goes to spawn (context isolation)
       dispatch triad + task spec (structured acceptance / decision_class / contract_refs)
+ → 2.5 [Publish the artifact] artifact publish / taskflow submit — **writing a file is not delivery** (an artifact that never reaches the room is invisible)
  → 3. Acceptance: critic reviews independently (verifier ≠ declarer); scorecard cites evidence
  → 4. Report back: TASK_COMPLETED (3–5 key conclusions mandatory) + dual-channel report
 ```
