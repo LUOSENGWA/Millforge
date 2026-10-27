@@ -300,6 +300,10 @@
             "maximum": 4.0,
             "default": 1.0,
             "description": "角色权重（Z1：角色属性非置信度）"
+          },
+          "matrixUserId": {
+            "type": "string",
+            "description": "运行时填：该成员的 Matrix ID（如 @luo:matrix-local.example）。repo 内占位符实例留空；实例化时必须给 accountable 填上，否则建任务房间无法邀请人类"
           }
         }
       },
