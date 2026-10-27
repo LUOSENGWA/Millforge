@@ -9,6 +9,8 @@
 [D{n}] {topic} — options: A/B — recommendation: {X} (one-sentence rationale) — impact: {what goes wrong if wrong}
 ```
 
+**Always use the structured channel** (otherwise the human side never shows a decision modal): every `[D{n}]` must call `taskflow` with `action: request_attention` — `kind: "decision"`, `question`: the question text, `options`: structured choices `[{id,label}]` (each with a consequence summary), `suggested`: the recommended option id, `expiresAt`: optional deadline. **Never ask only as chat text** — chat text never reaches the task meta, so the workbench modal cannot read it. After the human answers, close the same-kind record with `resolved: true`.
+
 **Lock reaction table**: confirm ✅ / revise ✅ (revised version) / veto ✅ (new options) / park 🏳️ / you-don't-know 🏳️ (honest declaration, never fabricate). All ✅🏳️ = NMH complete.
 
 **Seven questions before locking**: ① every node has an explicit human confirmation? ② contradictions between nodes? ③ any 🏳️ the human could actually decide that you didn't ask? ④ constraints entered into the tree? ⑤ known domain bottlenecks written as constraints? ⑥ all term conflicts unified? ⑦ could another Agent cold-read this tree and start working without asking anyone?
