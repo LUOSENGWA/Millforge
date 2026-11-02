@@ -88,6 +88,23 @@ python3 compiler/millforge-compile.py compile my-team.json --out out/my-team
 
 产出 `out/my-team/`：每个角色一份 `.soul.md`（身份文件，受行硬门）+ `fragments/`（触发时装载的协议全文）+ `spawn-specs/`（spawn 注入的域规范）。部署方式见对应 binding 的 README。
 
+## Deployment ledger
+
+`deployments.jsonl`（仓库根目录）是部署台账：一行一条 JSON，记录某时刻某模块某版本部署/打包了哪个产物（含 sha256）到哪个目标、操作人是谁——让「当时部署/打包的是哪一版」随时可回答。
+
+**为什么 append-only**：台账是溯源记录，改写历史会破坏可审计性；工具只以追加模式写入，回滚也是新增一条（`--action rollback`）而非抹除。`sha256_source` 区分两种来源：`computed`（由 `--artifact` 现场计算）/ `provided`（调用方提供 `--sha256`，`artifact` 字段取 `--label` 值）。
+
+```bash
+tools/deploy.sh record --module teamharness --version 0.3.0 --target build-host:/opt/agentteams \
+    --operator alice --artifact releases/teamharness/0.3.0/teamharness.tar.gz
+tools/deploy.sh record --module looprunner --version 0.1.0 --action pack --target deploy-host:/opt \
+    --operator alice --sha256 <64hex> --label "pack of commit 0f11cde"
+tools/deploy.sh verify --module teamharness --artifact releases/teamharness/0.3.0/teamharness.tar.gz
+tools/deploy.sh list --module teamharness --limit 5
+```
+
+`verify` 取该模块**最后一条**匹配记录与当前值（artifact 现场重算哈希，或直接给 `--sha256`）比较：一致 exit 0；不一致 exit 1 并打印 `mismatch: recorded=… current=…`；无记录 exit 2。`list` 按时间顺序打印原始行（`--limit` 取最后 N 条）。零依赖（标准库）、不联网；文件入库（`.gitignore` 不忽略它）。
+
 ## 双语安装（中文 / English）
 
 **每个模板都有全量中英文双文件**（`X.md` 中文 + `X.en.md` 英文，43/43 覆盖；协议层 13 篇 + 不变量 4 篇同样双语）。安装语言是**实例参数**，不是重新翻译：

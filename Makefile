@@ -20,6 +20,7 @@ test: schemas bilingual
 	python3 core/scripts/check-evidence-refs.py
 	python3 core/scripts/check-binding-compliance.py
 	python3 golden-tests/tests/test_tier_gate.py
+	python3 golden-tests/tests/test_deploy_audit.py
 
 validate:
 	python3 compiler/millforge-compile.py validate $(FILE)
