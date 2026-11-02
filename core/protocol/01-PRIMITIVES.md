@@ -32,5 +32,5 @@
 - `worker` 不拆解、不派发给其他 worker（特殊 worker 除外：critic 只审不做）
 - `arbitrator`（单用户模式）不做 worker 的活——编排者不是实现者（故障 SOP 见 §06-LIFECYCLE 6.6）
 - **`leader` ≡ `arbitrator` 功能对齐**：两者是同一编排者角色种类，功能核心相同 = 任务拆解/派发/验收 + 同行审查 + 闭环汇报；差异只有**管辖范围**（团队 vs 集群）与**存在条件**（arbitrator 仅 single_user 存在）。同一套协议，只差管辖范围
-- **验证者 ≠ 声明者**（五条款核心）：任何产出方的验收不能由自己完成。critic 独立 fresh 上下文（CAP-SPAWN X1）
+- **验证者 ≠ 声明者**（五条款核心）：任何产出方的验收不能由自己完成。critic 独立 fresh 上下文（CAP-SPAWN X1）——X1 是**能力条件**：运行时提供隔离原语时 critic 必须在该上下文中运行；不提供时按能力声明降级（**身份与记录独立仍必须**），隔离缺口记入 compliance，不算违规
 - **accountable 单点**：每个 project/loop/decision 有且仅有一个 accountable stakeholder（CAP-ROSTER Z2），委托链可查询（Z3），不得集体持锁

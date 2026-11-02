@@ -103,7 +103,7 @@ python3 compiler/millforge-compile.py compile my-team.json --out out/my-team
 | **冻结基线（T9）** | 模板/片段/编译器变更 → 输出 vs 冻结基线 diff，非空 = 必须显式重冻并人审（协议回归零静默） |
 | **生产溯源（T10）** | 生产基线 5 份 SOUL（占位化）+ 条款映射表：每条生产协议条款必须能映射到 v1.0 落点，缺失 = 协议内容在升级中丢失 |
 
-**CI（GitHub Actions）**：三门 = golden（13+83）/ 双语完整性 / 敏扫，push 与 PR 自动触发。
+**门（本地，无外部 CI）**：`make test`（golden 13+83）/ 双语完整性 / 敏扫；外部 CI 已移除（11/02），提交前在本地跑同一套。
 
 **scrub 纪律**：核心层只允许 CAP-* 能力编号 + 通用词；运行时专有 API 名（各运行时的子代理/存储/定时器机制）全部归 binding 层。开源基线不携带任何具体部署环境名、人类 MXID、内部事故编号。
 
