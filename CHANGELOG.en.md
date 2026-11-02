@@ -11,6 +11,9 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 
 ### Added
 
+- **Deployment audit (M4, both ends)**: `bindings/agentteams/deployment-guide(.en).md` gains §5 — every deployment appends a `deployments.jsonl` line (sha256 read back from the target, failures recorded too, no line = not deployed), and the Worker startup log carries the SOUL provenance hash; the binding layer requires both ends to agree.
+
+
 - **Schema wiring (`schemas` gate)**: `core/scripts/validate-schemas.py` + `make schemas` (included in `make test`). Validates every `core/schemas/*.json` (draft-07 validity, unique `$id`, `required` ⊆ properties, resolvable internal `$ref`), validates in-repo instances against their schema (team fixtures match automatically; other instances declare a top-level `schema` key), and requires every schema to be registered in `core/schemas/README.md` (an unregistered schema is an orphan and fails the gate).
 - `core/schemas/README(.en).md`: a mapping of the 11 schemas to protocol clauses, writer/reader and instances.
 - **Bilingual completeness gate (local)**: `core/scripts/check-bilingual.py` + `make bilingual` (included in `make test`) — every `X.md` needs `X.en.md` and vice versa; `docs/provenance/` (verbatim session records) and `golden-tests/` (generated artifacts) are documented exceptions. The gate used to live in CI and is restored locally after CI was removed.

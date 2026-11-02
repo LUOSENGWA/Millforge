@@ -49,3 +49,41 @@ deploy (per role):
 | cron timer lost (container rebuild) | task has due_at but no cron | timer-derive idempotent re-derivation (U3: verdict recomputed from state) |
 | spawn hung with no return | X4 bound (best-effort) | bounded_failure semantics; escalate after 3 |
 | SOUL.md rolled back after restart | file mtime/line count | dual-location re-deploy (after restart) |
+
+## 5. Deployment Audit (M4: both ends)
+
+**Why**: the compiler writes provenance into file content (version / fragment hashes / parameter fingerprint),
+but once a file is overwritten or rolled back that history is unrecoverable — "which build was actually running"
+cannot be answered (the #168 class of incident). The **deployment action itself** must leave a trace, and the
+runtime must carry independent evidence; only when both ends agree is the deployment considered successful.
+
+**5.1 Every deployment appends an audit line (control side)**
+
+After pushing a build to a target (container / workspace / object store), append one JSON line to
+`<state>/deployments.jsonl`:
+
+```json
+{"ts":"2026-11-02T02:10:00Z","target":"hiclaw-worker-sysdev",
+ "source":{"team":"biz-team","compile_id":"…","git_commit":"…"},
+ "files":[{"path":"SOUL.md","sha256":"…","bytes":12345}],
+ "operator":"…","result":"ok"}
+```
+
+Hard requirements:
+- `files[].sha256` is the hash **read back from the target after deployment**, never the local file hash — it is the
+  only evidence against a half-copied file or a runtime rollback.
+- `result ∈ {ok, failed}`; **failures are recorded too** (a failure line is root-cause material).
+- **No audit line = not deployed** (treated exactly like the failure sequences in §4).
+
+**5.2 Worker startup records the provenance hash (runtime side)**
+
+On container start the Worker writes one line to its startup log with the provenance hash of the active SOUL:
+
+```text
+[soul] provenance=<sha256-8> version=<millforge.version> compiled_at=<ts>
+```
+
+The binding layer compares the audit line's sha256 with the startup log's provenance hash; a mismatch means the
+deployment did not take effect and is rolled back.
+
+**5.3 Relation to filesync**: the audit line is written locally under `<state>/` and synced by push_loop — no new storage.

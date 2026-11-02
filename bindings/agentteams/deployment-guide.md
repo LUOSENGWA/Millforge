@@ -49,3 +49,37 @@ millforge compile <team.json> --out /tmp/build/<team>
 | cron 定时器丢失（容器重建） | task 有 due_at 无 cron | timer-derive 幂等重派生（U3：判定从状态重算） |
 | spawn 挂起无返回 | X4 时限（尽力） | bounded_failure 语义；3 次 → 升级 |
 | restart 后 SOUL.md 回滚 | 文件 mtime/行数 | 双位置重部署（restart 后） |
+
+## 5. 部署审计（M4：两头发）
+
+**为什么**：编译器把 provenance 写进文件内容（版本 / 片段哈希 / 参数指纹），但文件一旦被覆盖或回滚，
+历史就不可回溯——"当时到底跑的是哪一版"答不出来（#168 类事故）。所以**部署动作本身**必须留痕，
+且运行时侧要有独立证据，两头对得上才算部署成功。
+
+**5.1 部署动作必须 append 审计行（控制侧）**
+
+每次把编译产物推到目标（容器 / 工作区 / 对象存储）后，向 `<state>/deployments.jsonl` append 一行 JSON：
+
+```json
+{"ts":"2026-11-02T02:10:00Z","target":"hiclaw-worker-sysdev",
+ "source":{"team":"biz-team","compile_id":"…","git_commit":"…"},
+ "files":[{"path":"SOUL.md","sha256":"…","bytes":12345}],
+ "operator":"…","result":"ok"}
+```
+
+硬性要求：
+- `files[].sha256` 必须是**部署后从目标读回**的哈希，不是本地文件哈希——这是防"cp 到一半 / 被 runtime 恢复覆盖"的唯一证据。
+- `result ∈ {ok, failed}`；**失败也要写**（失败行就是根因材料）。
+- **未写审计行 = 未部署**（与 §4 失败序列同等对待）。
+
+**5.2 Worker 启动必须记录 provenance 哈希（运行时侧）**
+
+Worker 容器启动时，把当前 SOUL 的 provenance 块哈希写入启动日志一行：
+
+```text
+[soul] provenance=<sha256-8> version=<millforge.version> compiled_at=<ts>
+```
+
+绑定层验收时比对「部署审计行的 sha256」与「启动日志的 provenance 哈希」，不一致 → 视为部署未成功并回滚。
+
+**5.3 与 filesync 的关系**：审计行写本地 `<state>/` 即可，由 push_loop 同步，不引入新存储。
