@@ -3,12 +3,12 @@
 
 FILE ?= golden-tests/fixtures/bizmarket-team.json
 
-.PHONY: test compile validate deps compliance evidence contract
+.PHONY: test compile validate deps compliance evidence contract schemas bilingual
 
 deps:
 	pip install -r requirements.txt
 
-test:
+test: schemas bilingual
 	bash golden-tests/scripts/run-compile-tests.sh
 	bash golden-tests/scripts/run-scripts-tests.sh
 	bash golden-tests/scripts/run-contract-tests.sh
@@ -21,6 +21,12 @@ validate:
 
 compile:
 	python3 compiler/millforge-compile.py compile $(FILE) --out out
+
+schemas:
+	python3 core/scripts/validate-schemas.py
+
+bilingual:
+	python3 core/scripts/check-bilingual.py
 
 compliance:
 	python3 core/scripts/check-binding-compliance.py

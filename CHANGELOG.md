@@ -9,6 +9,12 @@
 - **X1 改为能力条件**：`10-LOOP §2 DISPATCH` 与 `01-PRIMITIVES` 明确——运行时提供 spawn/会话隔离原语时实现与 critic 在该隔离上下文中运行；不提供的运行时不能作为 LOOP 绑定（与 X4 同理），但**普通任务在 native session 内实现不受约束**，隔离缺口作为已声明 gap 记录，不算违规。
 - `bindings/coding-cli/compliance.json` 的 X1 gap note 按上述语义重写。
 
+### 新增
+
+- **机器契约接线（schemas 门）**：`core/scripts/validate-schemas.py` + `make schemas`（已并入 `make test`）。逐份校验 `core/schemas/*.json`（draft-07 合法 / `$id` 唯一 / `required` ⊆ properties / 内部 `$ref` 可解析），随仓实例按 schema 校验（团队 fixtures 自动匹配，其他实例认顶层 `schema` 字段），并要求每份 schema 在 `core/schemas/README.md` 登记（未登记=孤儿，门红）。
+- `core/schemas/README(.en).md`：11 份 schema ↔ 协议条款 ↔ 写者读者 ↔ 实例 的映射表。
+- **双语完整性门（本地）**：`core/scripts/check-bilingual.py` + `make bilingual`（已并入 `make test`）——每个 `X.md` 必须有 `X.en.md`，反之亦然；`docs/provenance/`（逐字会话记录）与 `golden-tests/`（编译产物）为文档化例外。该门原由 CI 承担，CI 移除后在本地恢复。
+
 ### 维护
 
 - **T9 冻结基线重冻**：基线自 `535fc74`（roster 绑定 `matrixUserId`、建群必须邀请 accountable）后未同步，`make test` 的 T9 一直红。本次按门规显式重冻并逐文件复核：差异仅为该规则引入的 `protocol/nmh`、`skeleton` 片段哈希与对应正文。

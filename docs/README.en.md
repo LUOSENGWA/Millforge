@@ -15,8 +15,9 @@
 2. `PHILOSOPHY.md` → why it is designed this way (can be fed verbatim to any LLM)
 3. `core/protocol/00-OVERVIEW.md` → navigation across the 13 protocol clauses
 4. `core/binding-contract.md` → the minimal capability set a runtime declares (8 capabilities + 55 invariants: 34 capability invariants + 21 implementation sub-items)
-5. `bindings/<shape>/` → which shape your runtime should follow
-6. `migration/` → how an existing team migrates in
+5. `core/schemas/README.md` → machine contracts (11 JSON Schemas) mapped to protocol clauses; validated by the `make schemas` gate
+6. `bindings/<shape>/` → which shape your runtime should follow
+7. `migration/` → how an existing team migrates in
 
 ## Conventions
 

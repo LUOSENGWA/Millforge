@@ -9,6 +9,12 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 - **X1 becomes a capability gate**: `10-LOOP §2 DISPATCH` and `01-PRIMITIVES` now state that when the runtime provides a spawn/session-isolation primitive, implementation and critics run inside that isolated context; a runtime without it cannot host a LOOP binding (same rule as X4), while ordinary task implementation in the native session is not constrained and the missing isolation is recorded as a declared gap, not a violation.
 - The `bindings/coding-cli/compliance.json` X1 gap note was rewritten accordingly.
 
+### Added
+
+- **Schema wiring (`schemas` gate)**: `core/scripts/validate-schemas.py` + `make schemas` (included in `make test`). Validates every `core/schemas/*.json` (draft-07 validity, unique `$id`, `required` ⊆ properties, resolvable internal `$ref`), validates in-repo instances against their schema (team fixtures match automatically; other instances declare a top-level `schema` key), and requires every schema to be registered in `core/schemas/README.md` (an unregistered schema is an orphan and fails the gate).
+- `core/schemas/README(.en).md`: a mapping of the 11 schemas to protocol clauses, writer/reader and instances.
+- **Bilingual completeness gate (local)**: `core/scripts/check-bilingual.py` + `make bilingual` (included in `make test`) — every `X.md` needs `X.en.md` and vice versa; `docs/provenance/` (verbatim session records) and `golden-tests/` (generated artifacts) are documented exceptions. The gate used to live in CI and is restored locally after CI was removed.
+
 ### Maintenance
 
 - **T9 frozen baseline re-frozen**: the baseline had not followed `535fc74` (roster `matrixUserId` binding; a task room must invite the accountable human), so T9 in `make test` had been red. Re-frozen explicitly after reviewing every drifted file: the only differences are the `protocol/nmh` and `skeleton` fragment hashes and the clause text that commit introduced.
