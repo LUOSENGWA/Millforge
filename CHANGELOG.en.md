@@ -2,6 +2,21 @@
 
 All notable changes to the Millforge protocol compiler and reference bindings are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/); versions follow Semantic Versioning.
 
+## [Unreleased]
+
+### Changed
+
+- **X1 becomes a capability gate**: `10-LOOP §2 DISPATCH` and `01-PRIMITIVES` now state that when the runtime provides a spawn/session-isolation primitive, implementation and critics run inside that isolated context; a runtime without it cannot host a LOOP binding (same rule as X4), while ordinary task implementation in the native session is not constrained and the missing isolation is recorded as a declared gap, not a violation.
+- The `bindings/coding-cli/compliance.json` X1 gap note was rewritten accordingly.
+
+### Maintenance
+
+- **T9 frozen baseline re-frozen**: the baseline had not followed `535fc74` (roster `matrixUserId` binding; a task room must invite the accountable human), so T9 in `make test` had been red. Re-frozen explicitly after reviewing every drifted file: the only differences are the `protocol/nmh` and `skeleton` fragment hashes and the clause text that commit introduced.
+
+### Removed
+
+- GitHub Actions workflow: external CI removed; the local gates remain (`make test` / `make compliance` / `make evidence`).
+
 ## [1.1.0] - 2026-10-22
 
 ### Added

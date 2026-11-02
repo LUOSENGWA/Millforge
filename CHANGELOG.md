@@ -2,6 +2,21 @@
 
 本文件记录 Millforge 协议编译器与参考绑定的对外可见变更。格式参照 [Keep a Changelog](https://keepachangelog.com/)，版本遵循语义化版本。
 
+## [未发布]
+
+### 变更
+
+- **X1 改为能力条件**：`10-LOOP §2 DISPATCH` 与 `01-PRIMITIVES` 明确——运行时提供 spawn/会话隔离原语时实现与 critic 在该隔离上下文中运行；不提供的运行时不能作为 LOOP 绑定（与 X4 同理），但**普通任务在 native session 内实现不受约束**，隔离缺口作为已声明 gap 记录，不算违规。
+- `bindings/coding-cli/compliance.json` 的 X1 gap note 按上述语义重写。
+
+### 维护
+
+- **T9 冻结基线重冻**：基线自 `535fc74`（roster 绑定 `matrixUserId`、建群必须邀请 accountable）后未同步，`make test` 的 T9 一直红。本次按门规显式重冻并逐文件复核：差异仅为该规则引入的 `protocol/nmh`、`skeleton` 片段哈希与对应正文。
+
+### 移除
+
+- GitHub Actions workflow：外部 CI 已移除；本地门保留（`make test` / `make compliance` / `make evidence`）。
+
 ## [1.1.0] - 2026-10-22
 
 ### 新增
