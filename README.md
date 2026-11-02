@@ -7,6 +7,10 @@
 
 ---
 
+> **即将默认集成到 AgentTeams**：千锻正在成为 [AgentTeams](https://github.com/agentscope-ai/AgentTeams) 的默认团队协议层——
+> AgentTeams 负责团队 / 任务 / Matrix 运行时的执行面，千锻负责把协作协议编译成可部署的身份与约束文件；
+> 集成后新建团队默认使用千锻编译产物（协议条款、9 态、signal 契约、loop 预算一次冻结，团队差异只留在 `team.json`）。
+
 ## 为什么需要千锻
 
 多 Agent 团队（一个协调角色 + 若干 leader/worker/critic）的行为质量，不取决于模型多强，而取决于**协作协议**是否被严格执行。实践中反复出现的失效模式：
@@ -102,6 +106,8 @@ python3 compiler/millforge-compile.py compile my-team.json --out out/my-team
 | golden 回归 | 同输入编译两次逐字节一致；生产专名零泄漏；触发指针全部可达 |
 | **冻结基线（T9）** | 模板/片段/编译器变更 → 输出 vs 冻结基线 diff，非空 = 必须显式重冻并人审（协议回归零静默） |
 | **生产溯源（T10）** | 生产基线 5 份 SOUL（占位化）+ 条款映射表：每条生产协议条款必须能映射到 v1.0 落点，缺失 = 协议内容在升级中丢失 |
+| **机器契约（schemas）** | `core/schemas/*.json` 逐份校验（draft-07 合法 / `$id` 唯一 / required 已声明 / 内部 `$ref` 可解析）+ 随仓实例按 schema 校验 + **每份 schema 必须在 `core/schemas/README.md` 登记**（未登记=孤儿，门红） |
+| **双语完整性** | 每个 `X.md` 必须有 `X.en.md`，反之亦然（`docs/provenance/`、`golden-tests/` 为文档化例外）——原 CI 门，现由 `make bilingual` 在本地执行 |
 
 **门（本地，无外部 CI）**：`make test`（golden 13+83）/ 双语完整性 / 敏扫；外部 CI 已移除（11/02），提交前在本地跑同一套。
 

@@ -7,6 +7,12 @@
 
 ---
 
+> **Becoming the default protocol layer for AgentTeams**: Millforge is on its way to being the default team
+> protocol layer of [AgentTeams](https://github.com/agentscope-ai/AgentTeams) — AgentTeams owns the execution side
+> (teams, tasks, Matrix runtime) while Millforge compiles the collaboration protocol into deployable identity and
+> constraint files. Once integrated, new teams default to Millforge's compiled output, with team differences confined
+> to `team.json`.
+
 ## Why Millforge
 
 The behavioral quality of a multi-agent team (one coordinator + leaders/workers/critics) depends less on how strong the models are than on whether the **collaboration protocol** is enforced. Failure patterns that recur in practice:
