@@ -21,7 +21,7 @@
       "description": "产生该 signal 的协议事件（不依赖消息内容中的标记文本）",
       "required": ["origin"],
       "properties": {
-        "origin": { "type": "string", "enum": ["submit", "decision_lock", "decision_reopen", "critic_verdict", "stop_condition_predicate", "artifact_write", "handoff_write", "attention_resolved", "mismatch_recorded", "contract_snapshot"] },
+        "origin": { "type": "string", "enum": ["submit", "decision_lock", "decision_reopen", "critic_verdict", "stop_condition_predicate", "artifact_write", "handoff_write", "attention_raised", "attention_resolved", "attention_overdue", "mismatch_recorded", "contract_snapshot"] },
         "request_id": { "type": ["string", "null"], "description": "attention 类：resolve 溯源（S5 幂等键含 task_id）" }
       }
     },
