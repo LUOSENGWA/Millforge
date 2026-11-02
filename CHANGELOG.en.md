@@ -18,6 +18,17 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 - `core/schemas/README(.en).md`: a mapping of the 11 schemas to protocol clauses, writer/reader and instances.
 - **Bilingual completeness gate (local)**: `core/scripts/check-bilingual.py` + `make bilingual` (included in `make test`) — every `X.md` needs `X.en.md` and vice versa; `docs/provenance/` (verbatim session records) and `golden-tests/` (generated artifacts) are documented exceptions. The gate used to live in CI and is restored locally after CI was removed.
 
+### Added
+
+- **Beta distribution mirror (`releases/`)**: the directory carries module artifacts (`teamharness` / `agentteams-matrix` / `looprunner`) plus the `channels.json` index (module → version → artifact/sha256/requires/commit/deprecated). Artifacts are committed as repository content so GitHub and GitCode serve them through the same raw URLs (GitCode has no release mirroring).
+- **Protocol pack (`make pack`)**: deterministic packaging of `compiler/`, `core/`, `templates/`, `bindings/` … into `dist/millforge-pack-<VERSION>.tar.gz`, with `sha256sums.txt` and `pack-manifest.json` (version/commit/file count/11 schema digests); this is what TeamHarness pins via `requires.millforge`.
+- **Local sync tooling**: `tools/sync-beta.sh` / `tools/sync_beta.py` (download from the fork's public releases → sha256 → update `channels.json`; idempotent, never pushes) and `tools/make-pack-manifest.py`. This repository does not use GitHub Actions.
+
+### Changed
+
+- `core/schemas/signal_event.schema.json`: `source_event.origin.enum` gains `attention_raised` and `attention_overdue` (existing `attention_resolved` unchanged) for the TeamHarness attention event family.
+- `bindings/agentteams/deployment-guide(.en).md`: new "module-era injection surface" subsection — SOUL/fragments/spawn-specs stay, the `millforge-core` skill becomes an optional reference.
+
 ### Maintenance
 
 - **T9 frozen baseline re-frozen**: the baseline had not followed `535fc74` (roster `matrixUserId` binding; a task room must invite the accountable human), so T9 in `make test` had been red. Re-frozen explicitly after reviewing every drifted file: the only differences are the `protocol/nmh` and `skeleton` fragment hashes and the clause text that commit introduced.

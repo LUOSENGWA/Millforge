@@ -33,6 +33,19 @@ millforge compile <team.json> --out /tmp/build/<team>
 - **pip 一律 venv 版**（`/opt/venv/copaw/bin/pip`）——系统 pip 装到错误路径，版本误判是生产事故源（运行时约束）。
 - 身份文件**双位置**部署；restart 前部署会被 runtime 恢复覆盖。
 
+### 2.1 模块时代：注入面保留什么
+
+TH 运行时内建协议强制作集后（9 态机、signal 契约、loop 预算、decision_class），编译产物的注入面收敛为：
+
+| 产物 | 是否注入 | 说明 |
+|:--|:--|:--|
+| `<role>.soul.md` | ✅ 注入 | 身份/铁律/核心循环；行硬门 coordinator≤500 / leader≤250 / worker≤150 / critic≤150 |
+| `fragments/`（第 1 层） | ✅ 注入到工作区 `protocols/` | 按需触发装载，不占身份文件行数 |
+| `spawn-specs/`（第 2 层） | ✅ 派发时注入 | 子任务上下文契约 |
+| `millforge-core` skill | ⚪ 可选（默认关） | TH 模块自带协议 core 后再注入一份 = 双份漂移源；仅在需要参考文档时启用 |
+
+协议中可被代码强制的部分由 TH 运行时执行，不再依赖注入文本；`core/scripts/` 的确定性脚本随 pack 分发（不注入角色工作区）。模块版本 pin（`requires.millforge`）见 TH 插件清单。
+
 ## 3. filesync 同步层（CAP-STORE T2 执行细则）
 
 - 容器工作区 ↔ MinIO/RustFS 的同步 = push_loop（异步）+ startup mirror_all。

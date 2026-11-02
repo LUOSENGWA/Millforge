@@ -46,6 +46,8 @@ millforge/
 ├── bindings/            # 运行时绑定（agentteams 参考 / standalone-agent / coding-cli）
 ├── migration/           # 存量团队迁移（scaffold-team.py + MIGRATION-CHECKLIST）
 ├── golden-tests/        # 确定性回归（T1–T10 门 / 13 用例 / 83 脚本断言 + 证据/合规/tier 单元门）
+├── releases/            # beta 分发镜像（模块产物 + channels.json 契约；见 releases/README.md）
+├── tools/               # 本地工具（sync-beta 同步 / pack manifest 生成）
 └── docs/                # 绑定指南（adding-a-binding）+ provenance/（源流原文归档）
 ```
 

@@ -48,6 +48,8 @@ millforge/
 ├── bindings/            # runtime bindings (agentteams reference / standalone-agent / coding-cli)
 ├── migration/           # migrating existing teams (scaffold-team.py + MIGRATION-CHECKLIST)
 ├── golden-tests/        # deterministic regression (T1–T10 gates / 13 cases / 83 script assertions + evidence/compliance/tier unit gates)
+├── releases/            # beta distribution mirror (module artifacts + channels.json contract; see releases/README.md)
+├── tools/               # local tooling (sync-beta / pack manifest)
 └── docs/                # binding guide (adding-a-binding) + provenance/ (verbatim-inheritance source archives)
 ```
 

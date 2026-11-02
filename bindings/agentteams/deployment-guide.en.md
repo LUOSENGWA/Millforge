@@ -33,6 +33,19 @@ deploy (per role):
 - **pip is always the venv version** (`/opt/venv/copaw/bin/pip`) — the system pip installs to the wrong path; version misreads are a production-incident source (runtime constraint).
 - Identity files are deployed to **dual locations**; deploying before restart gets overwritten by the runtime's restore.
 
+### 2.1 Module era: what the injection surface keeps
+
+Once the TeamHarness runtime enforces the protocol subset (nine-state machine, signal contract, loop budget, decision classes), the injection surface of the compiler output narrows to:
+
+| Artifact | Injected | Note |
+|:--|:--|:--|
+| `<role>.soul.md` | ✅ | Identity / iron rules / core loop; line hard gates coordinator≤500 / leader≤250 / worker≤150 / critic≤150 |
+| `fragments/` (layer 1) | ✅ into the workspace `protocols/` | Trigger-loaded, does not consume the identity file's line budget |
+| `spawn-specs/` (layer 2) | ✅ at spawn time | Sub-task context contract |
+| `millforge-core` skill | ⚪ optional (off by default) | Injecting it next to a TeamHarness-bundled core duplicates the source of truth; enable only when the reference docs are needed |
+
+What the runtime can enforce is enforced by TeamHarness code instead of injected text; the deterministic `core/scripts/` ship with the pack (they are not injected into role workspaces). The module version pin (`requires.millforge`) lives in the TeamHarness plugin manifest.
+
 ## 3. filesync Sync Layer (CAP-STORE T2 Execution Detail)
 
 - Container workspace ↔ MinIO/RustFS sync = push_loop (async) + startup mirror_all.

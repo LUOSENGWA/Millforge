@@ -18,6 +18,17 @@
 - `core/schemas/README(.en).md`：11 份 schema ↔ 协议条款 ↔ 写者读者 ↔ 实例 的映射表。
 - **双语完整性门（本地）**：`core/scripts/check-bilingual.py` + `make bilingual`（已并入 `make test`）——每个 `X.md` 必须有 `X.en.md`，反之亦然；`docs/provenance/`（逐字会话记录）与 `golden-tests/`（编译产物）为文档化例外。该门原由 CI 承担，CI 移除后在本地恢复。
 
+### 新增
+
+- **beta 分发镜像（releases/）**：`releases/` 目录承载模块产物（`teamharness` / `agentteams-matrix` / `looprunner`）+ `channels.json` 通道索引（模块 → 版本 → artifact/sha256/requires/commit/deprecated）。产物作为**仓库内容**提交，GitHub 与 GitCode 用同一套 raw 路径即可拉取（GitCode 无 release 镜像能力）。
+- **协议 pack（`make pack`）**：确定性打包 `compiler/`、`core/`、`templates/`、`bindings/` 等为 `dist/millforge-pack-<VERSION>.tar.gz`，产 `sha256sums.txt` + `pack-manifest.json`（version/commit/文件数/11 份 schema 摘要）；供 TH 的 `requires.millforge` pin。
+- **本地同步工具**：`tools/sync-beta.sh` / `tools/sync_beta.py`（从 fork 的公开 release 下载 → sha256 → 更新 `channels.json`，幂等、不自动 push）；`tools/make-pack-manifest.py`。本仓不使用 GitHub Actions。
+
+### 变更
+
+- `core/schemas/signal_event.schema.json`：`source_event.origin.enum` 增加 `attention_raised`、`attention_overdue`（既有 `attention_resolved` 不动），供 TeamHarness 的 attention 事件族使用。
+- `bindings/agentteams/deployment-guide(.en).md`：新增「模块时代注入面」小节——SOUL/fragments/spawn-specs 保留，`millforge-core` skill 改为可选参考。
+
 ### 维护
 
 - **T9 冻结基线重冻**：基线自 `535fc74`（roster 绑定 `matrixUserId`、建群必须邀请 accountable）后未同步，`make test` 的 T9 一直红。本次按门规显式重冻并逐文件复核：差异仅为该规则引入的 `protocol/nmh`、`skeleton` 片段哈希与对应正文。
