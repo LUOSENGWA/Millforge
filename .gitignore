@@ -12,3 +12,5 @@ industry-custom.frag.md
 # 编辑器
 .DS_Store
 *.swp
+# local build outputs (make pack)
+dist/

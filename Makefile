@@ -3,7 +3,12 @@
 
 FILE ?= golden-tests/fixtures/bizmarket-team.json
 
-.PHONY: test compile validate deps compliance evidence contract schemas bilingual
+VERSION := $(shell cat VERSION)
+PACK_DIR := dist
+PACK_NAME := millforge-pack-$(VERSION).tar.gz
+PACK_INPUTS := compiler core templates bindings VERSION CHANGELOG.md CHANGELOG.en.md LICENSE README.md README.en.md
+
+.PHONY: test compile validate deps compliance evidence contract schemas bilingual pack
 
 deps:
 	pip install -r requirements.txt
@@ -36,3 +41,13 @@ evidence:
 
 contract:
 	bash golden-tests/scripts/run-contract-tests.sh
+
+# Protocol pack for the pinned `requires.millforge` dependency (see TH plugin manifest).
+# Deterministic: sorted members, fixed mtime/owner, `gzip -n`; the manifest stays outside
+# the tarball so its timestamp cannot break reproducibility.
+pack: schemas bilingual
+	@set -e; mkdir -p $(PACK_DIR); \
+	tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
+	    --exclude='__pycache__' --exclude='*.pyc' \
+	    -cf - $(PACK_INPUTS) | gzip -9n > $(PACK_DIR)/$(PACK_NAME)
+	@python3 tools/make-pack-manifest.py --pack $(PACK_DIR)/$(PACK_NAME) --version $(VERSION) --commit "$$(git rev-parse --short=12 HEAD 2>/dev/null || true)"
