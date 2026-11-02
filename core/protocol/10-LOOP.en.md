@@ -52,6 +52,9 @@ loop_spec = {
 1. DISPATCH: the driver reads loop state from CAP-STATE and constructs this iteration's task spec
    (goal_ref + previous iteration's mismatch evidence ref + constraint deltas),
    dispatched via CAP-SPAWN as a fresh sub-execution unit (X1 hard isolation, no parent-history inheritance)
+   — X1 is a **capability gate**: dispatch this way when the runtime provides CAP-SPAWN with real isolation;
+     a runtime without it cannot host a LOOP binding (same rule as X4), while
+     **ordinary task implementation in the native session is not constrained by this clause** (declare the capability, record the gap).
 2. EXECUTE: the sub-execution unit returns structured results within its X4 bound
    {artifact_refs[], decision_log_ref, self_reported_status}
    — self_reported_status is data, not an acceptance verdict

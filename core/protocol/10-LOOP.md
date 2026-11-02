@@ -52,6 +52,9 @@ loop_spec = {
 1. DISPATCH：driver 从 CAP-STATE 读 loop 状态，构造本迭代 task spec
    （goal_ref + 上迭代 mismatch 证据 ref + 约束增量），
    经 CAP-SPAWN 派发 fresh 子执行单元（X1 硬隔离，不继承父历史）
+   —— X1 是**能力条件**：运行时提供 CAP-SPAWN 且能隔离子单元时按此派发；
+      不提供的运行时不能作为 LOOP 绑定（与 X4 同理），
+      但**普通任务在 native session 内实现不受本条约束**（能力声明 + 缺口记录即可）。
 2. EXECUTE：子执行单元在 X4 时限内返回结构化结果
    {artifact_refs[], decision_log_ref, self_reported_status}
    —— self_reported_status 是数据，不是验收结论

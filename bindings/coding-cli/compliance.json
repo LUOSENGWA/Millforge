@@ -21,7 +21,7 @@
       "id": "X1",
       "scope": "hard-gate",
       "ref": "one-shot CLI design",
-      "note": "no session-isolation primitive; parent must provide"
+      "note": "capability-dependent isolation: when the runtime exposes a spawn/session-isolation primitive, implementation work must run in the spawned unit; this one-shot CLI binding can spawn (CAP-SPAWN) but does not isolate the spawned run from the parent filesystem/environment, so direct execution stays permitted and X1 stays not-enforced as a declared gap (not a violation)"
     },
     {
       "id": "STATE",
