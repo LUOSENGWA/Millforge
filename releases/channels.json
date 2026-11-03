@@ -2,5 +2,12 @@
   "schema": 1,
   "channel": "beta",
   "updated_at": "2026-11-03T00:00:00Z",
-  "modules": {}
+  "modules": {
+    "looprunner": {
+      "kind": "runner",
+      "latest": null,
+      "versions": {},
+      "note": "reserved in 1.2.6; the runner is not shipped with this release"
+    }
+  }
 }

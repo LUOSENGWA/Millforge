@@ -22,6 +22,10 @@
 | `contract_snapshot.schema.json` | `08-CONTRACT.md` (pinning snapshot: `pinned_fingerprint` + `checked_at`) | the executor writes → drift detection reads | — |
 | `handoff.schema.json` | `07-HANDOFF.md` (cross-team handoff: context / key_decisions / tasks_for_receiver) | the upstream team writes → the downstream team reads | — |
 | `loop_spec.schema.json` | `10-LOOP.md` §1 (`iteration_budget` / `convergence_rule` / `re_plan_rule` / `termination_action` / `cross_team_reflow` = §5 cross-team reflow) | a human locks the budget → the Runner reads | — |
+| `looprunner-manifest.schema.json` | design doc `12-Loop Runner 接口预留` (2026-11-03) §2.1 (manifest: `version` / `protocol_version` / `kind` / `entrypoint` / `capabilities` / `requires`) | the upstream release writes it → the installer / client reads it | — |
+| `occurrence.schema.json` | design doc `12-Loop Runner 接口预留` §2.2 (occurrence: the unique record of one deadline; dedupe key = `(loop_id, window_start)`); `10-LOOP.md` | the scheduler (Runner or the built-in ticker) writes → controller / front-end read | — |
+| `iteration.schema.json` | design doc `12-Loop Runner 接口预留` §2.3 (iteration: lease + budget + termination basis; the `10-LOOP.md` five requirements) | the Runner writes → the controller reads | — |
+| `kick.schema.json` | design doc `12-Loop Runner 接口预留` §2.4 (kick: the sole delivery target is the controller; idempotency key = `iteration_id`; `unknown` is never replayed) | the Runner writes → the controller delivers and reads the three delivery states | — |
 
 ## How it is enforced
 
