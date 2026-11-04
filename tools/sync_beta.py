@@ -30,6 +30,10 @@ MODULE_KINDS = {
     "qwen-code-bridge": "plugin",
     "looprunner": "runner",
 }
+# QwenPaw plugin ids that differ from the module id (adapter packages).
+MODULE_PLUGIN_IDS = {
+    "agentteams-matrix": "agentteams-matrix-channel",
+}
 META_FILES = {"sha256sums.txt", "release-manifest.json"}
 KEEP_BETAS = 5
 USER_AGENT = "millforge-sync/1"
@@ -129,6 +133,8 @@ def process_release(repo_root: Path, fork: str, release: dict, dry_run: bool) ->
     module_entry = channel["modules"].setdefault(module, {"latest": version, "versions": {}})
     if "kind" not in module_entry:
         module_entry["kind"] = MODULE_KINDS[module]
+    if "pluginId" not in module_entry and module in MODULE_PLUGIN_IDS:
+        module_entry["pluginId"] = MODULE_PLUGIN_IDS[module]
     module_entry["versions"][version] = {
         "artifacts": sorted(artifacts, key=lambda item: item["name"]),
         "requires": requires,
