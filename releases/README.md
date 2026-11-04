@@ -52,6 +52,7 @@ releases/
 
 - `latest` = 该模块最高版本（beta 通道内）。
 - `kind`（模块级）：`plugin` / `bundle` / `runner`，客户端/工作台据此选择安装路径：`plugin` = `teamharness` / `qwen-code-bridge`，`bundle` = `agentteams-matrix`，`runner` = `looprunner`。Runner 的模块 id 保持 `looprunner`，显示名 **TaskForge**（暂定，2026-11-04）。
+- `pluginId`（可选，模块级）：QwenPaw 内实际安装的 plugin id；缺省 = 模块名。MX 为 `agentteams-matrix-channel`（adapter 安装），**在适配器 zip 落地前不要填**——控制器会对 `kind=bundle` 且 `pluginId==module` 返回 400，避免装错包。
 - 同步脚本按上表为新模块条目自动填 `kind`；已手工设置的 `kind` 不会被覆盖。
 - `deprecated: true`：标记停用但保留文件；客户端不应默认安装。
 - `requires` 来自上游 release 的 `release-manifest.json`；缺失时留空对象并在同步时告警。

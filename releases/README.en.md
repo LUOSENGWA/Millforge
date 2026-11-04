@@ -52,6 +52,7 @@ releases/
 
 - `latest`: highest version per module on this channel.
 - `kind` (module level): `plugin` / `bundle` / `runner` — the client/workbench uses it to pick the install path: `plugin` = `teamharness` / `qwen-code-bridge`, `bundle` = `agentteams-matrix`, `runner` = `looprunner`. The Runner module id stays `looprunner`; its display name is **TaskForge** (tentative, 2026-11-04).
+- `pluginId` (optional, module level): the plugin id QwenPaw actually installs; defaults to the module name. MX uses `agentteams-matrix-channel` (adapter install) — **do not set it before the adapter zip exists**: the controller rejects `kind=bundle` with `pluginId==module` (400) to avoid installing the wrong package.
 - The sync script sets `kind` from this table for new module entries; a hand-set `kind` is never overwritten.
 - `deprecated: true`: kept on disk, must not be installed by default.
 - `requires` comes from the upstream `release-manifest.json`; when missing, the sync script leaves `{}` and warns.
