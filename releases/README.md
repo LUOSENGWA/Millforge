@@ -1,6 +1,6 @@
 # releases/ — beta 分发镜像
 
-本目录是**模块产物的分发镜像**（`teamharness` / `agentteams-matrix` / 之后的 `looprunner`）。
+本目录是**模块产物的分发镜像**（`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`）。
 它不是构建目录：产物由上游仓库（AgentTeams 的发布 workflow）构建，本目录只承载**可下载的副本 + 索引**。
 
 > 为什么放仓库内容而不是 GitHub Releases：普通 git 镜像（包括没有 release 镜像能力的 GitCode）只同步仓库内容。放这里，GitHub 与 GitCode 两侧都能用同一套 `raw` URL 拉取。
@@ -18,7 +18,7 @@ releases/
 │       └── release-manifest.json
 ```
 
-- `<module>`：`teamharness` / `agentteams-matrix` / `looprunner`。
+- `<module>`：`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`。
 - `<version>`：beta 为 `<semver>-beta.N`（例如 `0.3.0-beta.2`）。
 - 产物原样保留上游 release 的资产；`sha256sums.txt` 与 `release-manifest.json` 若上游已提供则原样放入，未提供则由同步脚本生成 sha256。
 
@@ -31,6 +31,7 @@ releases/
   "updated_at": "2026-11-03T00:00:00Z",
   "modules": {
     "teamharness": {
+      "kind": "plugin",
       "latest": "0.3.0-beta.2",
       "versions": {
         "0.3.0-beta.2": {
@@ -50,6 +51,8 @@ releases/
 ```
 
 - `latest` = 该模块最高版本（beta 通道内）。
+- `kind`（模块级）：`plugin` / `bundle` / `runner`，客户端/工作台据此选择安装路径：`plugin` = `teamharness` / `qwen-code-bridge`，`bundle` = `agentteams-matrix`，`runner` = `looprunner`。Runner 的模块 id 保持 `looprunner`，显示名 **TaskForge**（暂定，2026-11-04）。
+- 同步脚本按上表为新模块条目自动填 `kind`；已手工设置的 `kind` 不会被覆盖。
 - `deprecated: true`：标记停用但保留文件；客户端不应默认安装。
 - `requires` 来自上游 release 的 `release-manifest.json`；缺失时留空对象并在同步时告警。
 - 客户端（安装器 / 工作台）只认这份契约；stable 通道用同一 schema，托管在别处（官方仓 / controller 内置 / 对象存储镜像三选一）。

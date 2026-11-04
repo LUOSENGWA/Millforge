@@ -23,7 +23,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 FORK_DEFAULT = "LUOSENGWA/HiClaw"
-TAG_RE = re.compile(r"^(teamharness|agentteams-matrix|looprunner)-v(\d+\.\d+\.\d+-beta\.\d+)$")
+TAG_RE = re.compile(r"^(teamharness|agentteams-matrix|qwen-code-bridge|looprunner)-v(\d+\.\d+\.\d+-beta\.\d+)$")
+MODULE_KINDS = {
+    "teamharness": "plugin",
+    "agentteams-matrix": "bundle",
+    "qwen-code-bridge": "plugin",
+    "looprunner": "runner",
+}
 META_FILES = {"sha256sums.txt", "release-manifest.json"}
 KEEP_BETAS = 5
 USER_AGENT = "millforge-sync/1"
@@ -121,6 +127,8 @@ def process_release(repo_root: Path, fork: str, release: dict, dry_run: bool) ->
     before = channel_path.read_text(encoding="utf-8")
     channel = json.loads(before)
     module_entry = channel["modules"].setdefault(module, {"latest": version, "versions": {}})
+    if "kind" not in module_entry:
+        module_entry["kind"] = MODULE_KINDS[module]
     module_entry["versions"][version] = {
         "artifacts": sorted(artifacts, key=lambda item: item["name"]),
         "requires": requires,

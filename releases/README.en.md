@@ -1,6 +1,6 @@
 # releases/ — beta distribution mirror
 
-This directory mirrors **module artifacts** (`teamharness`, `agentteams-matrix`, and later `looprunner`).
+This directory mirrors **module artifacts** (`teamharness`, `agentteams-matrix`, `qwen-code-bridge`, `looprunner`).
 It is not a build directory: artifacts are produced by the upstream release workflow (AgentTeams); this directory only carries **downloadable copies plus the index**.
 
 > Why repository content instead of GitHub Releases: plain git mirrors (including GitCode, which has no release mirroring) only sync repository content. Keeping the artifacts here means GitHub and GitCode both serve them through the same `raw` URLs.
@@ -18,7 +18,7 @@ releases/
 │       └── release-manifest.json
 ```
 
-- `<module>`: `teamharness` / `agentteams-matrix` / `looprunner`.
+- `<module>`: `teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`.
 - `<version>`: betas are `<semver>-beta.N` (e.g. `0.3.0-beta.2`).
 - Artifacts are copied verbatim from the upstream release. When `sha256sums.txt` / `release-manifest.json` are provided upstream they are copied as-is; otherwise the sync script generates the checksums.
 
@@ -31,6 +31,7 @@ releases/
   "updated_at": "2026-11-03T00:00:00Z",
   "modules": {
     "teamharness": {
+      "kind": "plugin",
       "latest": "0.3.0-beta.2",
       "versions": {
         "0.3.0-beta.2": {
@@ -50,6 +51,8 @@ releases/
 ```
 
 - `latest`: highest version per module on this channel.
+- `kind` (module level): `plugin` / `bundle` / `runner` — the client/workbench uses it to pick the install path: `plugin` = `teamharness` / `qwen-code-bridge`, `bundle` = `agentteams-matrix`, `runner` = `looprunner`. The Runner module id stays `looprunner`; its display name is **TaskForge** (tentative, 2026-11-04).
+- The sync script sets `kind` from this table for new module entries; a hand-set `kind` is never overwritten.
 - `deprecated: true`: kept on disk, must not be installed by default.
 - `requires` comes from the upstream `release-manifest.json`; when missing, the sync script leaves `{}` and warns.
 - Clients (installer / workbench) consume only this contract. The stable channel uses the same schema and is hosted elsewhere (official repo / controller default / object-storage mirror — one of the three, configurable).
