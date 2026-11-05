@@ -1,6 +1,8 @@
 # releases/ — beta 分发镜像
 
 本目录是**模块产物的分发镜像**（`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`）。
+
+**当前 beta 暂存（2026-11-04）**：`teamharness` 0.1.0（`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`）与 `agentteams-matrix` 0.1.0（`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`）；`channels.json` 已写入 `pluginId=agentteams-matrix-channel`。
 它不是构建目录：产物由上游仓库（AgentTeams 的发布 workflow）构建，本目录只承载**可下载的副本 + 索引**。
 
 > 为什么放仓库内容而不是 GitHub Releases：普通 git 镜像（包括没有 release 镜像能力的 GitCode）只同步仓库内容。放这里，GitHub 与 GitCode 两侧都能用同一套 `raw` URL 拉取。
