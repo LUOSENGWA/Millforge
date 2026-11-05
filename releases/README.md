@@ -93,3 +93,43 @@ releases/
 ## 脚本
 
 `tools/sync_beta.py` 是 **beta-only 的旧助手**（只处理 `-beta.N`，写 `releases/beta/channels.json`），不属于运行时/自动更新流程；alpha/stable 不要依赖它。本仓库不使用 GitHub Actions 自动同步。
+
+## 下载与安装：0.1.1-alpha.1（alpha 通道）
+
+**这版 alpha 的目的**：上游 1.2.6 的发布窗口内合不完所有 TH-*/MX-* PR，所以把已验收的成果先按 alpha 发到这里——维护者和用户**不必等上游合并**，直接从本仓下载安装即可。
+
+### 1. 选件
+
+| 装什么 | 下载路径（`releases/<module>/0.1.1-alpha.1/`） |
+|---|---|
+| TeamHarness 整包 | `teamharness.tar.gz`（含 `scripts/install.sh`、`mcp/`、`contracts/`、各运行时适配器） |
+| TeamHarness 单插件包（QwenPaw） | `teamharness-qwenpaw-0.1.1-alpha.1.zip` |
+| AgentTeams Matrix 整包 | `agentteams-matrix.tar.gz`（含 `scripts/install.sh`、`core/`、`contracts`、三适配器） |
+| AgentTeams Matrix 单插件包（QwenPaw channel） | `agentteams-matrix-channel-0.1.1-alpha.1.zip` |
+
+### 2. 校验
+
+`sha256sums.txt` 列出该版本**全部**产物；只下载其中一个时，按行校验：
+
+```bash
+grep ' teamharness.tar.gz$' sha256sums.txt | sha256sum -c
+```
+
+### 3. 安装（QwenPaw 为例）
+
+```bash
+tar xzf teamharness.tar.gz
+QWENPAW_WORKING_DIR="${QWENPAW_WORKING_DIR:-$HOME/.qwenpaw}" bash scripts/install.sh --adapter qwenpaw
+# agentteams-matrix 同理：tar xzf agentteams-matrix.tar.gz && bash scripts/install.sh --adapter qwenpaw
+```
+
+重跑安装是幂等的（按内容哈希只改变化文件）；卸载用同目录 `scripts/uninstall.sh`。
+
+### 4. 自动更新路径（集群内 worker）
+
+后端 module-update 读 `releases/<channel>/channels.json`：`agentteams-matrix` 条目带 `kind=bundle` + `pluginId=agentteams-matrix-channel`，版本条目含 `artifacts`（name/sha256）、`requires`、`commit`、`published_at`、`deprecated`。
+
+### 5. 已知限制
+
+- alpha 是预发布：不建 GitHub Release，只提交索引与产物；`latest` 指本通道内最高版本。
+- `release-manifest.commit` 记录构建所用源码提交。本轮 AT 源码按发布策略不推上游，**外部核对以 sha256 为准**（同一 sha256 在 GitHub/GitCode 两个源出现即视为同一件）。
