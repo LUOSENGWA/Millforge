@@ -17,11 +17,15 @@
           "artifacts": [
             {
               "name": "teamharness-qwenpaw-0.1.1-alpha.1.zip",
-              "sha256": "a9861c43c468b25358b9b62496dcb2e1c6935c7c3303e8ee5d4135691572bfed"
+              "sha256": "c6983f6a2f96f5795beb31ccdf9dd78f94cecb645c32538c06bead67c2c65113"
+            },
+            {
+              "name": "teamharness-qwenpaw.zip",
+              "sha256": "c6983f6a2f96f5795beb31ccdf9dd78f94cecb645c32538c06bead67c2c65113"
             },
             {
               "name": "teamharness.tar.gz",
-              "sha256": "10c4bf80a10a93b8080a4c65ac27e89a52bdd4a008998e7e4cc8d42695dfdfc4"
+              "sha256": "4c4e7ae0ef25212a76278bcc74004129ffbd57dc26a8ae8d24769a40c1ad86d2"
             }
           ],
           "requires": {
@@ -29,7 +33,7 @@
             "contracts": "1",
             "tool_schema": "1"
           },
-          "commit": "9a616ed2d95ac50047a1dd8aac82d6397d262c3d",
+          "commit": "21ae0aa0b",
           "published_at": "2026-11-05T16:45:00Z",
           "deprecated": false
         }
@@ -43,11 +47,11 @@
           "artifacts": [
             {
               "name": "agentteams-matrix-channel-0.1.1-alpha.1.zip",
-              "sha256": "e9ff0bd9b108004861ae4450a03c712a50191763721097f0169279e9daa4aefe"
+              "sha256": "4b55ce8c4ffa26c271af2fefc3de491c520f3f786c42c7bd04a326685a336bef"
             },
             {
               "name": "agentteams-matrix.tar.gz",
-              "sha256": "62ca84641c832b4813eecee07b454aec9c439920ba56c3a94791451a44d523c6"
+              "sha256": "ace2221be71713445e7e7ef41484b76ccfba2ffa4e564916633a53498625400b"
             }
           ],
           "requires": {
@@ -55,7 +59,7 @@
             "contracts": "1",
             "tool_schema": "1"
           },
-          "commit": "9a616ed2d95ac50047a1dd8aac82d6397d262c3d",
+          "commit": "21ae0aa0b",
           "published_at": "2026-11-05T16:45:00Z",
           "deprecated": false
         }
