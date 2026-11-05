@@ -1,0 +1,21 @@
+{
+  "name": "agentteams-matrix",
+  "version": "0.1.0",
+  "commit": "8795080efdd7edcecdce025d83f8994d0600f31f",
+  "files": 37,
+  "artifacts": [
+    {
+      "name": "agentteams-matrix-channel-0.1.0.zip",
+      "sha256": "dd46b308bdd4b3ae80f4b098a4e282855f8736bdefa7c477c2b780aec4d9b44b"
+    },
+    {
+      "name": "agentteams-matrix.tar.gz",
+      "sha256": "35ae107671e27a04120e607387c38e0a5645e8b74fdf0316e60cce6d6ba0d049"
+    }
+  ],
+  "requires": {
+    "agentteams": ">=1.2.6",
+    "contracts": "1",
+    "tool_schema": "1"
+  }
+}
