@@ -1,6 +1,8 @@
 # releases/ — beta distribution mirror
 
 This directory mirrors **module artifacts** (`teamharness`, `agentteams-matrix`, `qwen-code-bridge`, `looprunner`).
+
+**Current beta staging (2026-11-04):** `teamharness` 0.1.0 (`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`) and `agentteams-matrix` 0.1.0 (`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`); `channels.json` records `pluginId=agentteams-matrix-channel`.
 It is not a build directory: artifacts are produced by the upstream release workflow (AgentTeams); this directory only carries **downloadable copies plus the index**.
 
 > Why repository content instead of GitHub Releases: plain git mirrors (including GitCode, which has no release mirroring) only sync repository content. Keeping the artifacts here means GitHub and GitCode both serve them through the same `raw` URLs.
