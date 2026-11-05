@@ -1,6 +1,51 @@
 {
   "schema": 1,
   "channel": "alpha",
-  "updated_at": "2026-11-05T01:25:33Z",
-  "modules": {}
+  "updated_at": "2026-11-05T16:05:00Z",
+  "modules": {
+    "looprunner": {
+      "kind": "runner",
+      "latest": null,
+      "versions": {},
+      "note": "reserved in 1.2.6; the runner is not shipped with this release"
+    },
+    "teamharness": {
+      "kind": "plugin",
+      "latest": "0.1.1-alpha.1",
+      "versions": {
+        "0.1.1-alpha.1": {
+          "artifacts": [
+            {
+              "name": "teamharness-qwenpaw-0.1.1-alpha.1.zip",
+              "sha256": "a2800525fd599d9cf11b36fb71a5f39bf870f2e6da3047248cb5816197bd47a7"
+            },
+            {
+              "name": "teamharness.tar.gz",
+              "sha256": "1c63a85e16b6c5faceb25f1fc58df0eb1f57a6c2f5d54f4839b1fb42235ef475"
+            }
+          ],
+          "manifest": "releases/teamharness/0.1.1-alpha.1/release-manifest.json"
+        }
+      }
+    },
+    "agentteams-matrix": {
+      "kind": "plugin",
+      "latest": "0.1.1-alpha.1",
+      "versions": {
+        "0.1.1-alpha.1": {
+          "artifacts": [
+            {
+              "name": "agentteams-matrix-channel-0.1.1-alpha.1.zip",
+              "sha256": "10d50cd9175be20afdc731341aa8b1f0c1c7c0524b7e58b67d9af2f6f0b46f18"
+            },
+            {
+              "name": "agentteams-matrix.tar.gz",
+              "sha256": "b64b01caabb291b87b0a77324fff856611d7e527008f284ec10e2256865ccf9c"
+            }
+          ],
+          "manifest": "releases/agentteams-matrix/0.1.1-alpha.1/release-manifest.json"
+        }
+      }
+    }
+  }
 }

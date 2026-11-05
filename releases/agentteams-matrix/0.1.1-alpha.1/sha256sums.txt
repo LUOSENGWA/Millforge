@@ -1,0 +1,2 @@
+10d50cd9175be20afdc731341aa8b1f0c1c7c0524b7e58b67d9af2f6f0b46f18  agentteams-matrix-channel-0.1.1-alpha.1.zip
+b64b01caabb291b87b0a77324fff856611d7e527008f284ec10e2256865ccf9c  agentteams-matrix.tar.gz

@@ -1,0 +1,25 @@
+{
+  "name": "teamharness",
+  "version": "0.1.1-alpha.1",
+  "commit": "21feb4c2ea257a82085b7d418df36e8782391987",
+  "files": 75,
+  "artifacts": [
+    {
+      "name": "teamharness-qwenpaw-0.1.1-alpha.1.zip",
+      "sha256": "a2800525fd599d9cf11b36fb71a5f39bf870f2e6da3047248cb5816197bd47a7"
+    },
+    {
+      "name": "teamharness-qwenpaw.zip",
+      "sha256": "a2800525fd599d9cf11b36fb71a5f39bf870f2e6da3047248cb5816197bd47a7"
+    },
+    {
+      "name": "teamharness.tar.gz",
+      "sha256": "1c63a85e16b6c5faceb25f1fc58df0eb1f57a6c2f5d54f4839b1fb42235ef475"
+    }
+  ],
+  "requires": {
+    "agentteams": ">=1.2.6",
+    "contracts": "1",
+    "tool_schema": "1"
+  }
+}
