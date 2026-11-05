@@ -2,7 +2,7 @@
 """Sync beta module artifacts from the fork's GitHub releases into `releases/`.
 
 Reads only the public releases API (no token), copies the release assets into
-`releases/<module>/<version>/`, computes sha256 and updates `releases/channels.json`.
+`releases/<module>/<version>/`, computes sha256 and updates `releases/beta/channels.json`.
 Never pushes. See `releases/README.md` for the layout and contract.
 
 Usage:
@@ -127,7 +127,7 @@ def process_release(repo_root: Path, fork: str, release: dict, dry_run: bool) ->
         except json.JSONDecodeError:
             print(f"  warn: invalid release-manifest.json for {release['tag_name']}")
 
-    channel_path = repo_root / "releases" / "channels.json"
+    channel_path = repo_root / "releases" / "beta" / "channels.json"
     before = channel_path.read_text(encoding="utf-8")
     channel = json.loads(before)
     module_entry = channel["modules"].setdefault(module, {"latest": version, "versions": {}})

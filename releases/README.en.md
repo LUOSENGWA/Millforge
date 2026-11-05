@@ -1,17 +1,20 @@
-# releases/ — beta distribution mirror
+# releases/ — module distribution mirror (alpha / beta / stable)
 
-This directory mirrors **module artifacts** (`teamharness`, `agentteams-matrix`, `qwen-code-bridge`, `looprunner`).
+This directory mirrors **module artifacts** (`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`).
 
-**Current beta staging (2026-11-04):** `teamharness` 0.1.0 (`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`) and `agentteams-matrix` 0.1.0 (`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`); `channels.json` records `pluginId=agentteams-matrix-channel`.
-It is not a build directory: artifacts are produced by the upstream release workflow (AgentTeams); this directory only carries **downloadable copies plus the index**.
+**Current beta staging (2026-11-04):** `teamharness` 0.1.0 (`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`) and `agentteams-matrix` 0.1.0 (`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`); the entries live in `releases/beta/channels.json` and record `pluginId=agentteams-matrix-channel`.
 
-> Why repository content instead of GitHub Releases: plain git mirrors (including GitCode, which has no release mirroring) only sync repository content. Keeping the artifacts here means GitHub and GitCode both serve them through the same `raw` URLs.
+It is not a build directory: artifacts are built by the upstream repository (AgentTeams release workflow); this directory only carries downloadable copies and indexes. **There is no automatic sync**; indexes are committed by the release/manual process, and the front-end checks updates per selected channel.
+
+> Why repository content instead of GitHub Releases only: ordinary git mirrors (including GitCode, which does not mirror releases) sync repository content. Keeping artifacts here gives GitHub and GitCode the same `raw` URLs.
 
 ## Layout
 
 ```
 releases/
-├── channels.json            # channel index (single entry point)
+├── alpha/channels.json       # alpha channel index
+├── beta/channels.json        # beta channel index
+├── stable/channels.json      # stable channel index
 ├── <module>/
 │   └── <version>/
 │       ├── <module>-<version>.tar.gz
@@ -21,10 +24,13 @@ releases/
 ```
 
 - `<module>`: `teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`.
-- `<version>`: betas are `<semver>-beta.N` (e.g. `0.3.0-beta.2`).
-- Artifacts are copied verbatim from the upstream release. When `sha256sums.txt` / `release-manifest.json` are provided upstream they are copied as-is; otherwise the sync script generates the checksums.
+- `<version>`: alpha = `<semver>-alpha.N`, beta = `<semver>-beta.N`, stable = `<semver>`.
+- **The channel selects the index file only; artifact paths are always `releases/<module>/<version>/<artifact>`**.
+- Keep old version directories; rollback reinstalls an older version.
 
 ## channels.json
+
+One index per channel; the `channel` field must match the directory.
 
 ```json
 {
@@ -34,15 +40,15 @@ releases/
   "modules": {
     "teamharness": {
       "kind": "plugin",
-      "latest": "0.3.0-beta.2",
+      "latest": "0.1.0",
       "versions": {
-        "0.3.0-beta.2": {
+        "0.1.0": {
           "artifacts": [
-            {"name": "teamharness-0.3.0-beta.2.tar.gz", "sha256": "…"},
-            {"name": "teamharness-0.3.0-beta.2-qwenpaw.zip", "sha256": "…"}
+            {"name": "teamharness-qwenpaw-0.1.0.zip", "sha256": "…"},
+            {"name": "teamharness.tar.gz", "sha256": "…"}
           ],
-          "requires": {"agentteams": ">=1.2.6", "contracts": "1", "tool_schema": "1", "millforge": "1.1.0"},
-          "commit": "abc123def456",
+          "requires": {"agentteams": ">=1.2.6", "contracts": "1", "tool_schema": "1"},
+          "commit": "…",
           "published_at": "2026-11-03T00:00:00Z",
           "deprecated": false
         }
@@ -52,27 +58,36 @@ releases/
 }
 ```
 
-- `latest`: highest version per module on this channel.
-- `kind` (module level): `plugin` / `bundle` / `runner` — the client/workbench uses it to pick the install path: `plugin` = `teamharness` / `qwen-code-bridge`, `bundle` = `agentteams-matrix`, `runner` = `looprunner`. The Runner module id stays `looprunner`; its display name is **TaskForge** (tentative, 2026-11-04).
-- `pluginId` (optional, module level): the plugin id QwenPaw actually installs; defaults to the module name. MX uses `agentteams-matrix-channel` (adapter install). **The current 0.1.0 entry sets `pluginId=agentteams-matrix-channel`**; the controller rejects `kind=bundle` with `pluginId==module` (400) to avoid installing the wrong package.
-- The sync script sets `kind` from this table for new module entries; a hand-set `kind` is never overwritten.
-- `deprecated: true`: kept on disk, must not be installed by default.
-- `requires` comes from the upstream `release-manifest.json`; when missing, the sync script leaves `{}` and warns.
-- Clients (installer / workbench) consume only this contract. The stable channel uses the same schema and is hosted elsewhere (official repo / controller default / object-storage mirror — one of the three, configurable).
+- `latest` is the highest version in that channel; older versions remain selectable.
+- `kind`: `plugin` / `bundle` / `runner`; `plugin` = `teamharness` / `qwen-code-bridge`, `bundle` = `agentteams-matrix`, `runner` = `looprunner` (not shipped in 1.2.6).
+- `pluginId`: the plugin id QwenPaw actually installs; defaults to the module name. MX uses `agentteams-matrix-channel`.
+- `deprecated: true`: keep the files but do not offer the version by default.
+- Clients read the selected channel index; the controller fetches `releases/<channel>/channels.json`.
+
+## Channel rules
+
+| channel | tag | GitHub Release | Index / artifacts |
+|---|---|---|---|
+| alpha | `<module>-v<semver>-alpha.N` | no Release | commit `releases/alpha/channels.json` + artifacts |
+| beta | `<module>-v<semver>-beta.N` | prerelease (optional, for records/manual pickup) | copy to `releases/beta/channels.json` + artifacts |
+| stable | `<module>-v<semver>` | release (optional) | copy to `releases/stable/channels.json` + artifacts |
+
+**No automatic sync**: beta/stable Releases are not a client dependency and do not write this repo automatically; the index and artifacts must be committed explicitly. Alpha does not create a Release.
 
 ## Adding a version
 
-1. Upstream tags `<module>-v<semver>-beta.N` (prerelease).
-2. Run `tools/sync-beta.sh <tag>` from the repository root (or `tools/sync-beta.sh` to sync the five most recent betas).
-3. Review `git diff releases/` and commit (`chore(releases): sync beta artifacts from <tag>`).
-4. Push to GitHub and GitCode (dual push, or let the mirror follow).
+1. Tag and build the upstream artifact for the target channel.
+2. Put the artifact in `releases/<module>/<version>/`.
+3. Update `versions` and `latest` in `releases/<channel>/channels.json`.
+4. Verify sha256, commit, and push to GitHub + GitCode.
+
+**Do not delete old versions**; stable rollback relies on the old directories and `versions` entries.
 
 ## Verification
 
-- `sha256sums.txt` lists **package-relative filenames**: `cd releases/<module>/<version> && sha256sum -c sha256sums.txt`.
-- When the same version appears on both beta and stable, the sha256 must match; clients must refuse to install on a mismatch.
+- `sha256sums.txt` uses package-relative names: `cd releases/<module>/<version> && sha256sum -c sha256sums.txt`.
+- If the same version appears in beta and stable, the sha256 must match; otherwise clients must refuse to install.
 
-## Sync script
+## Scripts
 
-`tools/sync-beta.sh`: reads the public releases API of the fork (`LUOSENGWA/HiClaw`), downloads assets, computes sha256, writes this directory and updates `channels.json`; it never pushes.
-This repository does not use GitHub Actions (removed at the maintainer's request in `b192fc5`; all gates run locally through `make test`).
+`tools/sync_beta.py` is a **legacy beta-only helper** (handles `-beta.N` and writes `releases/beta/channels.json`); it is not part of the runtime/auto-update flow. Do not use it for alpha/stable. This repository does not use GitHub Actions for automatic sync.
