@@ -1,16 +1,16 @@
 {
   "name": "agentteams-matrix",
   "version": "0.1.1-alpha.1",
-  "commit": "8150fa2e318a2e1447771977f7d89929885de61f",
+  "commit": "9a616ed2d95ac50047a1dd8aac82d6397d262c3d",
   "files": 40,
   "artifacts": [
     {
       "name": "agentteams-matrix-channel-0.1.1-alpha.1.zip",
-      "sha256": "138df7ec95469a37f93e9d4f5fb8734a39f7097d317cd038e215362bb3c40598"
+      "sha256": "e9ff0bd9b108004861ae4450a03c712a50191763721097f0169279e9daa4aefe"
     },
     {
       "name": "agentteams-matrix.tar.gz",
-      "sha256": "d59a926bd9faa8e24dc5a2ebf8f77d629372d69df35d474cc55a22a5e933f75c"
+      "sha256": "62ca84641c832b4813eecee07b454aec9c439920ba56c3a94791451a44d523c6"
     }
   ],
   "requires": {

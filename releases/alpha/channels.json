@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "channel": "alpha",
-  "updated_at": "2026-11-05T16:05:00Z",
+  "updated_at": "2026-11-05T16:45:00Z",
   "modules": {
     "looprunner": {
       "kind": "runner",
@@ -17,35 +17,50 @@
           "artifacts": [
             {
               "name": "teamharness-qwenpaw-0.1.1-alpha.1.zip",
-              "sha256": "116eb3f6b25587a71385cde8e65e8a27573e36b79c4573d054f90cc531696600"
+              "sha256": "a9861c43c468b25358b9b62496dcb2e1c6935c7c3303e8ee5d4135691572bfed"
             },
             {
               "name": "teamharness.tar.gz",
-              "sha256": "24a9ecbef1d1557f907e52d1e38d0f84ff5052a03396c327278a704cdafee20e"
+              "sha256": "10c4bf80a10a93b8080a4c65ac27e89a52bdd4a008998e7e4cc8d42695dfdfc4"
             }
           ],
-          "manifest": "releases/teamharness/0.1.1-alpha.1/release-manifest.json"
+          "requires": {
+            "agentteams": ">=1.2.6",
+            "contracts": "1",
+            "tool_schema": "1"
+          },
+          "commit": "9a616ed2d95ac50047a1dd8aac82d6397d262c3d",
+          "published_at": "2026-11-05T16:45:00Z",
+          "deprecated": false
         }
       }
     },
     "agentteams-matrix": {
-      "kind": "plugin",
+      "kind": "bundle",
       "latest": "0.1.1-alpha.1",
       "versions": {
         "0.1.1-alpha.1": {
           "artifacts": [
             {
               "name": "agentteams-matrix-channel-0.1.1-alpha.1.zip",
-              "sha256": "138df7ec95469a37f93e9d4f5fb8734a39f7097d317cd038e215362bb3c40598"
+              "sha256": "e9ff0bd9b108004861ae4450a03c712a50191763721097f0169279e9daa4aefe"
             },
             {
               "name": "agentteams-matrix.tar.gz",
-              "sha256": "d59a926bd9faa8e24dc5a2ebf8f77d629372d69df35d474cc55a22a5e933f75c"
+              "sha256": "62ca84641c832b4813eecee07b454aec9c439920ba56c3a94791451a44d523c6"
             }
           ],
-          "manifest": "releases/agentteams-matrix/0.1.1-alpha.1/release-manifest.json"
+          "requires": {
+            "agentteams": ">=1.2.6",
+            "contracts": "1",
+            "tool_schema": "1"
+          },
+          "commit": "9a616ed2d95ac50047a1dd8aac82d6397d262c3d",
+          "published_at": "2026-11-05T16:45:00Z",
+          "deprecated": false
         }
-      }
+      },
+      "pluginId": "agentteams-matrix-channel"
     }
   }
 }

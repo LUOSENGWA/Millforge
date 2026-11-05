@@ -4,6 +4,8 @@
 
 **当前 beta 暂存（2026-11-04）**：`teamharness` 0.1.0（`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`）与 `agentteams-matrix` 0.1.0（`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`）；条目在 `releases/beta/channels.json`，已写入 `pluginId=agentteams-matrix-channel`。
 
+**当前 alpha 暂存（2026-11-05）**：`teamharness` 与 `agentteams-matrix` 均为 `0.1.1-alpha.1`（`teamharness-qwenpaw-0.1.1-alpha.1.zip` / `teamharness.tar.gz`；`agentteams-matrix-channel-0.1.1-alpha.1.zip` / `agentteams-matrix.tar.gz`），条目在 `releases/alpha/channels.json`（`kind=bundle` + `pluginId=agentteams-matrix-channel`，`requires` / `commit` / `published_at` / `deprecated` 齐备）。
+
 它不是构建目录：产物由上游仓库（AgentTeams 的发布 workflow）构建，本目录只承载**可下载的副本 + 索引**。**不做自动同步**；索引由发布操作/人工提交，前端按 channel 检查更新。
 
 > 为什么放仓库内容而不是只依赖 GitHub Releases：普通 git 镜像（包括没有 release 镜像能力的 GitCode）只同步仓库内容。放这里，GitHub 与 GitCode 两侧都能用同一套 `raw` URL 拉取。
