@@ -40,7 +40,6 @@ releases/taskforge/<version>/
         {"name": "taskforge-0.1.0-linux-arm64.tar.gz", "sha256": "<64hex>"},
         {"name": "taskforge-0.1.0.manifest.json", "sha256": "<64hex>"}
       ],
-      "image": {"repository": "ghcr.io/luosengwa/taskforge", "digest": "sha256:<64hex>"},
       "protocol_version": "1",
       "commit": "<40hex>",
       "published_at": "2026-11-08T00:00:00Z",
