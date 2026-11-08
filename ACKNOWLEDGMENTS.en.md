@@ -35,7 +35,6 @@ Inheritance points mapped one by one (originals archived at [`docs/provenance/gr
 
 - **The 12 principles of distributed systems**: the methodology stress-test framework applied after every Millforge architecture decision (its principle dimensions are referenced; its text is not copied).
 - **Multi-round adversarial review by an external strong model**: the review method for protocol layer v1.0 — each round an external strong model adversarially reviews the draft, and every gap is either adopted or recorded with reasons. This is Millforge's **review process** (a process contribution), not a mechanism lineage.
-- **Internal design lineages (not published with this repository)**: the NMProtocol v3.0 design (Millforge's semantic base, internal), SATCOM (protocol predecessor, internal), and multi-round production incident postmortems (the incident-driven provenance of each mechanism, referenced by internal incident numbers in the "ruling" sections of the protocol documents). This content has been **anonymized and generalized** into the protocol layer (generic-terminology discipline); the originals are not shipped with the open-source package.
 
 ## 4. Third-Party Software Dependencies
 

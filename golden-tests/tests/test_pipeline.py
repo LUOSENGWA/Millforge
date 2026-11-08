@@ -295,14 +295,14 @@ def test_all_registered_worker_domains_usable(tmp_path):
 
 
 def test_en_lang_uses_twin_templates(tmp_path):
-    doc = _doc("bizmarket-team")
+    doc = _doc("example-team")
     r = _run(doc, str(tmp_path), cli_lang="en")
     assert r["ok"] is True
     twin = (ROOT / "templates" / "fragments" / "nmh.en.md").read_text(encoding="utf-8")
     assert r["fragment_artifacts"]["fragments/protocol-nmh.md"].rstrip() == twin.rstrip()
     zh = (ROOT / "templates" / "fragments" / "nmh.md").read_text(encoding="utf-8")
     assert r["fragment_artifacts"]["fragments/protocol-nmh.md"] != zh.rstrip()
-    assert "DO NOT HAND-EDIT" in r["artifacts"]["bizmarket-lead.soul.md"]
+    assert "DO NOT HAND-EDIT" in r["artifacts"]["example-team-lead.soul.md"]
 
 
 # ── CLI 冒烟（subprocess 承载；等价 run-compile-tests.sh T1–T9）──
@@ -339,7 +339,7 @@ def _compile_fixture(name, outdir):
 def test_cli_deterministic_line_budget_provenance_pointers_baseline(tmp_path):
     """T1 确定性 + T2 行硬门 + T3 零残留 + T4 provenance + T5 指针 + T9 基线。"""
     a, b, c = tmp_path / "a", tmp_path / "b", tmp_path / "c"
-    for name, out in (("example-biz-team", a), ("example-biz-team", b), ("bizmarket-team", c)):
+    for name, out in (("example-biz-team", a), ("example-biz-team", b), ("example-team", c)):
         r = _compile_fixture(name, out)
         assert r.returncode == 0, f"{name}: rc={r.returncode} err={r.stderr} out={r.stdout}"
 
@@ -349,7 +349,7 @@ def test_cli_deterministic_line_budget_provenance_pointers_baseline(tmp_path):
         assert _strip_timestamp(x.read_text(encoding="utf-8")) == _strip_timestamp(y.read_text(encoding="utf-8"))
 
     # T2 行硬门（文件行数 ≤ 角色预算）
-    for name, out in (("example-biz-team", a), ("bizmarket-team", c)):
+    for name, out in (("example-biz-team", a), ("example-team", c)):
         doc = _doc(name)
         budget_of = {role["id"]: role["budget"] for role in doc["roles"]}
         for f in out.glob("*.soul.md"):
@@ -375,7 +375,7 @@ def test_cli_deterministic_line_budget_provenance_pointers_baseline(tmp_path):
                 assert (out / m.group(1)).is_file(), f"pointer gap {m.group(1)} in {f.name}"
 
     # T9 冻结基线 diff（忽略 compiled: 时间戳行）
-    for name, out in (("example-biz-team", a), ("bizmarket-team", c)):
+    for name, out in (("example-biz-team", a), ("example-team", c)):
         base_dir = BASE / name
         for f in sorted(base_dir.glob("*.soul.md")):
             src = out / f.name
@@ -396,8 +396,8 @@ def test_cli_over_budget_exit4_zero_output(tmp_path):
 def test_cli_lang_en_scrub(tmp_path):
     """T8: zh + en 编译产物无生产专名（完整 SCRUB_WORDS 词表）。"""
     a, aen = tmp_path / "a-zh", tmp_path / "a-en"
-    assert _cli("compile", str(FIX / "bizmarket-team.json"), "--out", str(a)).returncode == 0
-    r = _cli("compile", str(FIX / "bizmarket-team.json"), "--out", str(aen), "--lang", "en")
+    assert _cli("compile", str(FIX / "example-team.json"), "--out", str(a)).returncode == 0
+    r = _cli("compile", str(FIX / "example-team.json"), "--out", str(aen), "--lang", "en")
     assert r.returncode == 0, r.stderr
     for out in (a, aen):
         for f in out.glob("*.soul.md"):

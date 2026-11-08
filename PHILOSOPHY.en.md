@@ -84,7 +84,7 @@ The core layer admits only **capability numbers (CAP-STATE/CAP-STORE/CAP-NOTIFYâ
 
 - a binding = the adaptation doc for "how a CAP-* capability is implemented on your runtime" + known issues + deployment steps
 - changing runtime = changing binding; zero protocol-layer change
-- the open-source baseline therefore **carries no deployment environment names / human identifiers / internal incident numbers** (scrub vocabulary CI gate)
+- the open-source baseline therefore **carries no deployment environment names / human identifiers / legacy rule numbers** (scrub vocabulary CI gate)
 
 ## 9. Determinism: the Compiler Is the Last Line of Defense
 

@@ -66,7 +66,7 @@ millforge/
 pip install -r requirements.txt   # 或 make deps；随后 make test 跑全部门
 
 # 1. 写团队实例（或从 golden-tests/fixtures/ 的参考实例改起：
-#    example-biz-team.json = single_user，bizmarket-team.json = multi_user）
+#    example-biz-team.json = single_user，example-team.json = multi_user）
 cat > my-team.json <<'EOF'
 { "name": "my-team", "mode": "multi_user", "lang": "zh",
   "template": "software",
@@ -142,9 +142,6 @@ tools/deploy.sh list --module teamharness --limit 5
 
 `PHILOSOPHY.md` 是千锻设计哲学全文——**复制全文 + 描述你的团队情况，喂任意 LLM，可生成你的 `team.json` 或自定义行业模板**（模板库覆盖不到时的第二兜底通道）。
 
-## 贡献
-
-**暂未开放**（仓库处于协议稳定期）。协议层稳定后开启贡献流程；届时：协议层变更走完整审查流程，模板层按 source 三级纪律（production/reference/llm）。
 
 ## 致谢
 

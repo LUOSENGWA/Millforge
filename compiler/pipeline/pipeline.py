@@ -47,8 +47,8 @@ TIER_CAPS = {"S": 8000, "M": 10000, "L": 12000}
 SCRUB_WORDS = [
     "spawn_subagent", "QwenPaw", "qwenpaw", "TeamHarness", "teamharness",
     "Matrix", "matrix-commander", "MinIO", "minio", "RustFS", "rustfs",
-    "hiclaw", "HiClaw", "copaw", "Copaw", "SGLang",
-    "QwenPaw 2", "qwenpaw_worker", "agentteams-", "hiclaw-worker",
+    "copaw", "Copaw", "SGLang",
+    "QwenPaw 2", "qwenpaw_worker", "agentteams-",
 ]
 # 部署环境敏感词（各部署方在本地副本追加自己的主机名/存储名/人类 MXID localpart；
 # 开源基线不携带任何具体环境名）。格式示例（勿直接启用）：

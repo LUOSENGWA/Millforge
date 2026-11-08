@@ -42,7 +42,7 @@ docs/                general documentation + provenance/ (verbatim source record
 
 **A team with hand-written SOULs is not rewritten from scratch** — it is replaced in three phases:
 
-1. **Shadow**: write a `team.json` for the current team (start from the two reference instances in `golden-tests/fixtures/`: `example-biz-team.json` = single_user / `bizmarket-team.json` = multi_user), compile once, and diff against the existing SOULs (audit: which current-protocol clauses the new protocol does not cover).
+1. **Shadow**: write a `team.json` for the current team (start from the two reference instances in `golden-tests/fixtures/`: `example-biz-team.json` = single_user / `example-team.json` = multi_user), compile once, and diff against the existing SOULs (audit: which current-protocol clauses the new protocol does not cover).
 2. **Parallel**: enable the newly compiled SOULs on part of the roles (new tasks on the new protocol, existing tasks on the old one).
 3. **Cut**: switch over fully and archive the old SOULs.
 

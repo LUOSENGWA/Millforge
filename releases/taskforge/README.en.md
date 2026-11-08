@@ -77,6 +77,3 @@ cd releases/taskforge/<version>
 sha256sum -c sha256sums.txt
 ```
 
-## Support
-
-Report install, upgrade, or compatibility issues in this repository's issue tracker, including the version, platform, `manifest.json`, and error logs.

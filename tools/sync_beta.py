@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import json
 import re
 import sys
@@ -22,7 +23,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-FORK_DEFAULT = "LUOSENGWA/HiClaw"
+FORK_DEFAULT = os.environ.get("MILLFORGE_FORK", "")
 TAG_RE = re.compile(r"^(teamharness|agentteams-matrix|qwen-code-bridge|taskforge)-v(\d+\.\d+\.\d+-beta\.\d+)$")
 MODULE_KINDS = {
     "teamharness": "plugin",

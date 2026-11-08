@@ -4,11 +4,11 @@
 
 ## 1. Baseline Definition & Gate Semantics
 
-**Production baseline** = the 5 SOULs in `fixtures/production-baseline/` (the bizmarket team, multi_user first-compile baseline; hand-edited v2.0 + subsequent production hot-patches; anonymized copies — placeholder mapping in §5).
+**Production baseline** = the 5 SOULs in `fixtures/production-baseline/` (the example-team team, multi_user first-compile baseline; hand-edited v2.0 + subsequent production hot-patches; anonymized copies — placeholder mapping in §5).
 
-**Gate semantics (important)**: the diff target of the golden gate is the **frozen compiled baseline** (the `baseline/` directory — deterministic compiler output for `fixtures/bizmarket-team.json` + `fixtures/example-biz-team.json`), **not** the production baseline source. Why:
+**Gate semantics (important)**: the diff target of the golden gate is the **frozen compiled baseline** (the `baseline/` directory — deterministic compiler output for `fixtures/example-team.json` + `fixtures/example-biz-team.json`), **not** the production baseline source. Why:
 
-- the production SOULs are from the **previous protocol generation** (hand-edited in the SATCOM v1.0 / NMProtocol v3.0 era + production-incident hot-patches), while the compiler implements **protocol layer v1.0** (frozen after eight review rounds).
+- the production SOULs are from the **previous protocol generation** (hand-edited in the legacy protocol v1.0 / legacy protocol v3.0 era + production-incident hot-patches), while the compiler implements **protocol layer v1.0** (frozen after eight review rounds).
 - the two generations share the same DNA (triad / dual-channel / declaration-verification binding / permission-wall fuse / context isolation), but terminology and structure have been upgraded (R1-R6 decision classes, X4 bounded deadlines, context_refs, decision_log, scorecard).
 - forcing byte-level reproduction would = regressing the compiler to the old protocol, contradicting the frozen v1.0 rulings.
 
@@ -70,17 +70,17 @@
 
 | fixture placeholder | production original category | note |
 |------|------|------|
-| `bizmarket-*` / `bizmarket` | team name + role ID prefix | instance param |
+| `example-team-*` / `example-team` | team name + role ID prefix | instance param |
 | `@human-owner` | human accountable MXID localpart | roster entry |
 | `matrix.example.org` | private Matrix server endpoint | topology |
 | `<gpu-node>` / `<port>` | GPU node name + text-to-image service port | topology |
 | `shared/users/human-owner/` | object-storage human-user path segment | instance param |
 | `{agent_fs_root}` | internal agent filesystem root | topology |
 | `owner` | human accountable's form of address | instance param |
-| `platform-incident C1..C7/P3..P15` | internal incident docket numbers | incident signatures (content kept, numbering de-internalized) |
+| `platform-rule C1..C7/P3..P15` | internal incident docket numbers | incident signatures (content kept, numbering renumbered) |
 | `historical incident` | internal incident date | time desensitization |
 
-Retained (public product names, not instance secrets): QwenPaw / spawn_subagent / Matrix / MinIO / mc / TeamHarness / agentteams-controller:6167 (public product standard service name+port) / SATCOM (protocol predecessor name, provenance citation) / SDXL-turbo (public model) / QwenPaw 2.2 3600s (public product version behavior).
+Retained (public product names, not instance secrets): QwenPaw / spawn_subagent / Matrix / MinIO / mc / TeamHarness / agentteams-controller:6167 (public product standard service name+port) / legacy-protocol (protocol predecessor name, provenance citation) / SDXL-turbo (public model) / QwenPaw 2.2 3600s (public product version behavior).
 
 ## 6. Re-verification Procedure
 

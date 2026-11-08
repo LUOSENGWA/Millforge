@@ -1,7 +1,7 @@
 # Millforge developer shortcuts
 # Requires: python3 + bash; deps via `pip install -r requirements.txt`
 
-FILE ?= golden-tests/fixtures/bizmarket-team.json
+FILE ?= golden-tests/fixtures/example-team.json
 
 VERSION := $(shell cat VERSION)
 PACK_DIR := dist

@@ -4,11 +4,11 @@
 
 ## 1. 基线定义与门语义
 
-**生产基线** = `fixtures/production-baseline/` 5 份 SOUL（bizmarket 团队，multi_user 首编基线，9/6 手编 v2.0 + 后续生产热补丁；占位化副本，占位映射见 §5）。
+**生产基线** = `fixtures/production-baseline/` 5 份 SOUL（example-team 团队，multi_user 首编基线，9/6 手编 v2.0 + 后续生产热补丁；占位化副本，占位映射见 §5）。
 
-**门语义（重要）**：golden gate 的 diff 对象是**冻结的编译基线**（`baseline/` 目录，编译器对 `fixtures/bizmarket-team.json` + `fixtures/example-biz-team.json` 的确定性输出），**不是**生产基线原文。原因：
+**门语义（重要）**：golden gate 的 diff 对象是**冻结的编译基线**（`baseline/` 目录，编译器对 `fixtures/example-team.json` + `fixtures/example-biz-team.json` 的确定性输出），**不是**生产基线原文。原因：
 
-- 生产 SOUL 是**上一代协议**（SATCOM v1.0/NMProtocol v3.0 时代手编 + 生产事故热补丁），编译器实现的是**协议层 v1.0**（千锻 8 轮审查冻结）。
+- 生产 SOUL 是**上一代协议**（legacy protocol v1.0/legacy protocol v3.0 时代手编 + 生产事故热补丁），编译器实现的是**协议层 v1.0**（千锻 8 轮审查冻结）。
 - 两代共享同一 DNA（三要素/双通道/声明-验证绑定/权限墙熔断/上下文隔离），但术语与结构已升级（R1-R6 决策类、X4 有界时限、context_refs、decision_log、scorecard）。
 - 强制字节级复现 = 把编译器退回旧协议，与 v1.0 冻结定案矛盾。
 
@@ -70,17 +70,17 @@
 
 | fixture 占位 | 生产原值类别 | 说明 |
 |------|------|------|
-| `bizmarket-*` / `bizmarket` | 团队名 + 角色 ID 前缀 | 实例参数 |
+| `example-team-*` / `example-team` | 团队名 + 角色 ID 前缀 | 实例参数 |
 | `@human-owner` | 人类责任人 MXID localpart | roster 条目 |
 | `matrix.example.org` | 私有 Matrix 服务端点 | 拓扑 |
 | `<gpu-node>` / `<port>` | GPU 节点名 + 文生图服务端口 | 拓扑 |
 | `shared/users/human-owner/` | MinIO 人类用户路径段 | 实例参数 |
 | `{agent_fs_root}` | 内部 agent 文件系统根 | 拓扑 |
 | `owner` | 人类责任人称呼 | 实例参数 |
-| `platform-incident C1..C7/P3..P15` | 内部事故案卷编号 | 事故签名（内容保留，编号去内部化） |
+| `platform-rule C1..C7/P3..P15` | 内部事故案卷编号 | 事故签名（内容保留，编号去内部化） |
 | `历史事故` | 内部事故日期 | 时间脱敏 |
 
-保留（公开产品名，非实例机密）：QwenPaw / spawn_subagent / Matrix / MinIO / mc / TeamHarness / agentteams-controller:6167（公开产品标准服务名+端口）/ SATCOM（协议前身名，出处标注）/ SDXL-turbo（公开模型）/ QwenPaw 2.2 3600s（公开产品版本行为）。
+保留（公开产品名，非实例机密）：QwenPaw / spawn_subagent / Matrix / MinIO / mc / TeamHarness / agentteams-controller:6167（公开产品标准服务名+端口）/ legacy-protocol（协议前身名，出处标注）/ SDXL-turbo（公开模型）/ QwenPaw 2.2 3600s（公开产品版本行为）。
 
 ## 6. 重验规程
 

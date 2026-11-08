@@ -68,7 +68,7 @@ millforge/
 pip install -r requirements.txt   # or `make deps`; then `make test` for all gates
 
 # 1. write your team instance (or adapt a reference from golden-tests/fixtures/:
-#    example-biz-team.json = single_user, bizmarket-team.json = multi_user)
+#    example-biz-team.json = single_user, example-team.json = multi_user)
 cat > my-team.json <<'EOF'
 { "name": "my-team", "mode": "multi_user", "lang": "zh",
   "template": "software",
@@ -111,7 +111,7 @@ Two install entry points (after deployment): Chinese `… + lang=zh` ｜ English
 | **Frozen baseline (T9)** | template/fragment/compiler change → output diffed against the frozen baseline; any drift requires an explicit re-freeze + human review (zero silent protocol regression) |
 | **Production traceability (T10)** | production baseline (5 SOULs, anonymized) + clause mapping table: every production protocol clause must map to a v1.0 landing point; a missing mapping = protocol content lost in upgrade |
 
-**Scrub discipline**: the core layer admits only CAP-* capability numbers + generic terms; runtime-specific API names (each runtime's subagent/storage/timer mechanisms) live in the binding layer. The open-source baseline carries no deployment environment names, human MXIDs, or internal incident numbers.
+**Scrub discipline**: the core layer admits only CAP-* capability numbers + generic terms; runtime-specific API names (each runtime's subagent/storage/timer mechanisms) live in the binding layer. The open-source baseline carries no deployment environment names, human MXIDs, or legacy rule numbers.
 
 ## Protocol Layer v1.0 (13 Documents)
 
@@ -123,9 +123,6 @@ Core design stance: **verifier ≠ declarer**, **the file is the contract**, **s
 
 `PHILOSOPHY.md` is the full design philosophy — **copy it in full + describe your team's situation, feed it to any LLM, and it can generate your `team.json` or a custom industry template** (the second fallback channel when the template library does not cover your case).
 
-## Contributing
-
-**Not open yet** (the repo is in its protocol stabilization phase). The contribution process will be enabled once the protocol layer stabilizes: protocol-layer changes go through the full review process; template changes follow the three-tier source discipline (production/reference/llm).
 
 ## Acknowledgments
 

@@ -42,7 +42,7 @@ docs/                通用文档 + provenance/（照搬源流原文归档）
 
 **存量手编 SOUL 的团队不是推倒重来**——按三阶段绞杀：
 
-1. **Shadow**：为现团队写一份 `team.json`（可改自 `golden-tests/fixtures/` 的 2 个参考实例：`example-biz-team.json`=single_user / `bizmarket-team.json`=multi_user），编译一遍，与现有 SOUL diff（审计：现协议有哪些条款新协议没覆盖）
+1. **Shadow**：为现团队写一份 `team.json`（可改自 `golden-tests/fixtures/` 的 2 个参考实例：`example-biz-team.json`=single_user / `example-team.json`=multi_user），编译一遍，与现有 SOUL diff（审计：现协议有哪些条款新协议没覆盖）
 2. **Parallel**：新编译的 SOUL 在部分角色启用（新任务走新协议，存量任务走旧）
 3. **Cut**：全量切换，旧 SOUL 归档
 

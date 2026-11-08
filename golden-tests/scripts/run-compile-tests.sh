@@ -87,8 +87,8 @@ if [ $RC -eq 4 ]; then ok "T7 over-budget fails with exit 4 (no truncation)"; el
 if [ -f "$TMP/over/biz-analyst.soul.md" ]; then bad "T7b over-budget file must not be emitted"; else ok "T7b no truncated output emitted"; fi
 
 # T8 scrub 词表（zh + en 双编译产物）
-python3 "$COMPILE" compile "$MF/golden-tests/fixtures/bizmarket-team.json" --out "$TMP/a-en" --lang en >/dev/null 2>&1
-SCRUB_WORDS="spawn_subagent|TeamHarness|MinIO|hiclaw|copaw|SGLang"
+python3 "$COMPILE" compile "$MF/golden-tests/fixtures/example-team.json" --out "$TMP/a-en" --lang en >/dev/null 2>&1
+SCRUB_WORDS="spawn_subagent|TeamHarness|MinIO|copaw|SGLang"
 HITS=$( { grep -lE "$SCRUB_WORDS" "$TMP/a"/*.soul.md 2>/dev/null; grep -lE "$SCRUB_WORDS" "$TMP/a-en"/*.soul.md 2>/dev/null; } | wc -l)
 [ "$HITS" -eq 0 ] && ok "T8 no runtime-specific names in compiled output (zh+en)" || bad "T8 scrub hits"
 
@@ -96,9 +96,9 @@ HITS=$( { grep -lE "$SCRUB_WORDS" "$TMP/a"/*.soul.md 2>/dev/null; grep -lE "$SCR
 # 支持 --freeze-baseline：重编译两 fixture 并刷新 baseline/（须人工审查 diff 后 commit）
 FREEZE=0
 for a in "$@"; do [ "$a" = "--freeze-baseline" ] && FREEZE=1; done
-python3 "$COMPILE" compile "$MF/golden-tests/fixtures/bizmarket-team.json" --out "$TMP/c" >/dev/null 2>&1
+python3 "$COMPILE" compile "$MF/golden-tests/fixtures/example-team.json" --out "$TMP/c" >/dev/null 2>&1
 BD=0
-for pair in "example-biz-team:$TMP/a" "bizmarket-team:$TMP/c"; do
+for pair in "example-biz-team:$TMP/a" "example-team:$TMP/c"; do
   name=${pair%%:*}; outdir=${pair#*:}
   BASE="$MF/golden-tests/baseline/$name"
   if [ $FREEZE -eq 1 ]; then

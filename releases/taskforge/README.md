@@ -79,6 +79,3 @@ cd releases/taskforge/<version>
 sha256sum -c sha256sums.txt
 ```
 
-## 支持
-
-请通过本仓库的 issue 反馈安装、升级或兼容性问题，并附上版本号、平台、`manifest.json` 和错误日志。

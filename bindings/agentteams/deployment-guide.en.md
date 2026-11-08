@@ -76,7 +76,7 @@ After pushing a build to a target (container / workspace / object store), append
 `<state>/deployments.jsonl`:
 
 ```json
-{"ts":"2026-11-02T02:10:00Z","target":"hiclaw-worker-sysdev",
+{"ts":"2026-11-02T02:10:00Z","target":"worker-example",
  "source":{"team":"biz-team","compile_id":"…","git_commit":"…"},
  "files":[{"path":"SOUL.md","sha256":"…","bytes":12345}],
  "operator":"…","result":"ok"}

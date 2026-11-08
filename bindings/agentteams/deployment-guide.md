@@ -74,7 +74,7 @@ TH 运行时内建协议强制作集后（9 态机、signal 契约、loop 预算
 每次把编译产物推到目标（容器 / 工作区 / 对象存储）后，向 `<state>/deployments.jsonl` append 一行 JSON：
 
 ```json
-{"ts":"2026-11-02T02:10:00Z","target":"hiclaw-worker-sysdev",
+{"ts":"2026-11-02T02:10:00Z","target":"worker-example",
  "source":{"team":"biz-team","compile_id":"…","git_commit":"…"},
  "files":[{"path":"SOUL.md","sha256":"…","bytes":12345}],
  "operator":"…","result":"ok"}

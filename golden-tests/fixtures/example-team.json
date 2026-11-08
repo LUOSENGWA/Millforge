@@ -1,5 +1,5 @@
 {
-  "name": "bizmarket",
+  "name": "example-team",
   "mode": "multi_user",
   "template": "business",
   "charter": {
@@ -9,7 +9,7 @@
   },
   "roles": [
     {
-      "id": "bizmarket-lead",
+      "id": "example-team-lead",
       "kind": "leader",
       "profile": "业务+市场专用入口：理解需求→NMH 审讯锁定→建项目群→拆解派发→验收汇总→双通道回报。只拆解派发审查整合，绝不自己实现。",
       "domains": [],
@@ -19,7 +19,7 @@
       "model": null
     },
     {
-      "id": "bizmarket-data-analyst",
+      "id": "example-team-data-analyst",
       "kind": "worker",
       "profile": "可复现数据分析：每个数字带来源；结论+图表+数据支撑落盘，供 writer 消费",
       "domains": ["data-analysis", "data-visualization"],
@@ -29,7 +29,7 @@
       "model": null
     },
     {
-      "id": "bizmarket-writer",
+      "id": "example-team-writer",
       "kind": "worker",
       "profile": "内容与报告撰写：广告文案/公众号/产品介绍/活动方案/短视频脚本/邮件营销/落地页/数据报告；消费 data-analyst 结论，产出喂 market-designer",
       "domains": ["docs-content", "research-reports"],
@@ -39,7 +39,7 @@
       "model": null
     },
     {
-      "id": "bizmarket-market-designer",
+      "id": "example-team-market-designer",
       "kind": "worker",
       "profile": "市场物料设计：海报/PPT/视觉/落地页视觉；消费 writer 文案产出",
       "domains": ["market-research", "data-visualization"],
@@ -49,7 +49,7 @@
       "model": null
     },
     {
-      "id": "bizmarket-critic",
+      "id": "example-team-critic",
       "kind": "critic",
       "profile": "独立审查：校验数字与证据链、验收产出，永不代改；NMA 结构化审查",
       "domains": ["test-qa"],

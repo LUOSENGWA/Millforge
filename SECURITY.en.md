@@ -20,7 +20,7 @@ This repo is **protocol definitions + a compiler** (no network, no LLM, determin
 | Surface | Notes |
 |---|---|
 | Compiler input | malicious `team.json` / template files → path traversal, resource exhaustion (line-budget gate); do not use bypass parameters beyond `--budget-override` on untrusted input |
-| Templates / fragments | third-party template injection (placeholder rendering); contributed templates must pass the golden gates and the sensitive scrub |
+| Templates / fragments | third-party template injection (placeholder rendering); third-party templates must pass the golden gates and the sensitive scrub |
 | Generated artifacts | runtime-specific names inside generated SOUL.md violate the generic-term discipline (not a security bug, but CI will reject it) |
 
 Out of scope: vulnerabilities in downstream runtimes (AgentTeams / QwenPaw / any binding runtime) — report those to the respective project; `bindings/` docs here only describe integration.
