@@ -1,77 +1,103 @@
-# taskforge/ — TaskForge 分发槽位（预留）
+# taskforge/ — TaskForge 模块（独立分发包，未发布）
 
-本目录是 `taskforge` 模块（TaskForge）的**分发槽位**。**当前未发布**：本目录不落地任何产物（1.2.6 不发；TaskForge 属 1.2.7 规划），
-`releases/channels.json` 的 `taskforge` 条目保持占位（`latest: null`、`versions: {}`）。
-Runner 真正发布后，按本文契约在本目录落 `<version>/` 子目录（tar.gz + manifest）并填 `channels.json` 条目；
-客户端按加载序列下载、校验、安装、握手，**不需要改 TH / ATMX / controller 的任何代码**。
+> **状态（2026-11-08）**：TaskForge = 原 LoopRunner；模块 id **`taskforge`**、进程 **`taskforged`**、kind **`runner`**。当前为 **1.2.7 规划占位**，1.2.6 不发布；`releases/channels.json` 的 `taskforge` 条目保持 `latest: null`、`versions: {}`。
+>
+> **不是 QwenPaw 插件**：TaskForge 是 AgentTeams 后面的任务组件，安装走 TaskForge installer / Controller module host（安装面仍待确认）；API 只经 Controller 网关。旧 #1509/#1510 的 standalone runner API 已由 #1508 撤回，不作为本模块安装面。
 
 **English**: [README.en.md](README.en.md)
 
-## 槽位现状（1.2.6 占位）
+## 1. 产物布局
 
-```json
-"taskforge": {
-  "kind": "runner",
-  "latest": null,
-  "versions": {},
-  "note": "reserved in 1.2.6; the runner is not shipped with this release"
-}
+发布时按版本落：
+
+```text
+releases/taskforge/<version>/
+  taskforge-<version>-linux-amd64.tar.gz
+  taskforge-<version>-linux-arm64.tar.gz
+  taskforge-<version>.manifest.json
+  sha256sums.txt
 ```
 
-## 条目契约（channels.json `modules.taskforge`）
+每个 tar 包含：
 
-契约随 1.2.6 冻结，**字段不再变**。发布后条目填成：
+- `taskforged` 二进制（对应平台）；
+- `migrations/`（`work` schema 迁移；版本与 manifest `work_schema` 对齐）；
+- `install.sh` / `update.sh` / `rollback.sh`（或等价 systemd/container 启动模板）；
+- `contracts/`（TaskForge 内部 API/事件契约；不含 TH/MX 插件）。
+
+源码/构建在 AgentTeams 仓（TaskForge 源），**千锻仓只放可下载产物 + channels 索引**；不在本仓复制源码。
+
+## 2. `channels.json` 条目
 
 ```json
 "taskforge": {
   "kind": "runner",
-  "latest": "0.1.0-beta.1",
+  "latest": "0.1.0",
   "versions": {
-    "0.1.0-beta.1": {
+    "0.1.0": {
       "artifacts": [
-        {"name": "taskforge-0.1.0-beta.1.tar.gz", "sha256": "<64hex>"},
-        {"name": "taskforge-0.1.0-beta.1.manifest.json", "sha256": "<64hex>"}
+        {"name": "taskforge-0.1.0-linux-amd64.tar.gz", "sha256": "<64hex>"},
+        {"name": "taskforge-0.1.0-linux-arm64.tar.gz", "sha256": "<64hex>"},
+        {"name": "taskforge-0.1.0.manifest.json", "sha256": "<64hex>"}
       ],
       "image": {"repository": "ghcr.io/luosengwa/taskforge", "digest": "sha256:<64hex>"},
-      "requires": {"agentteams": ">=1.2.6", "contracts": "1", "tool_schema": "1", "millforge": ">=1.1.0"},
       "protocol_version": "1",
+      "requires": {
+        "agentteams": ">=1.2.7",
+        "work_schema": "1",
+        "contracts": "1"
+      },
       "commit": "<40hex>",
-      "published_at": "2026-11-04T00:00:00Z",
+      "published_at": "2026-11-08T00:00:00Z",
       "deprecated": false
     }
   }
 }
 ```
 
-- `kind`：固定 `runner`（区别于 `teamharness` 等模块产物）。
-- `latest`：该模块在通道内的最高版本；未发布时为 `null`。
-- `versions.<v>.artifacts`：可下载产物，逐个带 sha256；**任一不一致即拒绝，不落半态**。
-- `versions.<v>.image`：容器镜像引用（repository + digest），可选。
-- `versions.<v>.requires`：Runner 依赖的版本窗口（`agentteams` / `contracts` / `tool_schema` / `millforge`）。
-- `versions.<v>.protocol_version`：Runner 实现的协议版本，须落在本地 controller/TH 支持的窗口内。
-- `versions.<v>.commit`：产出该发布物的上游 commit（溯源）。
-- `versions.<v>.published_at`：发布时间（ISO8601 UTC）。
-- `versions.<v>.deprecated`：停用标记；保留文件，客户端不应默认安装。
+- `kind` 固定 `runner`（TaskForge 是独立服务，不是 QwenPaw 插件，也不是 TH/MX bundle）。
+- `artifacts` 逐项 sha256；安装器必须全验，失败不落半态。
+- `requires.work_schema` 是 DB 迁移契约；`protocol_version` 是 Controller/TaskForge API 契约；`agentteams` 是网关/认证最低版本。
+- `image` 可选；有 OCI 镜像时安装器优先用 digest，没有则用 tar + install.sh。
 
-## 加载序列
+## 3. 独立更新流程
 
-客户端（安装器 / 工作台）**只认 channels.json**；换托管方不改代码（GitHub raw / GitCode raw 等价）：
+TaskForge 更新**不重建 Controller 镜像**；Controller 只保留通用网关/协议窗口：
 
-```
-1. GET <source>/releases/channels.json          # GitHub raw / GitCode raw
-2. 选 modules.taskforge.versions[<v>]           # channel=beta 需显式；默认 stable
-3. 下载 artifacts[*] → 逐个 sha256 校验（不一致 = 拒绝，不落半态）
-4. 读 manifest → 校验 protocol_version 与本地 controller/TH 支持的窗口
-5. 安装到 <state>/taskforge/<version>/（单写者：同一时刻只允许一个在跑副本）
-6. 启动 → POST /internal/runner/handshake → 握手失败即退出（fail-closed）
-7. 握手成功 → controller 把 Loop 的调度权从内置 ticker 切给 runner（同版本窗口内）
+```text
+1. 读 channels.json → 选 taskforge 版本
+2. 下载 artifacts → 逐个 sha256 校验
+3. 读 manifest → 校验 protocol_version / work_schema / agentteams 窗口
+4. 停旧 taskforged（单写者；先停后起，不并行）
+5. 备份 seekdb work schema（04 的 snapshot_id 同步）
+6. 运行 taskforged migrate（向前兼容；失败则回滚）
+7. 启动新版本 → /healthz /readyz → 校验 DB schema_version
+8. Controller 只切 TASKFORGE_URL / 网关；不重建 Controller
+9. 失败：停新 → 恢复备份 → 启动旧版本；保留旧 tar/DB 备份
 ```
 
-## 失败语义（逐条可测）
+- **单写者**：同一时刻只允许一个 `taskforged` 活跃副本；先停旧再起新，不可双写。
+- **迁移/回滚**：数据库迁移必须向前兼容；降级不保证自动反向迁移，回滚依赖备份。
+- **更新窗口**：TaskForge 不可用期间任务写 API 返回 503；不回退文件写（无 meta.json 双写）。
+- **Controller 协议变化**：只有 `protocol_version` 超窗时才需要升级 Controller；普通 TaskForge 版本升级不需要重建 Controller。
+- **数据/记忆/存储**：TaskForge 只写 `work` schema；不写 memory/resources；artifact bytes 走 04；全量备份需 DB + 对象 `snapshot_id` 对齐。
+
+## 4. 失败语义
 
 | 失败 | 码 | 行为 |
 |:--|:--|:--|
-| sha256 不符 | `artifact_digest_mismatch` | 不安装 |
-| `protocol_version` 不在支持窗口 | `protocol_unsupported` | 不启动 |
-| 握手失败 | `handshake_rejected` | 进程退出，loop 回退到内置降级（内置 ticker） |
-| 两个副本同时启动 | `runner_already_active` | 后到者退出（单写者保证） |
+| sha256 不符 | `artifact_digest_mismatch` | 不安装，不落半态 |
+| protocol/work_schema 不在窗口 | `protocol_unsupported` / `schema_unsupported` | 不启动 |
+| 迁移失败 | `migration_failed` | 保持旧版本/备份，Controller 503 |
+| health/ready 失败 | `taskforge_unhealthy` | 停新，回旧；不切流量 |
+| 两个副本同时启动 | `taskforge_already_active` | 后到者退出（单写者 lease） |
+| 任务 API 不可用 | `taskforge_unavailable` | Controller 返回 503，不回退文件写 |
+
+## 5. 边界
+
+- **DB 唯一后端 seekdb**：生产 `server`；embedded 仅本地/单进程（已确认）；SQLite 不进入 TaskForge 运行后端。
+- **checkpoint 不用 Git**：DB 逻辑快照 + `task_events`；Git 仅可作产物引用。
+- **API 只经 Controller**：TaskForge 内部 API 不暴露公网；TeamHarness/Matrix/Dashboard 都走 Controller 网关。
+- **独立 ≠ 独立 runner API**：TaskForge 独立的是版本/产物/安装/升级/回滚；#1508 已撤回 standalone runner API。
+- **安装面仍待确认**：自带 installer / Controller module host 尚未拍板；本文只定义产物/更新契约。
+- **跨线**：[`13-TaskForge与03-04-11咬合-20261108.md`](../../../../方案与设计/AgentTeams/下版本1.2.6-1.2.7/13-TaskForge与03-04-11咬合-20261108.md)。
