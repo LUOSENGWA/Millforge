@@ -70,7 +70,7 @@
       "kind": "runner",
       "latest": null,
       "versions": {},
-      "note": "TaskForge runner module; no build published yet"
+      "note": "TaskForge runner module; not released yet (planned for 1.2.7)"
     }
   }
 }

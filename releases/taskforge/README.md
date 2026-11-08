@@ -1,6 +1,6 @@
 # taskforge/ — TaskForge 分发槽位（预留）
 
-本目录是 `taskforge` 模块（TaskForge）的**分发槽位**。**1.2.6 不发程序**：本目录不落地任何产物，
+本目录是 `taskforge` 模块（TaskForge）的**分发槽位**。**当前未发布**：本目录不落地任何产物（1.2.6 不发；TaskForge 属 1.2.7 规划），
 `releases/channels.json` 的 `taskforge` 条目保持占位（`latest: null`、`versions: {}`）。
 Runner 真正发布后，按本文契约在本目录落 `<version>/` 子目录（tar.gz + manifest）并填 `channels.json` 条目；
 客户端按加载序列下载、校验、安装、握手，**不需要改 TH / ATMX / controller 的任何代码**。

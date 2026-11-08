@@ -1,7 +1,7 @@
 # taskforge/ — TaskForge distribution slot (reserved)
 
 This directory is the **distribution slot** for the `taskforge` module (the TaskForge).
-**1.2.6 ships no program**: this directory carries no artifacts, and the `taskforge` entry in
+**Not released yet**: this directory carries no artifacts (1.2.6 does not ship it; TaskForge is planned for 1.2.7), and the `taskforge` entry in
 `releases/channels.json` stays a placeholder (`latest: null`, `versions: {}`).
 When the Runner is actually released, this directory gains a `<version>/` subdirectory (tar.gz + manifest)
 and the `channels.json` entry is filled in, per the contract below; clients download, verify, install, and
