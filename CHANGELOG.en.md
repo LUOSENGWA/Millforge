@@ -6,6 +6,8 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 
 ### Changed
 
+- **Runner module renamed directly**: `looprunner` → `taskforge` (`taskforged`, module kind `runner`); channels, schema, sync tooling, golden examples and README all renamed. No runner artifact has been published, so no legacy channel key is kept.
+
 - **X1 becomes a capability gate**: `10-LOOP §2 DISPATCH` and `01-PRIMITIVES` now state that when the runtime provides a spawn/session-isolation primitive, implementation and critics run inside that isolated context; a runtime without it cannot host a LOOP binding (same rule as X4), while ordinary task implementation in the native session is not constrained and the missing isolation is recorded as a declared gap, not a violation.
 - The `bindings/coding-cli/compliance.json` X1 gap note was rewritten accordingly.
 
@@ -20,7 +22,7 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 
 ### Added
 
-- **Beta distribution mirror (`releases/`)**: the directory carries module artifacts (`teamharness` / `agentteams-matrix` / `looprunner`) plus the `channels.json` index (module → version → artifact/sha256/requires/commit/deprecated). Artifacts are committed as repository content so GitHub and GitCode serve them through the same raw URLs (GitCode has no release mirroring).
+- **Beta distribution mirror (`releases/`)**: the directory carries module artifacts (`teamharness` / `agentteams-matrix` / `taskforge`) plus the `channels.json` index (module → version → artifact/sha256/requires/commit/deprecated). Artifacts are committed as repository content so GitHub and GitCode serve them through the same raw URLs (GitCode has no release mirroring).
 - **Protocol pack (`make pack`)**: deterministic packaging of `compiler/`, `core/`, `templates/`, `bindings/` … into `dist/millforge-pack-<VERSION>.tar.gz`, with `sha256sums.txt` and `pack-manifest.json` (version/commit/file count/11 schema digests); this is what TeamHarness pins via `requires.millforge`.
 - **Local sync tooling**: `tools/sync-beta.sh` / `tools/sync_beta.py` (download from the fork's public releases → sha256 → update `channels.json`; idempotent, never pushes) and `tools/make-pack-manifest.py`. This repository does not use GitHub Actions.
 

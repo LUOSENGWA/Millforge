@@ -21,10 +21,10 @@
 | `contract_snapshot.schema.json` | `08-CONTRACT.md`（pinning 快照：`pinned_fingerprint` + `checked_at`） | 执行体写 → 漂移检测读 | — |
 | `handoff.schema.json` | `07-HANDOFF.md`（跨团队交接：context / key_decisions / tasks_for_receiver） | 上游团队写 → 下游团队读 | — |
 | `loop_spec.schema.json` | `10-LOOP.md` §1（`iteration_budget` / `convergence_rule` / `re_plan_rule` / `termination_action` / `cross_team_reflow`＝§5 跨团队回流） | 人锁预算 → Runner 读 | — |
-| `looprunner-manifest.schema.json` | 设计文档 `12-Loop Runner 接口预留`（2026-11-03）§2.1（manifest：`version` / `protocol_version` / `kind` / `entrypoint` / `capabilities` / `requires`） | 上游 release 产出 → 安装器/客户端读 | — |
-| `occurrence.schema.json` | 设计文档 `12-Loop Runner 接口预留` §2.2（发生：一次到期的唯一记录，去重键 = `(loop_id, window_start)`）；`10-LOOP.md` | 调度器（Runner 或内置 ticker）写 → controller/前端读 | — |
-| `iteration.schema.json` | 设计文档 `12-Loop Runner 接口预留` §2.3（迭代：租约 + 预算 + 终止依据；`10-LOOP.md` 五要件） | Runner 写 → controller 读 | — |
-| `kick.schema.json` | 设计文档 `12-Loop Runner 接口预留` §2.4（kick：唯一投递目标 = controller，幂等键 = `iteration_id`，`unknown` 不重放） | Runner 写 → controller 投递并读三态 | — |
+| `taskforge-manifest.schema.json` | 设计文档 `12-TaskForge 接口预留`（2026-11-03）§2.1（manifest：`version` / `protocol_version` / `kind` / `entrypoint` / `capabilities` / `requires`） | 上游 release 产出 → 安装器/客户端读 | — |
+| `occurrence.schema.json` | 设计文档 `12-TaskForge 接口预留` §2.2（发生：一次到期的唯一记录，去重键 = `(loop_id, window_start)`）；`10-LOOP.md` | 调度器（Runner 或内置 ticker）写 → controller/前端读 | — |
+| `iteration.schema.json` | 设计文档 `12-TaskForge 接口预留` §2.3（迭代：租约 + 预算 + 终止依据；`10-LOOP.md` 五要件） | Runner 写 → controller 读 | — |
+| `kick.schema.json` | 设计文档 `12-TaskForge 接口预留` §2.4（kick：唯一投递目标 = controller，幂等键 = `iteration_id`，`unknown` 不重放） | Runner 写 → controller 投递并读三态 | — |
 
 ## 使用方式
 

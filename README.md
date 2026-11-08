@@ -97,7 +97,7 @@ python3 compiler/millforge-compile.py compile my-team.json --out out/my-team
 ```bash
 tools/deploy.sh record --module teamharness --version 0.3.0 --target build-host:/opt/agentteams \
     --operator alice --artifact releases/teamharness/0.3.0/teamharness.tar.gz
-tools/deploy.sh record --module looprunner --version 0.1.0 --action pack --target deploy-host:/opt \
+tools/deploy.sh record --module taskforge --version 0.1.0 --action pack --target deploy-host:/opt \
     --operator alice --sha256 <64hex> --label "pack of commit 0f11cde"
 tools/deploy.sh verify --module teamharness --artifact releases/teamharness/0.3.0/teamharness.tar.gz
 tools/deploy.sh list --module teamharness --limit 5

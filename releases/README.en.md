@@ -1,6 +1,6 @@
 # releases/ — module distribution mirror (alpha / beta / stable)
 
-This directory mirrors **module artifacts** (`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`).
+This directory mirrors **module artifacts** (`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `taskforge`).
 
 **Current beta staging (2026-11-04):** `teamharness` 0.1.0 (`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`) and `agentteams-matrix` 0.1.0 (`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`); the entries live in `releases/beta/channels.json` and record `pluginId=agentteams-matrix-channel`.
 
@@ -23,7 +23,7 @@ releases/
 │       └── release-manifest.json
 ```
 
-- `<module>`: `teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`.
+- `<module>`: `teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `taskforge`.
 - `<version>`: alpha = `<semver>-alpha.N`, beta = `<semver>-beta.N`, stable = `<semver>`.
 - **The channel selects the index file only; artifact paths are always `releases/<module>/<version>/<artifact>`**.
 - Keep old version directories; rollback reinstalls an older version.
@@ -59,7 +59,7 @@ One index per channel; the `channel` field must match the directory.
 ```
 
 - `latest` is the highest version in that channel; older versions remain selectable.
-- `kind`: `plugin` / `bundle` / `runner`; `plugin` = `teamharness` / `qwen-code-bridge`, `bundle` = `agentteams-matrix`, `runner` = `looprunner` (not shipped in 1.2.6).
+- `kind`: `plugin` / `bundle` / `runner`; `plugin` = `teamharness` / `qwen-code-bridge`, `bundle` = `agentteams-matrix`, `runner` = `taskforge` (not shipped in 1.2.6).
 - `pluginId`: the plugin id QwenPaw actually installs; defaults to the module name. MX uses `agentteams-matrix-channel`.
 - `deprecated: true`: keep the files but do not offer the version by default.
 - Clients read the selected channel index; the controller fetches `releases/<channel>/channels.json`.

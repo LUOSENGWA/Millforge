@@ -1,8 +1,8 @@
 # releases/ — 模块分发镜像（alpha / beta / stable）
 
-本目录是**模块产物的分发镜像**（`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`）。
+本目录是**模块产物的分发镜像**（`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `taskforge`）。
 
-**stable 暂存（2026-11-08）**：`teamharness` 与 `agentteams-matrix` 均为 0.1.0，产物来自 AgentTeams main `85e625752`，条目在 `releases/stable/channels.json`。
+**stable 暂存（2026-11-08）**：`teamharness` 与 `agentteams-matrix` 均为 0.1.0，产物来自 AgentTeams **v1.2.6 tag `9301e533e`**（stable 已重建），条目在 `releases/stable/channels.json`。
 
 **当前 beta 暂存（2026-11-08，与 stable 同 sha）**：`teamharness` 0.1.0（`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`）与 `agentteams-matrix` 0.1.0（`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`）；条目在 `releases/beta/channels.json`，已写入 `pluginId=agentteams-matrix-channel`。
 
@@ -29,7 +29,7 @@ releases/
 │       └── release-manifest.json
 ```
 
-- `<module>`：`teamharness` / `agentteams-matrix` / `qwenpaw-qwencode-bridge`（pluginId `qwen-code-bridge`） / `looprunner`。
+- `<module>`：`teamharness` / `agentteams-matrix` / `qwenpaw-qwencode-bridge`（pluginId `qwen-code-bridge`） / `taskforge`。
 - `<version>`：alpha = `<semver>-alpha.N`，beta = `<semver>-beta.N`，stable = `<semver>`。
 - **channel 只决定索引文件；artifact 路径始终是 `releases/<module>/<version>/<artifact>`**。
 - 旧版本目录保留，不删除；回滚靠重新安装旧版本。
@@ -65,7 +65,7 @@ releases/
 ```
 
 - `latest` = 该 channel 内最高版本；旧版本继续保留，安装时可显式指定。
-- `kind`：`plugin` / `bundle` / `runner`；`plugin` = `teamharness` / `qwenpaw-qwencode-bridge`（pluginId `qwen-code-bridge`），`bundle` = `agentteams-matrix`，`runner` = `looprunner`（1.2.6 暂不发布）。
+- `kind`：`plugin` / `bundle` / `runner`；`plugin` = `teamharness` / `qwenpaw-qwencode-bridge`（pluginId `qwen-code-bridge`），`bundle` = `agentteams-matrix`，`runner` = `taskforge`（1.2.6 暂不发布）。
 - `pluginId`：QwenPaw 内实际安装的 plugin id；缺省 = 模块名。MX 为 `agentteams-matrix-channel`。
 - `deprecated: true`：标记停用但保留文件；客户端不应默认安装。
 - 客户端（安装器 / 工作台）只认所选 channel 的这份契约；controller 取 `releases/<channel>/channels.json`。

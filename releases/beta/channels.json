@@ -3,12 +3,6 @@
   "channel": "beta",
   "updated_at": "2026-11-08T01:30:00Z",
   "modules": {
-    "looprunner": {
-      "kind": "runner",
-      "latest": null,
-      "versions": {},
-      "note": "reserved in 1.2.6; the runner is not shipped with this release"
-    },
     "teamharness": {
       "kind": "plugin",
       "latest": "0.1.0",
@@ -71,6 +65,12 @@
       "pluginId": "qwen-code-bridge",
       "latest": null,
       "versions": {}
+    },
+    "taskforge": {
+      "kind": "runner",
+      "latest": null,
+      "versions": {},
+      "note": "TaskForge runner module; no build published yet"
     }
   }
 }

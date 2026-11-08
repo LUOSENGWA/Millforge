@@ -6,6 +6,8 @@
 
 ### 变更
 
+- **Runner 模块直接改名**：`looprunner` → `taskforge`（进程 `taskforged`，module kind `runner`）；`channels.json`、schema、sync 工具、golden 示例、README 全部改名；当前无任何已发布 runner 产物，不保留旧通道键。
+
 - **X1 改为能力条件**：`10-LOOP §2 DISPATCH` 与 `01-PRIMITIVES` 明确——运行时提供 spawn/会话隔离原语时实现与 critic 在该隔离上下文中运行；不提供的运行时不能作为 LOOP 绑定（与 X4 同理），但**普通任务在 native session 内实现不受约束**，隔离缺口作为已声明 gap 记录，不算违规。
 - `bindings/coding-cli/compliance.json` 的 X1 gap note 按上述语义重写。
 
@@ -20,7 +22,7 @@
 
 ### 新增
 
-- **beta 分发镜像（releases/）**：`releases/` 目录承载模块产物（`teamharness` / `agentteams-matrix` / `looprunner`）+ `channels.json` 通道索引（模块 → 版本 → artifact/sha256/requires/commit/deprecated）。产物作为**仓库内容**提交，GitHub 与 GitCode 用同一套 raw 路径即可拉取（GitCode 无 release 镜像能力）。
+- **beta 分发镜像（releases/）**：`releases/` 目录承载模块产物（`teamharness` / `agentteams-matrix` / `taskforge`）+ `channels.json` 通道索引（模块 → 版本 → artifact/sha256/requires/commit/deprecated）。产物作为**仓库内容**提交，GitHub 与 GitCode 用同一套 raw 路径即可拉取（GitCode 无 release 镜像能力）。
 - **协议 pack（`make pack`）**：确定性打包 `compiler/`、`core/`、`templates/`、`bindings/` 等为 `dist/millforge-pack-<VERSION>.tar.gz`，产 `sha256sums.txt` + `pack-manifest.json`（version/commit/文件数/11 份 schema 摘要）；供 TH 的 `requires.millforge` pin。
 - **本地同步工具**：`tools/sync-beta.sh` / `tools/sync_beta.py`（从 fork 的公开 release 下载 → sha256 → 更新 `channels.json`，幂等、不自动 push）；`tools/make-pack-manifest.py`。本仓不使用 GitHub Actions。
 

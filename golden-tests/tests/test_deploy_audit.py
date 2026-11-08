@@ -68,15 +68,15 @@ with tempfile.TemporaryDirectory() as tmp:
     first_line = lines[0] if lines else ""
 
     # 2) second record: append-only — first line byte-identical
-    r = run(repo, "record", "--module", "looprunner", "--version", "0.1.0",
+    r = run(repo, "record", "--module", "taskforge", "--version", "0.1.0",
             "--action", "pack", "--target", "deploy-host:/opt", "--operator", "alice",
-            "--sha256", want, "--label", "releases/looprunner/0.1.0/pack.tar.gz")
+            "--sha256", want, "--label", "releases/taskforge/0.1.0/pack.tar.gz")
     check("record2_exit0", r.returncode == 0, f"exit {r.returncode} stderr={r.stderr!r}")
     lines = ledger_lines(repo)
     check("two_lines", len(lines) == 2, f"{len(lines)} lines")
     check("first_line_unchanged", bool(lines) and lines[0] == first_line, "append-only violated")
     rec2 = json.loads(lines[1]) if len(lines) > 1 else {}
-    check("sha_provided", rec2.get("sha256_source") == "provided" and rec2.get("artifact") == "releases/looprunner/0.1.0/pack.tar.gz" and rec2.get("sha256") == want, str(rec2))
+    check("sha_provided", rec2.get("sha256_source") == "provided" and rec2.get("artifact") == "releases/taskforge/0.1.0/pack.tar.gz" and rec2.get("sha256") == want, str(rec2))
     check("action_pack", rec2.get("action") == "pack", str(rec2.get("action")))
 
     # 3) missing artifact: non-zero exit, message, no new line

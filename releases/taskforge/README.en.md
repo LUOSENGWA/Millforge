@@ -1,7 +1,7 @@
-# looprunner/ — runner distribution slot (reserved)
+# taskforge/ — TaskForge distribution slot (reserved)
 
-This directory is the **distribution slot** for the `looprunner` module (the Loop Runner).
-**1.2.6 ships no program**: this directory carries no artifacts, and the `looprunner` entry in
+This directory is the **distribution slot** for the `taskforge` module (the TaskForge).
+**1.2.6 ships no program**: this directory carries no artifacts, and the `taskforge` entry in
 `releases/channels.json` stays a placeholder (`latest: null`, `versions: {}`).
 When the Runner is actually released, this directory gains a `<version>/` subdirectory (tar.gz + manifest)
 and the `channels.json` entry is filled in, per the contract below; clients download, verify, install, and
@@ -12,7 +12,7 @@ handshake following the load sequence — **no code changes to TH / ATMX / contr
 ## Slot state (1.2.6 placeholder)
 
 ```json
-"looprunner": {
+"taskforge": {
   "kind": "runner",
   "latest": null,
   "versions": {},
@@ -20,21 +20,21 @@ handshake following the load sequence — **no code changes to TH / ATMX / contr
 }
 ```
 
-## Entry contract (channels.json `modules.looprunner`)
+## Entry contract (channels.json `modules.taskforge`)
 
 The contract is frozen with 1.2.6; **fields will not change**. After a release, the entry is filled as:
 
 ```json
-"looprunner": {
+"taskforge": {
   "kind": "runner",
   "latest": "0.1.0-beta.1",
   "versions": {
     "0.1.0-beta.1": {
       "artifacts": [
-        {"name": "looprunner-0.1.0-beta.1.tar.gz", "sha256": "<64hex>"},
-        {"name": "looprunner-0.1.0-beta.1.manifest.json", "sha256": "<64hex>"}
+        {"name": "taskforge-0.1.0-beta.1.tar.gz", "sha256": "<64hex>"},
+        {"name": "taskforge-0.1.0-beta.1.manifest.json", "sha256": "<64hex>"}
       ],
-      "image": {"repository": "ghcr.io/luosengwa/looprunner", "digest": "sha256:<64hex>"},
+      "image": {"repository": "ghcr.io/luosengwa/taskforge", "digest": "sha256:<64hex>"},
       "requires": {"agentteams": ">=1.2.6", "contracts": "1", "tool_schema": "1", "millforge": ">=1.1.0"},
       "protocol_version": "1",
       "commit": "<40hex>",
@@ -62,10 +62,10 @@ The client (installer / workbench) **consumes only channels.json**; swapping the
 
 ```
 1. GET <source>/releases/channels.json          # GitHub raw / GitCode raw
-2. pick modules.looprunner.versions[<v>]        # channel=beta must be explicit; default is stable
+2. pick modules.taskforge.versions[<v>]        # channel=beta must be explicit; default is stable
 3. download artifacts[*] → verify each sha256 (mismatch = refuse, no half-state)
 4. read the manifest → check protocol_version against the local controller/TH supported window
-5. install to <state>/looprunner/<version>/ (single writer: at most one running copy at a time)
+5. install to <state>/taskforge/<version>/ (single writer: at most one running copy at a time)
 6. start → POST /internal/runner/handshake → on handshake failure, exit (fail-closed)
 7. handshake OK → the controller hands Loop scheduling over from the built-in ticker to the runner (within the same version window)
 ```

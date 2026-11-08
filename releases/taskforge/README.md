@@ -1,7 +1,7 @@
-# looprunner/ — Runner 分发槽位（预留）
+# taskforge/ — TaskForge 分发槽位（预留）
 
-本目录是 `looprunner` 模块（Loop Runner）的**分发槽位**。**1.2.6 不发程序**：本目录不落地任何产物，
-`releases/channels.json` 的 `looprunner` 条目保持占位（`latest: null`、`versions: {}`）。
+本目录是 `taskforge` 模块（TaskForge）的**分发槽位**。**1.2.6 不发程序**：本目录不落地任何产物，
+`releases/channels.json` 的 `taskforge` 条目保持占位（`latest: null`、`versions: {}`）。
 Runner 真正发布后，按本文契约在本目录落 `<version>/` 子目录（tar.gz + manifest）并填 `channels.json` 条目；
 客户端按加载序列下载、校验、安装、握手，**不需要改 TH / ATMX / controller 的任何代码**。
 
@@ -10,7 +10,7 @@ Runner 真正发布后，按本文契约在本目录落 `<version>/` 子目录�
 ## 槽位现状（1.2.6 占位）
 
 ```json
-"looprunner": {
+"taskforge": {
   "kind": "runner",
   "latest": null,
   "versions": {},
@@ -18,21 +18,21 @@ Runner 真正发布后，按本文契约在本目录落 `<version>/` 子目录�
 }
 ```
 
-## 条目契约（channels.json `modules.looprunner`）
+## 条目契约（channels.json `modules.taskforge`）
 
 契约随 1.2.6 冻结，**字段不再变**。发布后条目填成：
 
 ```json
-"looprunner": {
+"taskforge": {
   "kind": "runner",
   "latest": "0.1.0-beta.1",
   "versions": {
     "0.1.0-beta.1": {
       "artifacts": [
-        {"name": "looprunner-0.1.0-beta.1.tar.gz", "sha256": "<64hex>"},
-        {"name": "looprunner-0.1.0-beta.1.manifest.json", "sha256": "<64hex>"}
+        {"name": "taskforge-0.1.0-beta.1.tar.gz", "sha256": "<64hex>"},
+        {"name": "taskforge-0.1.0-beta.1.manifest.json", "sha256": "<64hex>"}
       ],
-      "image": {"repository": "ghcr.io/luosengwa/looprunner", "digest": "sha256:<64hex>"},
+      "image": {"repository": "ghcr.io/luosengwa/taskforge", "digest": "sha256:<64hex>"},
       "requires": {"agentteams": ">=1.2.6", "contracts": "1", "tool_schema": "1", "millforge": ">=1.1.0"},
       "protocol_version": "1",
       "commit": "<40hex>",
@@ -59,10 +59,10 @@ Runner 真正发布后，按本文契约在本目录落 `<version>/` 子目录�
 
 ```
 1. GET <source>/releases/channels.json          # GitHub raw / GitCode raw
-2. 选 modules.looprunner.versions[<v>]           # channel=beta 需显式；默认 stable
+2. 选 modules.taskforge.versions[<v>]           # channel=beta 需显式；默认 stable
 3. 下载 artifacts[*] → 逐个 sha256 校验（不一致 = 拒绝，不落半态）
 4. 读 manifest → 校验 protocol_version 与本地 controller/TH 支持的窗口
-5. 安装到 <state>/looprunner/<version>/（单写者：同一时刻只允许一个在跑副本）
+5. 安装到 <state>/taskforge/<version>/（单写者：同一时刻只允许一个在跑副本）
 6. 启动 → POST /internal/runner/handshake → 握手失败即退出（fail-closed）
 7. 握手成功 → controller 把 Loop 的调度权从内置 ticker 切给 runner（同版本窗口内）
 ```
