@@ -6,7 +6,7 @@
 
 **当前 beta 暂存（2026-11-08，与 stable 同 sha）**：`teamharness` 0.1.0（`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`）与 `agentteams-matrix` 0.1.0（`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`）；条目在 `releases/beta/channels.json`，已写入 `pluginId=agentteams-matrix-channel`。
 
-**stable 新增（2026-11-08）：`qwenpaw-qwencode-bridge` 0.1.0** —— 来自上游 `agentscope-ai/AgentTeams#1411` 合并提交 `c31dc45df`（源树内版本 0.3.0，发布身份按本仓 stable 线规范化为 0.1.0，见 `release-manifest.json` 的 `source` 段）。产物 `qwenpaw-qwencode-bridge-0.1.0.zip`（34 文件，根 `qwen-code-bridge/`），`pluginId=qwen-code-bridge`。alpha/beta 通道已开同模块（`latest: null`），后续 alpha/beta 版本直接落位即可。
+**stable 新增（2026-11-08）：`qwenpaw-qwencode-bridge` 0.3.0** —— 来自上游 `agentscope-ai/AgentTeams#1411` 合并提交 `c31dc45df`（`plugins/qwen-code-bridge`），**版本取上游清单 0.3.0，不做发布侧篡改**。产物 `qwenpaw-qwencode-bridge-0.3.0.zip`（34 文件，根 `qwen-code-bridge/`，已排除 tests/pycache/web-shell-dist），`pluginId=qwen-code-bridge`，模块文档见 `releases/qwenpaw-qwencode-bridge/README.md`。alpha/beta 通道已开同模块（`latest: null`），后续版本直接落位即可。
 
 **当前 alpha 暂存（2026-11-08）**：`teamharness` 与 `agentteams-matrix` 均为 `0.1.1-alpha.2`（`teamharness-qwenpaw-0.1.1-alpha.2.zip` / `teamharness.tar.gz`；`agentteams-matrix-channel-0.1.1-alpha.2.zip` / `agentteams-matrix.tar.gz`），条目在 `releases/alpha/channels.json`（`kind=bundle` + `pluginId=agentteams-matrix-channel`，`requires` / `commit` / `published_at` / `deprecated` 齐备）。
 
@@ -65,7 +65,7 @@ releases/
 ```
 
 - `latest` = 该 channel 内最高版本；旧版本继续保留，安装时可显式指定。
-- `kind`：`plugin` / `bundle` / `runner`；`plugin` = `teamharness` / `qwenpaw-qwencode-bridge`，`bundle` = `agentteams-matrix`，`runner` = `looprunner`（1.2.6 暂不发布）。
+- `kind`：`plugin` / `bundle` / `runner`；`plugin` = `teamharness` / `qwenpaw-qwencode-bridge`（pluginId `qwen-code-bridge`），`bundle` = `agentteams-matrix`，`runner` = `looprunner`（1.2.6 暂不发布）。
 - `pluginId`：QwenPaw 内实际安装的 plugin id；缺省 = 模块名。MX 为 `agentteams-matrix-channel`。
 - `deprecated: true`：标记停用但保留文件；客户端不应默认安装。
 - 客户端（安装器 / 工作台）只认所选 channel 的这份契约；controller 取 `releases/<channel>/channels.json`。
