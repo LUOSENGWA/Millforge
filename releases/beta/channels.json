@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "channel": "beta",
-  "updated_at": "2026-11-05T01:00:35Z",
+  "updated_at": "2026-11-08T00:42:16Z",
   "modules": {
     "looprunner": {
       "kind": "runner",
@@ -17,11 +17,15 @@
           "artifacts": [
             {
               "name": "teamharness-qwenpaw-0.1.0.zip",
-              "sha256": "e4d07e30619b5d2e3452490303d33ab1423da056a241ceb5f8739a35cd7be77b"
+              "sha256": "c3fb9339c6aeeb125634cda034026c6936164b5438ad9302912a3f425ad17e44"
+            },
+            {
+              "name": "teamharness-qwenpaw.zip",
+              "sha256": "c3fb9339c6aeeb125634cda034026c6936164b5438ad9302912a3f425ad17e44"
             },
             {
               "name": "teamharness.tar.gz",
-              "sha256": "595f33fb8680410ad5fa0be82c6d460bd6ab5baa5910df3e8c38eed8f3551533"
+              "sha256": "f6d6a66a2b77b311b9f76b703989f8a0b59d992367af8ae963db1b567b5c187f"
             }
           ],
           "requires": {
@@ -29,8 +33,8 @@
             "contracts": "1",
             "tool_schema": "1"
           },
-          "commit": "8795080efdd7edcecdce025d83f8994d0600f31f",
-          "published_at": "2026-11-05T01:00:35Z",
+          "commit": "85e625752a28ffaf0ac17941aadfc55e02bbe05b",
+          "published_at": "2026-11-08T00:42:16Z",
           "deprecated": false
         }
       }
@@ -44,11 +48,11 @@
           "artifacts": [
             {
               "name": "agentteams-matrix-channel-0.1.0.zip",
-              "sha256": "dd46b308bdd4b3ae80f4b098a4e282855f8736bdefa7c477c2b780aec4d9b44b"
+              "sha256": "1be232c13639801e011273197393e2d9780253dc3265cba03bd7b0611984ba83"
             },
             {
               "name": "agentteams-matrix.tar.gz",
-              "sha256": "35ae107671e27a04120e607387c38e0a5645e8b74fdf0316e60cce6d6ba0d049"
+              "sha256": "a11c2e2b7cc4a7836607bd8d93d8a22208c127994861329c72262fe319c6cdbf"
             }
           ],
           "requires": {
@@ -56,8 +60,8 @@
             "contracts": "1",
             "tool_schema": "1"
           },
-          "commit": "8795080efdd7edcecdce025d83f8994d0600f31f",
-          "published_at": "2026-11-05T01:00:35Z",
+          "commit": "85e625752a28ffaf0ac17941aadfc55e02bbe05b",
+          "published_at": "2026-11-08T00:42:16Z",
           "deprecated": false
         }
       }

@@ -2,9 +2,11 @@
 
 本目录是**模块产物的分发镜像**（`teamharness` / `agentteams-matrix` / `qwen-code-bridge` / `looprunner`）。
 
-**当前 beta 暂存（2026-11-04）**：`teamharness` 0.1.0（`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`）与 `agentteams-matrix` 0.1.0（`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`）；条目在 `releases/beta/channels.json`，已写入 `pluginId=agentteams-matrix-channel`。
+**stable 暂存（2026-11-08）**：`teamharness` 与 `agentteams-matrix` 均为 0.1.0，产物来自 AgentTeams main `85e625752`，条目在 `releases/stable/channels.json`。
 
-**当前 alpha 暂存（2026-11-05）**：`teamharness` 与 `agentteams-matrix` 均为 `0.1.1-alpha.1`（`teamharness-qwenpaw-0.1.1-alpha.1.zip` / `teamharness.tar.gz`；`agentteams-matrix-channel-0.1.1-alpha.1.zip` / `agentteams-matrix.tar.gz`），条目在 `releases/alpha/channels.json`（`kind=bundle` + `pluginId=agentteams-matrix-channel`，`requires` / `commit` / `published_at` / `deprecated` 齐备）。
+**当前 beta 暂存（2026-11-08，与 stable 同 sha）**：`teamharness` 0.1.0（`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`）与 `agentteams-matrix` 0.1.0（`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`）；条目在 `releases/beta/channels.json`，已写入 `pluginId=agentteams-matrix-channel`。
+
+**当前 alpha 暂存（2026-11-08）**：`teamharness` 与 `agentteams-matrix` 均为 `0.1.1-alpha.2`（`teamharness-qwenpaw-0.1.1-alpha.2.zip` / `teamharness.tar.gz`；`agentteams-matrix-channel-0.1.1-alpha.2.zip` / `agentteams-matrix.tar.gz`），条目在 `releases/alpha/channels.json`（`kind=bundle` + `pluginId=agentteams-matrix-channel`，`requires` / `commit` / `published_at` / `deprecated` 齐备）。
 
 它不是构建目录：产物由上游仓库（AgentTeams 的发布 workflow）构建，本目录只承载**可下载的副本 + 索引**。**不做自动同步**；索引由发布操作/人工提交，前端按 channel 检查更新。
 
@@ -94,18 +96,18 @@ releases/
 
 `tools/sync_beta.py` 是 **beta-only 的旧助手**（只处理 `-beta.N`，写 `releases/beta/channels.json`），不属于运行时/自动更新流程；alpha/stable 不要依赖它。本仓库不使用 GitHub Actions 自动同步。
 
-## 下载与安装：0.1.1-alpha.1（alpha 通道）
+## 下载与安装：0.1.1-alpha.2（alpha 通道）
 
-**这版 alpha 的目的**：上游 1.2.6 的发布窗口内合不完所有 TH-*/MX-* PR，所以把已验收的成果先按 alpha 发到这里——维护者和用户**不必等上游合并**，直接从本仓下载安装即可。
+本 alpha 通道提供已验收的 TeamHarness/Matrix 版本，可直接从本仓库下载安装；正式版本仍以 stable 通道为准。
 
 ### 1. 选件
 
-| 装什么 | 下载路径（`releases/<module>/0.1.1-alpha.1/`） |
+| 装什么 | 下载路径（`releases/<module>/0.1.1-alpha.2/`） |
 |---|---|
 | TeamHarness 整包 | `teamharness.tar.gz`（含 `scripts/install.sh`、`mcp/`、`contracts/`、各运行时适配器） |
-| TeamHarness 单插件包（QwenPaw） | `teamharness-qwenpaw-0.1.1-alpha.1.zip` |
+| TeamHarness 单插件包（QwenPaw） | `teamharness-qwenpaw-0.1.1-alpha.2.zip` |
 | AgentTeams Matrix 整包 | `agentteams-matrix.tar.gz`（含 `scripts/install.sh`、`core/`、`contracts`、三适配器） |
-| AgentTeams Matrix 单插件包（QwenPaw channel） | `agentteams-matrix-channel-0.1.1-alpha.1.zip` |
+| AgentTeams Matrix 单插件包（QwenPaw channel） | `agentteams-matrix-channel-0.1.1-alpha.2.zip` |
 
 ### 2. 校验
 
@@ -132,4 +134,4 @@ QWENPAW_WORKING_DIR="${QWENPAW_WORKING_DIR:-$HOME/.qwenpaw}" bash scripts/instal
 ### 5. 已知限制
 
 - alpha 是预发布：不建 GitHub Release，只提交索引与产物；`latest` 指本通道内最高版本。
-- `release-manifest.commit` 记录构建所用源码提交。本轮 AT 源码按发布策略不推上游，**外部核对以 sha256 为准**（同一 sha256 在 GitHub/GitCode 两个源出现即视为同一件）。
+- `release-manifest.commit` 记录本版构建所用源码提交；产物完整性以 sha256 校验为准（同一 sha256 在 GitHub/GitCode 两个源出现即视为同一件）。

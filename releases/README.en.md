@@ -92,13 +92,13 @@ One index per channel; the `channel` field must match the directory.
 
 `tools/sync_beta.py` is a **legacy beta-only helper** (handles `-beta.N` and writes `releases/beta/channels.json`); it is not part of the runtime/auto-update flow. Do not use it for alpha/stable. This repository does not use GitHub Actions for automatic sync.
 
-## Download and install: 0.1.1-alpha.1 (alpha channel)
+## Download and install: 0.1.1-alpha.2 (alpha channel)
 
-This alpha exists because the upstream 1.2.6 window cannot merge every TH-*/MX-* PR in time: the accepted work ships here first so maintainers and users can download and install it **without waiting for upstream merges**.
+The alpha channel provides accepted TeamHarness/Matrix builds for direct installation from this repository; production users should use the stable channel.
 
-1. Pick the artifact under `releases/<module>/0.1.1-alpha.1/` (`*.tar.gz` bundle, or the `*-qwenpaw-0.1.1-alpha.1.zip` / `agentteams-matrix-channel-0.1.1-alpha.1.zip` single-plugin package).
+1. Pick the artifact under `releases/<module>/0.1.1-alpha.2/` (`*.tar.gz` bundle, or the `*-qwenpaw-0.1.1-alpha.2.zip` / `agentteams-matrix-channel-0.1.1-alpha.2.zip` single-plugin package).
 2. Verify the single file: `grep ' <file>$' sha256sums.txt | sha256sum -c`.
 3. Install (QwenPaw): `tar xzf <bundle>.tar.gz && QWENPAW_WORKING_DIR="${QWENPAW_WORKING_DIR:-$HOME/.qwenpaw}" bash scripts/install.sh --adapter qwenpaw`. Re-running is idempotent; `scripts/uninstall.sh` removes exactly the installed files.
 4. Cluster auto-update reads `releases/<channel>/channels.json` (bundle entries carry `kind=bundle`, `pluginId=agentteams-matrix-channel`, per-version `artifacts`/`requires`/`commit`/`published_at`/`deprecated`).
 
-Known limits: alpha builds publish no GitHub Release; `release-manifest.commit` records the source commit, but the AT source is not pushed upstream in this round — verify by sha256 across the GitHub and GitCode mirrors.
+Known limits: alpha builds publish no GitHub Release; `release-manifest.commit` records the source revision, and artifact integrity is verified by sha256 across the GitHub and GitCode mirrors.

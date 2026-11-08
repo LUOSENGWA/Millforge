@@ -1,0 +1,3 @@
+151b27162e2484eec28d45a754ca9f33fe16b6acc0ec5c9c7c3aba27b5382807  teamharness-qwenpaw-0.1.1-alpha.2.zip
+151b27162e2484eec28d45a754ca9f33fe16b6acc0ec5c9c7c3aba27b5382807  teamharness-qwenpaw.zip
+f1f3cff3907c93b034eb1913fac8196fa15c8ed5539c4456999bb4bc1e67860c  teamharness.tar.gz
