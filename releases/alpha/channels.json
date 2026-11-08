@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "channel": "alpha",
-  "updated_at": "2026-11-08T01:04:00Z",
+  "updated_at": "2026-11-08T01:25:00Z",
   "modules": {
     "looprunner": {
       "kind": "runner",
@@ -109,6 +109,12 @@
         }
       },
       "pluginId": "agentteams-matrix-channel"
+    },
+    "qwenpaw-qwencode-bridge": {
+      "kind": "plugin",
+      "pluginId": "qwen-code-bridge",
+      "latest": null,
+      "versions": {}
     }
   }
 }

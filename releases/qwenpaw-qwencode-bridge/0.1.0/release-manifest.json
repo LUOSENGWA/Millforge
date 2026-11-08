@@ -1,0 +1,27 @@
+{
+  "module": "qwenpaw-qwencode-bridge",
+  "pluginId": "qwen-code-bridge",
+  "version": "0.1.0",
+  "commit": "c31dc45df",
+  "source": {
+    "repo": "agentscope-ai/AgentTeams",
+    "path": "plugins/qwen-code-bridge",
+    "commit": "c31dc45df",
+    "version_at_source": "0.3.0",
+    "pr": "agentscope-ai/AgentTeams#1411",
+    "note": "manifest version normalized to the Millforge stable line (0.1.0); release identity is this module version, source version recorded above"
+  },
+  "files": 34,
+  "artifacts": [
+    {
+      "name": "qwenpaw-qwencode-bridge-0.1.0.zip",
+      "sha256": "90d678f4974ab887104b621240e5dc6cfcb9a2fa27d1eef68bb70cb9cb02a6aa"
+    }
+  ],
+  "requires": {
+    "qwenpaw": ">=2.2.0 <2.3.0",
+    "qwen-code-cli": "0.26.x"
+  },
+  "published_at": "2026-11-08T01:25:00Z",
+  "deprecated": false
+}

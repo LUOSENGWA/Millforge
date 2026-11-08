@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "channel": "beta",
-  "updated_at": "2026-11-08T00:42:16Z",
+  "updated_at": "2026-11-08T01:25:00Z",
   "modules": {
     "looprunner": {
       "kind": "runner",
@@ -65,6 +65,12 @@
           "deprecated": false
         }
       }
+    },
+    "qwenpaw-qwencode-bridge": {
+      "kind": "plugin",
+      "pluginId": "qwen-code-bridge",
+      "latest": null,
+      "versions": {}
     }
   }
 }
