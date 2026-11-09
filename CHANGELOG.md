@@ -4,6 +4,10 @@
 
 ## [未发布]
 
+### 模块产物
+
+- **teamharness 0.1.1-beta.1 / agentteams-matrix 0.1.1-beta.1（beta 通道）**：从上游 main `41ef2358a` + 版本 bump 构建；包含上游 #1512（`complete_project` 要求任务已完成且产物已登记）与 #1557（NO_REPLY 末行检测对纯空白输出做全等判断）。stable 保持 0.1.0，alpha 保持 0.1.1-alpha.2。
+
 ### 变更
 
 - **Runner 模块直接改名**：`looprunner` → `taskforge`（进程 `taskforged`，module kind `runner`）；`channels.json`、schema、sync 工具、golden 示例、README 全部改名；当前无任何已发布 runner 产物，不保留旧通道键。

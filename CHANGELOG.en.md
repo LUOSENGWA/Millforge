@@ -4,6 +4,10 @@ All notable changes to the Millforge protocol compiler and reference bindings ar
 
 ## [Unreleased]
 
+### Modules
+
+- **teamharness 0.1.1-beta.1 / agentteams-matrix 0.1.1-beta.1 (beta channel)**: built from upstream main `41ef2358a` plus the version bump; includes upstream #1512 (`complete_project` now requires completed, artifact-registered tasks) and #1557 (the NO_REPLY final-line detector now handles whitespace-only output). stable stays on 0.1.0 and alpha stays on 0.1.1-alpha.2.
+
 ### Changed
 
 - **Runner module renamed directly**: `looprunner` → `taskforge` (`taskforged`, module kind `runner`); channels, schema, sync tooling, golden examples and README all renamed. No runner artifact has been published, so no legacy channel key is kept.

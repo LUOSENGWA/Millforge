@@ -1,76 +1,120 @@
 {
-  "schema": 1,
-  "channel": "beta",
-  "updated_at": "2026-11-08T01:30:00Z",
-  "modules": {
-    "teamharness": {
-      "kind": "plugin",
-      "latest": "0.1.0",
-      "versions": {
-        "0.1.0": {
-          "artifacts": [
-            {
-              "name": "teamharness-qwenpaw-0.1.0.zip",
-              "sha256": "c3fb9339c6aeeb125634cda034026c6936164b5438ad9302912a3f425ad17e44"
-            },
-            {
-              "name": "teamharness-qwenpaw.zip",
-              "sha256": "c3fb9339c6aeeb125634cda034026c6936164b5438ad9302912a3f425ad17e44"
-            },
-            {
-              "name": "teamharness.tar.gz",
-              "sha256": "f6d6a66a2b77b311b9f76b703989f8a0b59d992367af8ae963db1b567b5c187f"
-            }
-          ],
-          "requires": {
-            "agentteams": ">=1.2.6",
-            "contracts": "1",
-            "tool_schema": "1"
-          },
-          "commit": "85e625752a28ffaf0ac17941aadfc55e02bbe05b",
-          "published_at": "2026-11-08T00:42:16Z",
-          "deprecated": false
-        }
+ "schema": 1,
+ "channel": "beta",
+ "updated_at": "2026-11-09T22:51:04Z",
+ "modules": {
+  "teamharness": {
+   "kind": "plugin",
+   "latest": "0.1.1-beta.1",
+   "versions": {
+    "0.1.0": {
+     "artifacts": [
+      {
+       "name": "teamharness-qwenpaw-0.1.0.zip",
+       "sha256": "c3fb9339c6aeeb125634cda034026c6936164b5438ad9302912a3f425ad17e44"
+      },
+      {
+       "name": "teamharness-qwenpaw.zip",
+       "sha256": "c3fb9339c6aeeb125634cda034026c6936164b5438ad9302912a3f425ad17e44"
+      },
+      {
+       "name": "teamharness.tar.gz",
+       "sha256": "f6d6a66a2b77b311b9f76b703989f8a0b59d992367af8ae963db1b567b5c187f"
       }
+     ],
+     "requires": {
+      "agentteams": ">=1.2.6",
+      "contracts": "1",
+      "tool_schema": "1"
+     },
+     "commit": "85e625752a28ffaf0ac17941aadfc55e02bbe05b",
+     "published_at": "2026-11-08T00:42:16Z",
+     "deprecated": false
     },
-    "agentteams-matrix": {
-      "kind": "bundle",
-      "pluginId": "agentteams-matrix-channel",
-      "latest": "0.1.0",
-      "versions": {
-        "0.1.0": {
-          "artifacts": [
-            {
-              "name": "agentteams-matrix-channel-0.1.0.zip",
-              "sha256": "1be232c13639801e011273197393e2d9780253dc3265cba03bd7b0611984ba83"
-            },
-            {
-              "name": "agentteams-matrix.tar.gz",
-              "sha256": "a11c2e2b7cc4a7836607bd8d93d8a22208c127994861329c72262fe319c6cdbf"
-            }
-          ],
-          "requires": {
-            "agentteams": ">=1.2.6",
-            "contracts": "1",
-            "tool_schema": "1"
-          },
-          "commit": "85e625752a28ffaf0ac17941aadfc55e02bbe05b",
-          "published_at": "2026-11-08T00:42:16Z",
-          "deprecated": false
-        }
+    "0.1.1-beta.1": {
+     "artifacts": [
+      {
+       "name": "teamharness-qwenpaw-0.1.1-beta.1.zip",
+       "sha256": "a91de88f17204f3abff5eb776a7e5f151a9da42b54eb944d0bc7f31dbe629215"
+      },
+      {
+       "name": "teamharness-qwenpaw.zip",
+       "sha256": "a91de88f17204f3abff5eb776a7e5f151a9da42b54eb944d0bc7f31dbe629215"
+      },
+      {
+       "name": "teamharness.tar.gz",
+       "sha256": "037be37dfcda46993f2af0700e2cf8c3ef2d9ba522ced7c2224cd5baca8c21a9"
       }
-    },
-    "qwenpaw-qwencode-bridge": {
-      "kind": "plugin",
-      "pluginId": "qwen-code-bridge",
-      "latest": null,
-      "versions": {}
-    },
-    "taskforge": {
-      "kind": "runner",
-      "latest": null,
-      "versions": {},
-      "note": "TaskForge runner module; not released yet (planned for 1.2.7)"
+     ],
+     "requires": {
+      "agentteams": ">=1.2.6",
+      "contracts": "1",
+      "tool_schema": "1"
+     },
+     "commit": "9a25eb6a83d57f9d47c9b6140691a8873ce4d912",
+     "published_at": "2026-11-09T22:51:04Z",
+     "deprecated": false
     }
+   }
+  },
+  "agentteams-matrix": {
+   "kind": "bundle",
+   "pluginId": "agentteams-matrix-channel",
+   "latest": "0.1.1-beta.1",
+   "versions": {
+    "0.1.0": {
+     "artifacts": [
+      {
+       "name": "agentteams-matrix-channel-0.1.0.zip",
+       "sha256": "1be232c13639801e011273197393e2d9780253dc3265cba03bd7b0611984ba83"
+      },
+      {
+       "name": "agentteams-matrix.tar.gz",
+       "sha256": "a11c2e2b7cc4a7836607bd8d93d8a22208c127994861329c72262fe319c6cdbf"
+      }
+     ],
+     "requires": {
+      "agentteams": ">=1.2.6",
+      "contracts": "1",
+      "tool_schema": "1"
+     },
+     "commit": "85e625752a28ffaf0ac17941aadfc55e02bbe05b",
+     "published_at": "2026-11-08T00:42:16Z",
+     "deprecated": false
+    },
+    "0.1.1-beta.1": {
+     "artifacts": [
+      {
+       "name": "agentteams-matrix-channel-0.1.1-beta.1.zip",
+       "sha256": "5e0b2b8c5e2a101d446b62e02e04aceb45bc2a0011936dd68cd1792ad3d8b5c6"
+      },
+      {
+       "name": "agentteams-matrix.tar.gz",
+       "sha256": "e1da5da3316c6e4182e464255b49fa4edc9c8f430dd3339835c55952586137bc"
+      }
+     ],
+     "requires": {
+      "agentteams": ">=1.2.6",
+      "contracts": "1",
+      "tool_schema": "1"
+     },
+     "commit": "9a25eb6a83d57f9d47c9b6140691a8873ce4d912",
+     "published_at": "2026-11-09T22:51:04Z",
+     "deprecated": false
+    }
+   }
+  },
+  "qwenpaw-qwencode-bridge": {
+   "kind": "plugin",
+   "pluginId": "qwen-code-bridge",
+   "latest": null,
+   "versions": {}
+  },
+  "taskforge": {
+   "kind": "runner",
+   "latest": null,
+   "versions": {},
+   "note": "TaskForge runner module; not released yet (planned for 1.2.7)"
   }
+ }
 }

@@ -4,7 +4,7 @@
 
 **stable 暂存（2026-11-08）**：`teamharness` 与 `agentteams-matrix` 均为 0.1.0，产物来自 AgentTeams **v1.2.6 tag `9301e533e`**（stable 已重建），条目在 `releases/stable/channels.json`。
 
-**当前 beta 暂存（2026-11-08，与 stable 同 sha）**：`teamharness` 0.1.0（`teamharness-qwenpaw-0.1.0.zip` / `teamharness.tar.gz`）与 `agentteams-matrix` 0.1.0（`agentteams-matrix-channel-0.1.0.zip` / `agentteams-matrix.tar.gz`）；条目在 `releases/beta/channels.json`，已写入 `pluginId=agentteams-matrix-channel`。
+**当前 beta（2026-11-09）：`teamharness` / `agentteams-matrix` 均为 `0.1.1-beta.1`** —— 来自上游 main `41ef2358a` + 版本 bump（release 分支 `9a25eb6a8`），包含上游 #1512 与 #1557；产物在 `releases/teamharness/0.1.1-beta.1/`、`releases/agentteams-matrix/0.1.1-beta.1/`，条目在 `releases/beta/channels.json`（`pluginId=agentteams-matrix-channel`，含 `requires`/`commit`/`published_at`/`deprecated`）。上一版 `0.1.0` 保留作回滚点；stable 仍为 `0.1.0`。
 
 **stable 新增（2026-11-08）：`qwenpaw-qwencode-bridge` 0.3.0** —— 来自上游 `agentscope-ai/AgentTeams#1411` 合并提交 `c31dc45df`（`plugins/qwen-code-bridge`），**版本取上游清单 0.3.0，不做发布侧篡改**。产物 `qwenpaw-qwencode-bridge-0.3.0.zip`（34 文件，根 `qwen-code-bridge/`，已排除 tests/pycache/web-shell-dist），`pluginId=qwen-code-bridge`，模块文档见 `releases/qwenpaw-qwencode-bridge/README.md`。alpha/beta 通道已开同模块（`latest: null`），后续版本直接落位即可。
 
