@@ -11,9 +11,10 @@
 
 ---
 
-> **即将默认集成到 AgentTeams**：千锻正在成为 [AgentTeams](https://github.com/agentscope-ai/AgentTeams) 的默认团队协议层——
-> AgentTeams 负责团队 / 任务 / Matrix 运行时的执行面，千锻负责把协作协议编译成可部署的身份与约束文件；
-> 集成后新建团队默认使用千锻编译产物（协议条款、9 态、signal 契约、loop 预算一次冻结，团队差异只留在 `team.json`）。
+> **已集成到 AgentTeams**：[AgentTeams](https://github.com/agentscope-ai/AgentTeams) 的团队协议层就是千锻——
+> AgentTeams 负责团队 / 任务 / Matrix 运行时的执行面，千锻负责把协作协议编译成可部署的身份与约束文件。
+> 编译产物以 `teamharness` 模块经千锻发布仓（Millforge channels）分发，AgentTeams 控制器内置 Millforge 索引与模块安装端点；
+> 协议条款、9 态、signal 契约、loop 预算一次冻结，团队差异只留在 `team.json`。
 
 ## 为什么需要千锻
 

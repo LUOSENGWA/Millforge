@@ -11,11 +11,10 @@
 
 ---
 
-> **Becoming the default protocol layer for AgentTeams**: Millforge is on its way to being the default team
-> protocol layer of [AgentTeams](https://github.com/agentscope-ai/AgentTeams) — AgentTeams owns the execution side
-> (teams, tasks, Matrix runtime) while Millforge compiles the collaboration protocol into deployable identity and
-> constraint files. Once integrated, new teams default to Millforge's compiled output, with team differences confined
-> to `team.json`.
+> **Integrated into AgentTeams**: Millforge is the protocol layer behind [AgentTeams](https://github.com/agentscope-ai/AgentTeams) —
+> AgentTeams owns the execution side (teams, tasks, Matrix runtime) while Millforge compiles the collaboration protocol into deployable identity and constraint files.
+> The compiled output ships as the `teamharness` module through Millforge release channels, and the AgentTeams controller reads the Millforge index and installs modules from it;
+> protocol clauses, the 9-state machine, signal contracts and loop budgets are frozen once, leaving per-team differences in `team.json` alone.
 
 ## Why Millforge
 
