@@ -66,7 +66,7 @@
 ## 6. 品牌与视觉
 
 - **Logo 设计**：汤逸阳（[Tangyiyang906@gmail.com](mailto:Tangyiyang906@gmail.com)）
-- **仓库内文件**：`docs/assets/brand/millforge-logo.svg`、`avatar-512.png`、`social-preview-1280x640.png`
+- **仓库内文件**：`docs/assets/brand/millforge-logo.svg`
 
 ## 7. 纪律声明
 

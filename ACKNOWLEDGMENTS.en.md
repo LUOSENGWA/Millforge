@@ -66,7 +66,7 @@ Inheritance points mapped one by one (originals archived at [`docs/provenance/gr
 ## 6. Brand and Visuals
 
 - **Logo design**: Tang Yiyang / 汤逸阳 ([Tangyiyang906@gmail.com](mailto:Tangyiyang906@gmail.com))
-- **Files in this repository**: `docs/assets/brand/millforge-logo.svg`, `avatar-512.png`, `social-preview-1280x640.png`
+- **File in this repository**: `docs/assets/brand/millforge-logo.svg`
 
 ## 7. Discipline Statement
 
