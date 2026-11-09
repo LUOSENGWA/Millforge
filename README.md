@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/brand/millforge-logo.svg" alt="千锻 Millforge" width="320">
+</p>
+
 # 千锻（Millforge）— 多 Agent 团队协议编译器
 
 > 把「经过生产验证的 Agent 团队协作协议」编译成可直接部署的团队身份文件（SOUL + 协议片段 + 域规范）。

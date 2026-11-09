@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/brand/millforge-logo.svg" alt="千锻 Millforge" width="320">
+</p>
+
 # Millforge — A Compiler for Multi-Agent Team Protocols
 
 > Compiles a production-validated agent-team collaboration protocol into directly deployable team identity files (SOUL + protocol fragments + domain specs).
