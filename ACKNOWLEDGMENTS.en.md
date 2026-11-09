@@ -1,10 +1,29 @@
 # Acknowledgments & Mechanism Provenance
 
-> This file is Millforge's provenance ledger. **Verbatim inheritance (mechanism carried over word-for-word) must be cited** — this is a red-line discipline of Millforge open source: a missed citation is an open-source incident. This file follows the three-tier discipline (verbatim / adapted / referenced) and lists internal design lineages that are NOT included in this repository.
+Millforge stands on the shoulders of a number of open-source projects and public protocols. This file is organised as: projects and communities → verbatim inheritance → adaptations → references → third-party dependencies → brand.
 
-## 1. Verbatim (word-for-word inheritance, original text verifiable)
+## 1. Referenced Projects and Papers
 
-**NMH (collaborative exploration / interrogation & locking protocol) ← QwenPaw community skills `grill-me` / `grill-with-docs`**
+### 1.1 Projects
+
+| Project | What we drew on |
+|------|------|
+| [`grill-me`](https://github.com/mattpocock/skills/blob/main/docs/productivity/grill-me.md) / [`grill-with-docs`](https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md) (Matt Pocock's skills repository) | The mechanism source of NMH (verbatim inheritance; point-by-point mapping in §2). Introduction: <https://www.aihero.dev/skills-grill-me> |
+| [`dsh-superagent-prototype`](https://github.com/deepseek-ai/dsh-superagent-prototype) (deepseek-ai, MIT) | Task DAG + CAS revision, a closed set of approval outcomes, latest-only catch-up scheduling, and the principle of judging every design by the human attention it costs (*take as little human attention as possible, and give as much value as possible*) |
+
+### 1.2 Papers
+
+| Paper | What it supports | Source |
+|------|------|------|
+| Liu et al., *Lost in the Middle: How Language Models Use Long Contexts* | U-shaped long-context attention (strong at the ends, weaker in the middle) → identity-file line budgets and three-layer loading | arXiv:2307.03172 |
+| *Beyond Calibration: Temporal LLM Confidence Assessment Across Languages and Local Settings* | Hallucinated answers keep high confidence after generation → declare-verify binding | arXiv:2610.27702 |
+| *CHARM: Character Hallucination for Multicultural Role Play Benchmark* | Models may recognise an out-of-scope query yet still answer (a compliance failure, not an awareness failure) → declare-verify binding | arXiv:2609.01352 |
+
+> These three are the external citations registered in `docs/EVIDENCE.md`.
+
+## 2. Verbatim (word-for-word inheritance, original text verifiable)
+
+**NMH (collaborative exploration / interrogation & locking protocol) ← `grill-me` / `grill-with-docs` from Matt Pocock's skills repository**
 
 Inheritance points mapped one by one (originals archived at [`docs/provenance/grill/`](docs/provenance/grill/), preserved as-is):
 
@@ -22,7 +41,7 @@ Inheritance points mapped one by one (originals archived at [`docs/provenance/gr
 
 **Millforge extensions (not inherited; original work)**: explore/lock dual mode, the seven-question pre-lock self-check, the NMH document structure (nodes / options / human's own words / timestamps), R5 versioning (append, never overwrite), locking output as a structured spec (goal / acceptance / out_of_scope / decision_class / contract_refs), integration with the 7 closed-signal system. None of these exist in the source skills.
 
-## 2. Adapted (mechanism borrowed, Millforged)
+## 3. Adapted (mechanism borrowed, Millforged)
 
 | Millforge mechanism | Borrowed from | Millforge transformation |
 |------|------|------|
@@ -31,12 +50,12 @@ Inheritance points mapped one by one (originals archived at [`docs/provenance/gr
 | Hard line budgets (identity-file line ceiling; over = fail) | General LLM context-engineering practice (attention-budget awareness) | compile-time enforcement (Budget stage), never truncation; U-shaped attention distribution → three-layer loading |
 | Failure SOP (restart → re-dispatch → escalate after 3) | General ops "backoff / escalation" thinking | hardened into a role duty (the orchestrator never does the work); attempt count and escalation path are instance parameters |
 
-## 3. Referenced (cited during design review; text not inherited)
+## 4. Referenced (cited during design review; text not inherited)
 
 - **The 12 principles of distributed systems**: the methodology stress-test framework applied after every Millforge architecture decision (its principle dimensions are referenced; its text is not copied).
 - **Multi-round adversarial review by an external strong model**: the review method for protocol layer v1.0 — each round an external strong model adversarially reviews the draft, and every gap is either adopted or recorded with reasons. This is Millforge's **review process** (a process contribution), not a mechanism lineage.
 
-## 4. Third-Party Software Dependencies
+## 5. Third-Party Software Dependencies
 
 | Dependency | Use | License |
 |------|------|------|
@@ -44,8 +63,13 @@ Inheritance points mapped one by one (originals archived at [`docs/provenance/gr
 | `jsonschema` | team.json schema validation | MIT/Apache-2.0 dual |
 | `pyyaml` | INDEX.yaml parsing | MIT |
 
-## 5. Discipline Statement
+## 6. Brand and Visuals
 
-1. The repository body text (protocols / templates / docs) contains **zero sentence-level copying** of external text — the verbatim correspondences in §1 exist only at the **mechanism-pattern** level (behavioral patterns such as branch-by-branch decision-tree interrogation); Millforge's own wording is entirely rewritten under its own terminology system.
+- **Logo design**: Tang Yiyang / 汤逸阳 ([Tangyiyang906@gmail.com](mailto:Tangyiyang906@gmail.com))
+- **Files in this repository**: `docs/assets/brand/millforge-logo.svg`, `avatar-512.png`, `social-preview-1280x640.png`
+
+## 7. Discipline Statement
+
+1. The repository body text (protocols / templates / docs) contains **zero sentence-level copying** of external text — the verbatim correspondences in §2 exist only at the **mechanism-pattern** level (behavioral patterns such as branch-by-branch decision-tree interrogation); Millforge's own wording is entirely rewritten under its own terminology system.
 2. The sole exception: the two skill originals in `docs/provenance/grill/` are preserved as-is (verbatim inheritance requires citation; the originals must be verifiable).
 3. Any new verbatim inheritance must: ① add a row to this file ② archive the original under `docs/provenance/` ③ sync a "design provenance" section in the relevant protocol document. Missing any of the three = the PR must not merge.

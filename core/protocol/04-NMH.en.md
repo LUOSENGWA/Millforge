@@ -2,7 +2,7 @@
 
 > v1.0
 > **In one sentence**: what the human gives is a direction, not a requirement. NMH is the process in which the human and the agent turn a fuzzy direction into a **locked decision tree**, and simultaneously the human's learning channel.
-> **Design provenance**: the core grilling mechanism (branch-by-branch decision-tree interrogation, one question at a time, recommended answers, terminology alignment, inline write-to-disk, restrained escalation) is verbatim-inherited from the QwenPaw community skills `grill-me` / `grill-with-docs` — see [../../ACKNOWLEDGMENTS.md](../../ACKNOWLEDGMENTS.md) §1 for the point-by-point mapping (originals archived at `docs/provenance/grill/`). The explore/lock dual mode, the seven-question self-check, and the structured spec output are Millforge extensions.
+> **Design provenance**: the core grilling mechanism (branch-by-branch decision-tree interrogation, one question at a time, recommended answers, terminology alignment, inline write-to-disk, restrained escalation) is verbatim-inherited from `grill-me` / `grill-with-docs` in Matt Pocock's skills repository — see [../../ACKNOWLEDGMENTS.md](../../ACKNOWLEDGMENTS.md) §2 for the point-by-point mapping (originals archived at `docs/provenance/grill/`). The explore/lock dual mode, the seven-question self-check, and the structured spec output are Millforge extensions.
 
 ## 1. Trigger Rules
 

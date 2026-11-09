@@ -2,7 +2,7 @@
 
 > v1.0
 > **一句话**：人给的是方向，不是需求。NMH 是人和 Agent 一起把模糊方向变成**锁定的决策树**的过程，同时是人的学习通道。
-> **设计出处**：核心审讯机制（逐分支决策树审讯、一次一问、附推荐答案、术语对齐、即时落盘、克制的升级）逐字继承自 QwenPaw 社区 skill `grill-me` / `grill-with-docs`——逐条对照见 [../../ACKNOWLEDGMENTS.md](../../ACKNOWLEDGMENTS.md) §1（原稿归档于 `docs/provenance/grill/`）。探索/锁定双模式、锁定前七问自检、结构化 spec 输出为 Millforge 扩展。
+> **设计出处**：核心审讯机制（逐分支决策树审讯、一次一问、附推荐答案、术语对齐、即时落盘、克制的升级）逐字继承自 Matt Pocock 的 skills 仓库 `grill-me` / `grill-with-docs`——逐条对照见 [../../ACKNOWLEDGMENTS.md](../../ACKNOWLEDGMENTS.md) §2（原稿归档于 `docs/provenance/grill/`）。探索/锁定双模式、锁定前七问自检、结构化 spec 输出为 Millforge 扩展。
 
 ## 1. 触发规则
 

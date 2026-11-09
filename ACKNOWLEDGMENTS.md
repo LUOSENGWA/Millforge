@@ -1,10 +1,29 @@
 # 致谢与机制源流（ACKNOWLEDGMENTS）
 
-> 本文件是千锻的出处账本。**照搬（机制逐字继承）必注出处**是千锻开源的红线纪律：
+千锻建立在许多开源项目与公开协议之上。本文件按「项目与社区 → 照搬 → 适配 → 参考 → 第三方依赖 → 品牌」组织，逐项说明我们参考了什么。
 
-## 1. 照搬（逐字继承，原文可核）
+## 1. 参考项目与论文
 
-**NMH（协作探索/审讯锁定协议）← QwenPaw 社区 skill `grill-me` / `grill-with-docs`**
+### 1.1 项目
+
+| 项目 | 我们参考了什么 |
+|------|------|
+| [`grill-me`](https://github.com/mattpocock/skills/blob/main/docs/productivity/grill-me.md) / [`grill-with-docs`](https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md)（Matt Pocock 的 skills 仓库） | NMH 的机制源流（逐字继承，逐条对照见 §2）；介绍文：<https://www.aihero.dev/skills-grill-me> |
+| [`dsh-superagent-prototype`](https://github.com/deepseek-ai/dsh-superagent-prototype)（deepseek-ai，MIT） | 任务 DAG + CAS revision、审批 outcome 封闭集、调度 latest-only catch-up，以及「以人的注意力为唯一成本尺度」的设计原则（原文：*take as little human attention as possible, and give as much value as possible*） |
+
+### 1.2 论文
+
+| 论文 | 我们用它支撑什么 | 出处 |
+|------|------|------|
+| Liu et al., *Lost in the Middle: How Language Models Use Long Contexts* | 长上下文注意力呈 U 形（首尾高、中段衰减）→ 身份文件行预算与三层装载 | arXiv:2307.03172 |
+| *Beyond Calibration: Temporal LLM Confidence Assessment Across Languages and Local Settings* | 幻觉答案生成后仍维持高置信 → 声明-验证绑定 | arXiv:2610.27702 |
+| *CHARM: Character Hallucination for Multicultural Role Play Benchmark* | 模型可能识别越界却仍作答（合规失败而非意识失败）→ 声明-验证绑定 | arXiv:2609.01352 |
+
+> 以上三条即仓库 `docs/EVIDENCE.md` 登记的外部引用。
+
+## 2. 照搬（逐字继承，原文可核）
+
+**NMH（协作探索/审讯锁定协议）← Matt Pocock 的 skills 仓库 `grill-me` / `grill-with-docs`**
 
 继承点逐条对照（原文归档于 [`docs/provenance/grill/`](docs/provenance/grill/)，按原样保留）：
 
@@ -22,7 +41,7 @@
 
 **千锻扩展（非继承，自研）**：探索/锁定双模式、锁定前七问自检、NMH 文档结构（节点/选项/人类原话/时间戳）、R5 版本演进（append 不覆盖）、锁定输出为结构化 spec（goal/acceptance/out_of_scope/decision_class/contract_refs）、与 7 封闭信号体系集成。这些在源稿中不存在。
 
-## 2. 适配（机制借鉴，千锻化改造）
+## 3. 适配（机制借鉴，千锻化改造）
 
 | 千锻机制 | 借鉴对象 | 千锻化改造 |
 |------|------|------|
@@ -31,12 +50,12 @@
 | 行硬门预算（身份文件行数上限，超限=fail） | 通用 LLM 上下文工程实践（注意力预算意识） | 编译期强制（Budget 段），不截断；U 形注意力分布 → 三层装载 |
 | 故障 SOP（restart→重派→3 次升级） | 通用服务运维的"指数退避/升级"思想 | 固化为角色义务（编排者绝不做工），次数与升级路径实例参数化 |
 
-## 3. 参考（设计审查中引用，非继承文本）
+## 4. 参考（设计审查中引用，非继承文本）
 
 - **分布式系统 12 原则**：千锻每个架构决策后的方法论压力测试框架（引用其原则维度，未复制其文本）。
 - **外部强模型多轮对抗审查流程**：协议层 v1.0 的审查方法——每一轮由外部强模型对抗审查，缺口全部采纳或记录理由。这是千锻的**审查流程**（过程学分），非机制源流。
 
-## 4. 第三方软件依赖
+## 5. 第三方软件依赖
 
 | 依赖 | 用途 | 许可 |
 |------|------|------|
@@ -44,8 +63,13 @@
 | `jsonschema` | team.json Schema 校验 | MIT/Apache-2.0 双许可 |
 | `pyyaml` | INDEX.yaml 解析 | MIT |
 
-## 5. 纪律声明
+## 6. 品牌与视觉
 
-1. 本仓库正文（协议/模板/文档）**零句子级复制**外部文本——上表第 1 节的逐字对应仅存在于**机制模式**层面（决策树逐分支审讯等行为模式），千锻正文的表述全部为千锻术语体系下的重写。
+- **Logo 设计**：汤逸阳（[Tangyiyang906@gmail.com](mailto:Tangyiyang906@gmail.com)）
+- **仓库内文件**：`docs/assets/brand/millforge-logo.svg`、`avatar-512.png`、`social-preview-1280x640.png`
+
+## 7. 纪律声明
+
+1. 本仓库正文（协议/模板/文档）**零句子级复制**外部文本——§2 的逐字对应仅存在于**机制模式**层面（决策树逐分支审讯等行为模式），千锻正文的表述全部为千锻术语体系下的重写。
 2. 唯一例外：`docs/provenance/grill/` 中的两份 skill 原文按原样保留（照搬必注出处，原文可核）。
 3. 新增照搬点必须：① 本文件加行 ② 原文归档 `docs/provenance/` ③ 协议篇「设计源流」节同步。三者缺一 = PR 不得合入。
