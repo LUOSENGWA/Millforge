@@ -2,7 +2,7 @@
 
 TaskForge 是 AgentTeams 的任务管理模块。本目录用于发布可下载的 TaskForge 模块产物和版本索引。
 
-> **当前状态**：尚未发布任何版本；`releases/channels.json` 中的 `taskforge` 条目为空。
+> **当前状态**：尚未发布任何版本；发布后条目写入对应通道的 `releases/{alpha,beta,stable}/channels.json`。
 
 **English**: [README.en.md](README.en.md)
 
@@ -27,7 +27,7 @@ releases/taskforge/<version>/
 
 ## 版本索引
 
-`releases/channels.json` 的 `taskforge` 条目示例：
+`releases/stable/channels.json` 的 `taskforge` 条目示例（beta/alpha 结构相同）：
 
 ```json
 "taskforge": {
@@ -48,6 +48,15 @@ releases/taskforge/<version>/
   }
 }
 ```
+
+## 运行要求
+
+- Linux amd64/arm64；单实例运行（不做多副本同时写）。
+- **生产：seekdb server**；本地开发可用 embedded seekdb。
+- v1 不支持 SQLite、OceanBase 作为 TaskForge 后端。
+- TaskForge 只负责 `work` 任务数据；对象字节由外部对象存储保存，任务库只存引用。
+- Controller 通过内部网关调用 TaskForge，不直接暴露任务端口。
+- 身份认证与权限由 Controller 负责；TaskForge 只接受 Controller 的服务调用，不面向终端用户直接登录。
 
 完整的版本要求、兼容窗口和数据库要求以 `manifest.json` 及对应版本的发布说明为准。
 

@@ -2,7 +2,7 @@
 
 TaskForge is the task-management module for AgentTeams. This directory publishes downloadable TaskForge artifacts and the version index.
 
-> **Status**: no version is published yet; the `taskforge` entry in `releases/channels.json` is empty.
+> **Status**: no version is published yet; once published, the entry goes into the matching channel file under `releases/{alpha,beta,stable}/channels.json`.
 
 **中文**: [README.md](README.md)
 
@@ -25,7 +25,7 @@ Each archive contains:
 
 ## Version index
 
-Example `taskforge` entry in `releases/channels.json`:
+Example `taskforge` entry in `releases/stable/channels.json` (beta/alpha share the shape):
 
 ```json
 "taskforge": {
@@ -46,6 +46,15 @@ Example `taskforge` entry in `releases/channels.json`:
   }
 }
 ```
+
+## Runtime requirements
+
+- Linux amd64/arm64; run a single instance (no concurrent writers across replicas).
+- **Production: a seekdb server**; embedded seekdb is for local development only.
+- v1 does not support SQLite or OceanBase as the TaskForge backend.
+- TaskForge owns `work` task data only; artifact bytes stay in external object storage and the task database stores references.
+- Controller calls TaskForge through its internal gateway; do not expose the task port directly.
+- Authentication and authorization are handled by Controller; TaskForge accepts Controller service calls only and does not offer end-user login.
 
 Exact version, compatibility-window and database requirements are declared in `manifest.json` and the release notes for that version.
 
